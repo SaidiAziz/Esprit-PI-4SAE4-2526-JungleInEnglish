@@ -25,7 +25,7 @@ export class SignupComponent {
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
       role: ['', Validators.required],
 
       // Student fields (optional until STUDENT role is selected)
