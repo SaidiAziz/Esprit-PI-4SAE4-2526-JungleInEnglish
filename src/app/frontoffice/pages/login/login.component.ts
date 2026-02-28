@@ -48,9 +48,11 @@ export class LoginComponent {
           this.loginForm.enable();
           const role = response.user.role;
           if (role === 'STUDENT') {
-            this.router.navigate(['/student/dashboard']).then(r => console.log('Navigation to student dashboard successful:', r));
+            this.router.navigate(['/student/dashboard']);
           } else if (role === 'TUTOR') {
-            this.router.navigate(['/tutor/dashboard']).then(r => console.log('Navigation to tutor dashboard successful:', r));
+            this.router.navigate(['/tutor/dashboard']);
+          } else if (role === 'ADMIN') {
+            this.router.navigate(['/admin/dashboard']);
           } else {
             this.router.navigate(['/']);
           }
