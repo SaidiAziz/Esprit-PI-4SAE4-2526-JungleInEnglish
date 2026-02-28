@@ -1,17 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-export interface LoginFormData {
-  email: string;
-  password: string;
-  rememberMe?: boolean;
-}
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -19,8 +15,13 @@ export class LoginComponent {
   loginForm!: FormGroup;
   submitted = false;
   loading = false;
+  errorMessage = '';
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private authService: AuthService
+  ) {
     this.initializeForm();
   }
 
@@ -34,13 +35,36 @@ export class LoginComponent {
 
   onSubmit(): void {
     this.submitted = true;
+    this.errorMessage = '';
 
     if (this.loginForm.valid) {
       this.loading = true;
-      const formData: LoginFormData = this.loginForm.value;
-      console.log('Login form submitted:', formData);
-      // TODO: Send to backend API
-      // After successful login, redirect to dashboard
+      this.loginForm.disable();
+      const { email, password } = this.loginForm.value;
+
+      this.authService.login({ email, password }).subscribe({
+        next: (response) => {
+          this.loading = false;
+          this.loginForm.enable();
+          const role = response.user.role;
+          if (role === 'STUDENT') {
+            this.router.navigate(['/student/dashboard']).then(r => console.log('Navigation to student dashboard successful:', r));
+          } else if (role === 'TUTOR') {
+            this.router.navigate(['/tutor/dashboard']).then(r => console.log('Navigation to tutor dashboard successful:', r));
+          } else {
+            this.router.navigate(['/']);
+          }
+        },
+        error: (err) => {
+          this.loading = false;
+          this.loginForm.enable();
+          if (err.status === 401) {
+            this.errorMessage = 'Invalid email or password.';
+          } else {
+            this.errorMessage = 'An error occurred. Please try again.';
+          }
+        }
+      });
     }
   }
 

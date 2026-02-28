@@ -14,7 +14,6 @@
           formControlName="email"
           [class.is-invalid]="isFieldInvalid('email')"
           placeholder="your.email@example.com"
-          [disabled]="loading"
         />
         <div class="error-message" *ngIf="isFieldInvalid('email')">
           <span *ngIf="f['email'].errors?.['required']">Email is required</span>
@@ -32,7 +31,6 @@
           formControlName="password"
           [class.is-invalid]="isFieldInvalid('password')"
           placeholder="Your password"
-          [disabled]="loading"
         />
         <div class="error-message" *ngIf="isFieldInvalid('password')">
           <span *ngIf="f['password'].errors?.['required']">Password is required</span>
@@ -46,7 +44,6 @@
           type="checkbox"
           id="rememberMe"
           formControlName="rememberMe"
-          [disabled]="loading"
         />
         <label for="rememberMe">Remember me</label>
       </div>
@@ -56,12 +53,17 @@
         <span *ngIf="!loading">Sign In</span>
         <span *ngIf="loading">Signing In...</span>
       </button>
+
+      <!-- Error Message -->
+      <div class="error-message alert-error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
     </form>
 
     <!-- Links -->
     <div class="form-links">
       <a href="#forgot-password" class="link">Forgot password?</a>
-      <a href="/signup" class="link">Create an account</a>
+      <a routerLink="/signup" class="link">Create an account</a>
     </div>
   </div>
 </div>

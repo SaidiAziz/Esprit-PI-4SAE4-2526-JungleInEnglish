@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { Role, SignupFormData } from './signup.model';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css'
 })
@@ -14,8 +16,14 @@ export class SignupComponent {
   signupForm!: FormGroup;
   selectedRole: Role | null = null;
   submitted = false;
+  loading = false;
+  errorMessage = '';
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private authService: AuthService
+  ) {
     this.initializeForm();
   }
 
@@ -69,14 +77,30 @@ export class SignupComponent {
 
   onSubmit(): void {
     this.submitted = true;
+    this.errorMessage = '';
 
     if (this.signupForm.valid) {
+      this.loading = true;
       const formData: SignupFormData = {
         ...this.signupForm.value,
         accountStatus: 'ACTIVE'
       };
-      console.log('Form submitted:', formData);
-      // TODO: Send to backend API
+
+      this.authService.register(formData).subscribe({
+        next: (_user) => {
+          this.loading = false;
+          // After successful registration, redirect to login
+          this.router.navigate(['/login']);
+        },
+        error: (err) => {
+          this.loading = false;
+          if (err.status === 409) {
+            this.errorMessage = 'An account with this email already exists.';
+          } else {
+            this.errorMessage = 'Registration failed. Please try again.';
+          }
+        }
+      });
     }
   }
 

@@ -220,9 +220,21 @@
       </div>
 
       <!-- Submit Button -->
-      <button type="submit" class="btn-submit" [disabled]="!signupForm.valid">
-        Create My Account
+      <button type="submit" class="btn-submit" [disabled]="!signupForm.valid || loading">
+        <span *ngIf="!loading">Create My Account</span>
+        <span *ngIf="loading">Creating Account...</span>
       </button>
+
+      <!-- Error Message -->
+      <div class="error-message alert-error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
     </form>
+
+    <!-- Link to login -->
+    <div class="form-links">
+      <span>Already have an account? </span>
+      <a routerLink="/login" class="link">Sign in</a>
+    </div>
   </div>
 </div>
