@@ -9,6 +9,7 @@ import { StudentDashboardComponent } from './frontoffice/jungle/student/student-
 import { TutorDashboardComponent } from './frontoffice/jungle/tutor/tutor-dashboard/tutor-dashboard.component';
 import { AdminDashboardComponent } from './backoffice/pages/admin-dashboard/admin-dashboard.component';
 import { authGuard } from './core/guards/auth.guard';
+import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
 
@@ -29,8 +30,16 @@ export const routes: Routes = [
     component: DashboardLayoutComponent,
     canActivate: [authGuard],
     children: [
-      { path: 'student/dashboard', component: StudentDashboardComponent },
-      { path: 'tutor/dashboard',   component: TutorDashboardComponent },
+      {
+        path: 'student/dashboard',
+        component: StudentDashboardComponent,
+        canActivate: [roleGuard('STUDENT')]
+      },
+      {
+        path: 'tutor/dashboard',
+        component: TutorDashboardComponent,
+        canActivate: [roleGuard('TUTOR')]
+      },
     ]
   },
 
@@ -38,7 +47,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminLayoutComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleGuard('ADMIN')],
     children: [
       { path: 'dashboard', component: AdminDashboardComponent },
     ]
