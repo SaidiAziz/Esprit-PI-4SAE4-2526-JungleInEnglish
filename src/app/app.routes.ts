@@ -9,6 +9,7 @@ import { StudentDashboardComponent } from './frontoffice/jungle/student/student-
 import { TutorDashboardComponent } from './frontoffice/jungle/tutor/tutor-dashboard/tutor-dashboard.component';
 import { AdminDashboardComponent } from './backoffice/pages/admin-dashboard/admin-dashboard.component';
 import { UsersComponent } from './backoffice/pages/users/users.component';
+import { UserDetailComponent } from './backoffice/pages/users/user-detail/user-detail.component';
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
 
@@ -52,6 +53,7 @@ export const routes: Routes = [
     children: [
       { path: 'dashboard', component: AdminDashboardComponent },
       { path: 'users',     component: UsersComponent },
+      { path: 'users/:id', component: UserDetailComponent },
     ]
   },
 

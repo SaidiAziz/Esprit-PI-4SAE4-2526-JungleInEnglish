@@ -23,10 +23,11 @@
           <th>Role</th>
           <th>Status</th>
           <th>Joined</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of users">
+        <tr *ngFor="let user of users" class="clickable-row" (click)="viewUser(user.id)">
           <td class="col-id">{{ user.id }}</td>
           <td class="col-name">{{ user.firstName }} {{ user.lastName }}</td>
           <td class="col-email">{{ user.email }}</td>
@@ -39,6 +40,9 @@
             </span>
           </td>
           <td class="col-date">{{ user.createdAt | date: 'mediumDate' }}</td>
+          <td class="col-action">
+            <button class="btn-view" (click)="viewUser(user.id); $event.stopPropagation()">View →</button>
+          </td>
         </tr>
       </tbody>
     </table>

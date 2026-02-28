@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { UserServiceService } from '../../services/user-service.service';
 
 @Component({
@@ -14,7 +15,7 @@ export class UsersComponent implements OnInit {
   loading = true;
   errorMessage = '';
 
-  constructor(private userService: UserServiceService) {}
+  constructor(private userService: UserServiceService, private router: Router) {}
 
   ngOnInit(): void {
     this.getAllUsers();
@@ -39,4 +40,7 @@ export class UsersComponent implements OnInit {
     });
   }
 
+  viewUser(id: number): void {
+    this.router.navigate(['/admin/users', id]);
+  }
 }
