@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { NavItem } from '../../../core/models/nav-item.model';
-import { AuthService } from '../../../core/services/auth.service';
+import { NavItem } from '../../../../core/models/nav-item.model';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-front-dashboard-header',

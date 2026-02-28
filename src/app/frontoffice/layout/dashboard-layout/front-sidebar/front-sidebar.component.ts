@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { NavItem } from '../../../core/models/nav-item.model';
+import { NavItem } from '../../../../core/models/nav-item.model';
 
 @Component({
   selector: 'app-front-sidebar',

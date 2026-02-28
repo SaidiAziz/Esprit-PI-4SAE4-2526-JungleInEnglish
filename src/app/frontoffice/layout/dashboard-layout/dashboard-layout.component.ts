@@ -4,8 +4,8 @@ import { AuthService } from '../../../core/services/auth.service';
 import { NavItem } from '../../../core/models/nav-item.model';
 import { STUDENT_NAV } from '../../jungle/student/student-nav';
 import { TUTOR_NAV } from '../../jungle/tutor/tutor-nav';
-import { FrontDashboardHeaderComponent } from '../front-dashboard-header/front-dashboard-header.component';
-import { FrontSidebarComponent } from '../front-sidebar/front-sidebar.component';
+import { FrontDashboardHeaderComponent } from './front-dashboard-header/front-dashboard-header.component';
+import { FrontSidebarComponent } from './front-sidebar/front-sidebar.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
