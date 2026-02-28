@@ -8,11 +8,11 @@ import { CommonModule } from '@angular/common';
 export const ADMIN_NAV: NavItem[] = [
   { label: 'Dashboard',    route: '/admin/dashboard' },
   { label: 'Users',        route: '/admin/users' },
-  { label: 'Courses',      route: '#' },
-  { label: 'Enrollments',  route: '#' },
-  { label: 'Payments',     route: '#' },
-  { label: 'Reports',      route: '#' },
-  { label: 'Settings',     route: '#' },
+  //{ label: 'Courses',      route: '#' },
+  //{ label: 'Enrollments',  route: '#' },
+  //{ label: 'Payments',     route: '#' },
+  //{ label: 'Reports',      route: '#' },
+  //{ label: 'Settings',     route: '#' },
 ];
 
 @Component({
