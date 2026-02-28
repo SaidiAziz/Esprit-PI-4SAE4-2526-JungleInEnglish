@@ -1,0 +1,113 @@
+.error-banner {
+  background: #fce4ec;
+  color: #b71c1c;
+  border: 1px solid #ef9a9a;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.92rem;
+}
+
+.users-page {
+  padding: 0;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.page-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #1a3a3a;
+}
+
+.user-count {
+  background: #e4efe4;
+  color: #2d5757;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+}
+
+.state-msg {
+  color: #888;
+  font-style: italic;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 8px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  font-size: 0.92rem;
+}
+
+.users-table thead {
+  background: #1a3a3a;
+  color: #fff;
+}
+
+.users-table th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.users-table tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.15s;
+}
+
+.users-table tbody tr:hover {
+  background: #f7fbf7;
+}
+
+.users-table td {
+  padding: 0.7rem 1rem;
+  color: #333;
+  vertical-align: middle;
+}
+
+.col-id    { color: #999; font-size: 0.85rem; }
+.col-email { color: #555; }
+.col-date  { color: #777; font-size: 0.85rem; white-space: nowrap; }
+
+/* Role badges */
+.role-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.role-badge.role-student { background: #e8f5e9; color: #2e7d32; }
+.role-badge.role-tutor   { background: #e3f2fd; color: #1565c0; }
+.role-badge.role-admin   { background: #fce4ec; color: #b71c1c; }
+
+/* Status badges */
+.status-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.status-badge.status-active  { background: #e8f5e9; color: #2e7d32; }
+.status-badge.status-pending { background: #fff8e1; color: #f57f17; }
+.status-badge.status-banned  { background: #fce4ec; color: #b71c1c; }
+

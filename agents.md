@@ -341,7 +341,13 @@ export const TUTOR_NAV: NavItem[] = [
 
 // backoffice/layout/admin-layout/admin-layout.component.ts (exported from here)
 export const ADMIN_NAV: NavItem[] = [
-  { label: 'Dashboard', route: '/admin/dashboard', icon: 'home' },
+  { label: 'Dashboard',   route: '/admin/dashboard', icon: '🏠' },
+  { label: 'Users',       route: '#',                icon: '👥' },
+  { label: 'Courses',     route: '#',                icon: '📚' },
+  { label: 'Enrollments', route: '#',                icon: '📋' },
+  { label: 'Payments',    route: '#',                icon: '💳' },
+  { label: 'Reports',     route: '#',                icon: '📊' },
+  { label: 'Settings',    route: '#',                icon: '⚙️' },
 ];
 ```
 

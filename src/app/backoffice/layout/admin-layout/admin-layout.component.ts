@@ -6,7 +6,13 @@ import { NavItem } from '../../../core/models/nav-item.model';
 import { CommonModule } from '@angular/common';
 
 export const ADMIN_NAV: NavItem[] = [
-  { label: 'Dashboard', route: '/admin/dashboard', icon: 'home' },
+  { label: 'Dashboard',    route: '/admin/dashboard', icon: '🏠' },
+  { label: 'Users',        route: '/admin/users',     icon: '👥' },
+  { label: 'Courses',      route: '#',                icon: '📚' },
+  { label: 'Enrollments',  route: '#',                icon: '📋' },
+  { label: 'Payments',     route: '#',                icon: '💳' },
+  { label: 'Reports',      route: '#',                icon: '📊' },
+  { label: 'Settings',     route: '#',                icon: '⚙️' },
 ];
 
 @Component({

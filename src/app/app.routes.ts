@@ -8,6 +8,7 @@ import { SignupComponent } from './frontoffice/pages/signup/signup.component';
 import { StudentDashboardComponent } from './frontoffice/jungle/student/student-dashboard/student-dashboard.component';
 import { TutorDashboardComponent } from './frontoffice/jungle/tutor/tutor-dashboard/tutor-dashboard.component';
 import { AdminDashboardComponent } from './backoffice/pages/admin-dashboard/admin-dashboard.component';
+import { UsersComponent } from './backoffice/pages/users/users.component';
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
 
@@ -50,6 +51,7 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard('ADMIN')],
     children: [
       { path: 'dashboard', component: AdminDashboardComponent },
+      { path: 'users',     component: UsersComponent },
     ]
   },
 
