@@ -4,29 +4,29 @@ import { AuthService } from '../../../core/services/auth.service';
 import { NavItem } from '../../../core/models/nav-item.model';
 import { STUDENT_NAV } from '../../jungle/student/student-nav';
 import { TUTOR_NAV } from '../../jungle/tutor/tutor-nav';
-import { DashboardHeaderComponent } from '../../../backoffice/layout/header/header.component';
-import { SidebarComponent } from '../../../backoffice/layout/sidebar/sidebar.component';
+import { FrontDashboardHeaderComponent } from '../front-dashboard-header/front-dashboard-header.component';
+import { FrontSidebarComponent } from '../front-sidebar/front-sidebar.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, DashboardHeaderComponent, SidebarComponent],
+  imports: [CommonModule, RouterOutlet, FrontDashboardHeaderComponent, FrontSidebarComponent],
   template: `
-    <div class="dashboard-shell">
-      <app-dashboard-header [navItems]="navItems"></app-dashboard-header>
-      <div class="dashboard-body">
-        <app-sidebar [navItems]="navItems"></app-sidebar>
-        <main class="dashboard-main">
+    <div class="fd-shell">
+      <app-front-dashboard-header [navItems]="navItems"></app-front-dashboard-header>
+      <div class="fd-body">
+        <app-front-sidebar [navItems]="navItems"></app-front-sidebar>
+        <main class="fd-main">
           <router-outlet></router-outlet>
         </main>
       </div>
     </div>
   `,
   styles: [`
-    .dashboard-shell { display: flex; flex-direction: column; min-height: 100vh; }
-    .dashboard-body  { display: flex; flex: 1; }
-    .dashboard-main  { flex: 1; padding: 2rem; background: #fff; }
+    .fd-shell { display: flex; flex-direction: column; min-height: 100vh; background: var(--fd-shell-bg); }
+    .fd-body  { display: flex; flex: 1; min-height: calc(100vh - 64px); }
+    .fd-main  { flex: 1; padding: 2rem 2.5rem; background: var(--fd-main-bg); overflow-y: auto; }
   `]
 })
 export class DashboardLayoutComponent {
@@ -37,4 +37,3 @@ export class DashboardLayoutComponent {
     this.navItems = role === 'TUTOR' ? TUTOR_NAV : STUDENT_NAV;
   }
 }
-

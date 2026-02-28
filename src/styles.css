@@ -2,16 +2,38 @@
 
 /* Color Palette */
 :root {
-  --color-cream: #F7EDE2;
-  --color-dark-teal: #2D5757;
-  --color-accent-purple: #3D3D60;
-  --color-accent-gold: #F6BD60;
-  --color-accent-red: #C84630;
-  --color-text-dark: #2D5757;
-  --color-text-light: #F7EDE2;
-  --color-white: #FFFFFF;
-  --color-gray-light: #F5F0EB;
-  --color-gray-medium: #D4C4B8;
+  /* ── Frontoffice / Public ─────────────────────────────── */
+  --color-cream:          #F7EDE2;
+  --color-dark-teal:      #2D5757;
+  --color-accent-purple:  #3D3D60;
+  --color-accent-gold:    #F6BD60;
+  --color-accent-red:     #C84630;
+  --color-text-dark:      #2D5757;
+  --color-text-light:     #F7EDE2;
+  --color-white:          #FFFFFF;
+  --color-gray-light:     #F5F0EB;
+  --color-gray-medium:    #D4C4B8;
+
+  /* ── Frontoffice Dashboard (student / tutor) ─────────── */
+  --fd-header-bg:          #2D5757;
+  --fd-header-border:      #F6BD60;
+  --fd-header-text:        #F7EDE2;
+  --fd-header-link:        rgba(247, 237, 226, 0.7);
+  --fd-header-link-active: #F6BD60;
+  --fd-header-link-hover-bg: rgba(246, 189, 96, 0.15);
+
+  --fd-sidebar-bg:          #F5F0EB;
+  --fd-sidebar-border:      #D4C4B8;
+  --fd-sidebar-link:        #2D5757;
+  --fd-sidebar-hover-bg:    #EAE0D5;
+  --fd-sidebar-active-bg:   #2D5757;
+  --fd-sidebar-active-text: #F7EDE2;
+  --fd-sidebar-active-accent: #F6BD60;
+
+  --fd-shell-bg:    #F7EDE2;
+  --fd-main-bg:     #F5F0EB;
+  --fd-card-bg:     #FFFFFF;
+  --fd-card-border: #D4C4B8;
 }
 
 /* Global Reset and Base Styles */
