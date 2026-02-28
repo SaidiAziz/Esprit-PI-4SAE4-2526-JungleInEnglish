@@ -6,13 +6,13 @@ import { NavItem } from '../../../core/models/nav-item.model';
 import { CommonModule } from '@angular/common';
 
 export const ADMIN_NAV: NavItem[] = [
-  { label: 'Dashboard',    route: '/admin/dashboard', icon: '🏠' },
-  { label: 'Users',        route: '/admin/users',     icon: '👥' },
-  { label: 'Courses',      route: '#',                icon: '📚' },
-  { label: 'Enrollments',  route: '#',                icon: '📋' },
-  { label: 'Payments',     route: '#',                icon: '💳' },
-  { label: 'Reports',      route: '#',                icon: '📊' },
-  { label: 'Settings',     route: '#',                icon: '⚙️' },
+  { label: 'Dashboard',    route: '/admin/dashboard' },
+  { label: 'Users',        route: '/admin/users' },
+  { label: 'Courses',      route: '#' },
+  { label: 'Enrollments',  route: '#' },
+  { label: 'Payments',     route: '#' },
+  { label: 'Reports',      route: '#' },
+  { label: 'Settings',     route: '#' },
 ];
 
 @Component({
@@ -31,9 +31,9 @@ export const ADMIN_NAV: NavItem[] = [
     </div>
   `,
   styles: [`
-    .dashboard-shell { display: flex; flex-direction: column; min-height: 100vh; }
-    .dashboard-body  { display: flex; flex: 1; }
-    .dashboard-main  { flex: 1; padding: 2rem; background: #fff; }
+    .dashboard-shell { display: flex; flex-direction: column; min-height: 100vh; background: #0f172a; }
+    .dashboard-body  { display: flex; flex: 1; min-height: calc(100vh - 60px); }
+    .dashboard-main  { flex: 1; padding: 2rem 2.5rem; background: #f8fafc; overflow-y: auto; }
   `]
 })
 export class AdminLayoutComponent {
