@@ -36,3 +36,23 @@ export interface RegisterRequest {
   hourlyRate?: number;
 }
 
+export interface UpdateProfileRequest {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  level?: string;
+  learningGoals?: string;
+  bio?: string;
+  specialization?: string;
+  experienceYears?: number;
+  hourlyRate?: number;
+}
+
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  newPassword: string;
+}

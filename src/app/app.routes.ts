@@ -5,6 +5,8 @@ import { AdminLayoutComponent } from './backoffice/layout/admin-layout/admin-lay
 import { LandingpageComponent } from './frontoffice/pages/landingpage/landingpage.component';
 import { LoginComponent } from './frontoffice/pages/login/login.component';
 import { SignupComponent } from './frontoffice/pages/signup/signup.component';
+import { ForgotPasswordComponent } from './frontoffice/pages/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './frontoffice/pages/reset-password/reset-password.component';
 import { StudentDashboardComponent } from './frontoffice/jungle/student/student-dashboard/student-dashboard.component';
 import { TutorDashboardComponent } from './frontoffice/jungle/tutor/tutor-dashboard/tutor-dashboard.component';
 import { AdminDashboardComponent } from './backoffice/pages/admin-dashboard/admin-dashboard.component';
@@ -20,9 +22,11 @@ export const routes: Routes = [
     path: '',
     component: PublicLayoutComponent,
     children: [
-      { path: '',       component: LandingpageComponent },
-      { path: 'login',  component: LoginComponent },
-      { path: 'signup', component: SignupComponent },
+      { path: '',                 component: LandingpageComponent },
+      { path: 'login',            component: LoginComponent },
+      { path: 'signup',           component: SignupComponent },
+      { path: 'forgot-password',  component: ForgotPasswordComponent },
+      { path: 'reset-password',   component: ResetPasswordComponent },
     ]
   },
 

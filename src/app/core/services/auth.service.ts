@@ -6,11 +6,13 @@ import {
   LoginRequest,
   LoginResponse,
   RegisterRequest,
-  UserResponse
+  UserResponse,
+  ForgotPasswordRequest,
+  ResetPasswordRequest
 } from '../models/user.model';
 
 // Re-export so existing imports from auth.service still work
-export type { LoginRequest, LoginResponse, RegisterRequest, UserResponse };
+export type { LoginRequest, LoginResponse, RegisterRequest, UserResponse, ForgotPasswordRequest, ResetPasswordRequest };
 
 @Injectable({
   providedIn: 'root'
@@ -69,5 +71,13 @@ export class AuthService {
   getUserRole(): 'STUDENT' | 'TUTOR' | 'ADMIN' | null {
     const user = this.getCurrentUser();
     return user ? user.role : null;
+  }
+
+  forgotPassword(request: ForgotPasswordRequest): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.API_URL}/forgot-password`, request);
+  }
+
+  resetPassword(request: ResetPasswordRequest): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.API_URL}/reset-password`, request);
   }
 }
