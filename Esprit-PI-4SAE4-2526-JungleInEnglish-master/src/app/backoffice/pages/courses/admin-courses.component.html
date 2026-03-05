@@ -1,0 +1,96 @@
+<div class="courses-page">
+
+  <div class="page-header">
+    <div>
+      <h2>Courses</h2>
+      <p class="state-msg">Manage your school courses and export the catalog as PDF.</p>
+    </div>
+    <div class="page-actions">
+      <a routerLink="/courses/new" class="btn-secondary">+ New course</a>
+      <button type="button" class="btn-secondary" (click)="exportToPdf()">
+        ⬇ Export PDF
+      </button>
+    </div>
+  </div>
+
+  <section class="list-panel">
+    <div class="toolbar">
+      <label for="levelFilter">Search by level</label>
+      <input
+        id="levelFilter"
+        type="text"
+        [(ngModel)]="levelFilter"
+        placeholder="e.g. Beginner, Intermediate..."
+      />
+      <button type="button" (click)="searchByLevel()">Search</button>
+      <button type="button" class="btn-ghost" (click)="clearFilter()">Reset</button>
+    </div>
+
+    <div *ngIf="loading" class="state-msg">Loading courses...</div>
+    <div *ngIf="error" class="error-banner">{{ error }}</div>
+
+    <div class="table-wrapper" *ngIf="!loading && filteredCourses.length > 0">
+      <table class="courses-table">
+        <thead>
+        <tr>
+          <th>Title</th>
+          <th>Level</th>
+          <th>Duration (h)</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Price</th>
+          <th>Max students</th>
+          <th>Active</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let c of pagedCourses">
+          <td class="col-title">{{ c.title }}</td>
+          <td class="col-level">{{ c.level }}</td>
+          <td>{{ c.durationHours }}</td>
+          <td>{{ c.startDate }}</td>
+          <td>{{ c.endDate || '—' }}</td>
+          <td>{{ c.price ?? '—' }}</td>
+          <td>{{ c.maxStudents }}</td>
+          <td>
+          <span
+            class="status-badge"
+            [class.status-active]="c.active"
+            [class.status-inactive]="!c.active">
+            {{ c.active ? 'Active' : 'Inactive' }}
+          </span>
+          </td>
+          <td class="col-actions">
+            <a [routerLink]="['/courses', c.id]" class="btn-link">Edit</a>
+            <button type="button" class="btn-link danger" (click)="deleteCourse(c)">Delete</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="!loading && filteredCourses.length === 0" class="state-msg">
+      No courses found. Try another level or create a new course.
+    </div>
+  </section>
+
+  <div *ngIf="!loading && filteredCourses.length > 0" class="courses-pagination">
+    <button type="button" (click)="prevPage()" [disabled]="page === 1">
+      ‹ Prev
+    </button>
+    <div class="pages">
+      <button
+        type="button"
+        *ngFor="let p of [].constructor(totalPages); let i = index"
+        [class.active]="page === i + 1"
+        (click)="goToPage(i + 1)">
+        {{ i + 1 }}
+      </button>
+    </div>
+    <button type="button" (click)="nextPage()" [disabled]="page === totalPages">
+      Next ›
+    </button>
+  </div>
+</div>
+

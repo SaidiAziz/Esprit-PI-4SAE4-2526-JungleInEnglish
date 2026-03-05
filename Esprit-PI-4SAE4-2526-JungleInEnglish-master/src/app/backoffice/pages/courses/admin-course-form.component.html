@@ -1,0 +1,92 @@
+<div class="course-form-page">
+  <div class="page-header">
+    <div>
+      <h2>{{ isEditing ? 'Edit course' : 'Create course' }}</h2>
+      <p class="state-msg">
+        {{ isEditing ? 'Update the course details.' : 'Add a new course to your catalog.' }}
+      </p>
+    </div>
+    <button type="button" class="btn-secondary" (click)="cancel()">Back to list</button>
+  </div>
+
+  <section class="form-panel">
+    <div *ngIf="loading" class="state-msg">Loading course...</div>
+    <div *ngIf="error" class="error-banner">{{ error }}</div>
+
+    <form [formGroup]="courseForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input id="title" type="text" formControlName="title" />
+          <div class="error" *ngIf="courseForm.get('title')?.touched && courseForm.get('title')?.invalid">
+            Title is required (max 100 characters).
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="level">Level</label>
+          <input id="level" type="text" formControlName="level" placeholder="Beginner, Intermediate..." />
+          <div class="error" *ngIf="courseForm.get('level')?.touched && courseForm.get('level')?.invalid">
+            Level is required.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" rows="3" formControlName="description"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="durationHours">Duration (hours)</label>
+          <input id="durationHours" type="number" min="1" formControlName="durationHours" />
+          <div class="error" *ngIf="courseForm.get('durationHours')?.touched && courseForm.get('durationHours')?.invalid">
+            Duration must be at least 1 hour.
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="price">Price</label>
+          <input id="price" type="number" min="0" step="0.01" formControlName="price" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="startDate">Start date</label>
+          <input id="startDate" type="date" formControlName="startDate" />
+          <div class="error" *ngIf="courseForm.get('startDate')?.touched && courseForm.get('startDate')?.invalid">
+            Start date is required.
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="endDate">End date</label>
+          <input id="endDate" type="date" formControlName="endDate" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="maxStudents">Max students</label>
+          <input id="maxStudents" type="number" min="1" formControlName="maxStudents" />
+          <div class="error" *ngIf="courseForm.get('maxStudents')?.touched && courseForm.get('maxStudents')?.invalid">
+            Max students must be at least 1.
+          </div>
+        </div>
+        <div class="form-group checkbox-group">
+          <label>
+            <input type="checkbox" formControlName="active" />
+            Active
+          </label>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="saving">
+          {{ isEditing ? 'Update course' : 'Create course' }}
+        </button>
+        <button type="button" class="btn-ghost" (click)="cancel()">Cancel</button>
+      </div>
+    </form>
+  </section>
+</div>
+

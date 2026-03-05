@@ -1,0 +1,137 @@
+<div class="sc-page">
+  <div class="sc-hero">
+    <div class="sc-hero-text">
+      <h2>Available courses</h2>
+      <p>Browse live English courses and pick the one that fits your level and schedule.</p>
+      <div class="sc-tags">
+        <span>Live & online</span>
+        <span>Small groups</span>
+        <span>Flexible schedule</span>
+      </div>
+    </div>
+    <div class="sc-hero-tag">
+      <div class="tag-pill">Student View</div>
+      <p>Personalized catalog based on your goals.</p>
+    </div>
+  </div>
+
+  <div class="sc-filters">
+    <div class="filter-group">
+      <label for="levelSelect">Level</label>
+      <select
+        id="levelSelect"
+        [(ngModel)]="selectedLevel"
+        (change)="applyFilters()">
+        <option value="">All levels</option>
+        <option *ngFor="let lvl of levels" [value]="lvl">
+          {{ lvl }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-group checkbox">
+      <label>
+        <input type="checkbox" [(ngModel)]="onlyActive" (change)="applyFilters()" />
+        Only active courses
+      </label>
+    </div>
+
+    <button type="button" class="btn-ghost" (click)="clearFilters()">Reset</button>
+  </div>
+
+  <div *ngIf="loading" class="banner info">Loading courses...</div>
+  <div *ngIf="error" class="banner error">{{ error }}</div>
+
+  <div *ngIf="!loading && !error" class="sc-grid">
+    <article *ngFor="let c of pagedCourses" class="sc-card">
+      <header class="sc-card-header">
+        <div class="level-pill">{{ c.level }}</div>
+        <h3>{{ c.title }}</h3>
+      </header>
+
+      <p class="sc-card-desc">
+        {{ c.description || 'No detailed description has been added yet for this course.' }}
+      </p>
+
+      <ul class="sc-meta">
+        <li>
+          <span class="label">Duration</span>
+          <span class="value">{{ c.durationHours }} hours</span>
+        </li>
+        <li>
+          <span class="label">Starts</span>
+          <span class="value">{{ c.startDate }}</span>
+        </li>
+        <li>
+          <span class="label">Ends</span>
+          <span class="value">{{ c.endDate || 'Flexible' }}</span>
+        </li>
+        <li>
+          <span class="label">Max students</span>
+          <span class="value">{{ c.maxStudents }}</span>
+        </li>
+      </ul>
+
+      <footer class="sc-footer">
+        <div class="price-block">
+          <span class="label">Price</span>
+          <span class="price" *ngIf="c.price !== null && c.price !== undefined; else contact">
+            {{ c.price }} USD
+          </span>
+          <ng-template #contact>
+            <span class="price muted">Contact us</span>
+          </ng-template>
+        </div>
+        <div class="status-pill" [class.inactive]="!c.active">
+          {{ c.active ? 'Open' : 'Closed' }}
+        </div>
+      </footer>
+
+      <div class="qr-block">
+        <img [src]="getCourseQrUrl(c)" alt="QR code for {{ c.title }}" />
+        <span>Scan to save this course</span>
+      </div>
+    </article>
+
+    <div *ngIf="filteredCourses.length === 0" class="empty-state">
+      <h3>No course matches your filters</h3>
+      <p>Try another level or remove the “Only active courses” filter.</p>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !error && filteredCourses.length > 0" class="pagination">
+    <button type="button" (click)="prevPage()" [disabled]="page === 1">
+      ‹ Prev
+    </button>
+    <div class="pages">
+      <button
+        type="button"
+        *ngFor="let p of [].constructor(totalPages); let i = index"
+        [class.active]="page === i + 1"
+        (click)="goToPage(i + 1)">
+        {{ i + 1 }}
+      </button>
+    </div>
+    <button type="button" (click)="nextPage()" [disabled]="page === totalPages">
+      Next ›
+    </button>
+  </div>
+
+  <!-- Floating chatbot bubble -->
+  <button class="chat-bubble" type="button" (click)="toggleChat()">
+    💬
+  </button>
+
+  <div class="chat-panel" *ngIf="chatOpen">
+    <div class="chat-header">
+      <span>Jungle Assistant</span>
+      <button type="button" (click)="toggleChat()">✕</button>
+    </div>
+    <iframe
+      class="chat-iframe"
+      src="https://cdn.botpress.cloud/webchat/v3.6/shareable.html?configUrl=https://files.bpcontent.cloud/2026/03/04/16/20260304163507-63TC9WY9.json"
+      title="Jungle Chatbot"
+    ></iframe>
+  </div>
+</div>
+
