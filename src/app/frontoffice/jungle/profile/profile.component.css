@@ -1,0 +1,281 @@
+/* ── Profile Page ──────────────────────────────────────────── */
+.profile-page {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.state-msg {
+  color: #94a3b8;
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+.error-banner {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.success-toast {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* ── Header card ────────────────────────────────────────────── */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 6px rgba(15, 23, 42, 0.05);
+  flex-wrap: wrap;
+}
+
+.avatar {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #818cf8);
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-info h2 {
+  margin: 0 0 0.3rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.role-pill {
+  display: inline-block;
+  padding: 0.15rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.3rem;
+}
+
+.role-pill.role-student { background: #dcfce7; color: #15803d; }
+.role-pill.role-tutor   { background: #dbeafe; color: #1d4ed8; }
+.role-pill.role-admin   { background: #ede9fe; color: #6d28d9; }
+
+.email  { color: #64748b; font-size: 0.875rem; margin: 0.2rem 0 0; }
+.joined { color: #94a3b8; font-size: 0.78rem;  margin: 0.1rem 0 0; }
+
+.btn-edit {
+  margin-left: auto;
+  padding: 0.45rem 1.1rem;
+  background: #6366f1;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+.btn-edit:hover { background: #4f46e5; }
+
+/* ── Detail sections ─────────────────────────────────────────── */
+.detail-section {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.25rem 1.75rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 4px rgba(15,23,42,0.04);
+}
+
+.detail-section h3 {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 0.5rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid #f8fafc;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: #334155;
+}
+
+.detail-row:last-child { border-bottom: none; }
+
+.detail-row .label {
+  color: #94a3b8;
+  font-weight: 600;
+  min-width: 140px;
+  flex-shrink: 0;
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.status-pill.status-active  { background: #dcfce7; color: #15803d; }
+.status-pill.status-pending { background: #fef9c3; color: #a16207; }
+.status-pill.status-banned  { background: #fee2e2; color: #b91c1c; }
+
+/* ── Security section ─────────────────────────────────────── */
+.security-section .detail-row {
+  justify-content: flex-start;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.btn-change-pw {
+  margin-left: auto;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6366f1;
+  text-decoration: none;
+  border: 1px solid #c7d2fe;
+  border-radius: 6px;
+  padding: 0.2rem 0.7rem;
+  transition: background 0.12s, color 0.12s;
+  white-space: nowrap;
+}
+.btn-change-pw:hover {
+  background: #6366f1;
+  color: #fff;
+}
+
+/* ── Edit Form ────────────────────────────────────────────────── */
+.profile-form {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.75rem;
+  box-shadow: 0 1px 6px rgba(15,23,42,0.05);
+}
+
+.profile-form h3 {
+  margin: 0 0 1.25rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.sub-heading {
+  margin: 1.25rem 0 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #6366f1;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.form-row label {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #475569;
+  gap: 0.3rem;
+}
+
+.form-row label.full { flex: 1 1 100%; }
+
+.form-row input,
+.form-row textarea {
+  padding: 0.45rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #0f172a;
+  outline: none;
+  transition: border-color 0.15s;
+  background: #f8fafc;
+  resize: vertical;
+}
+
+.form-row input:focus,
+.form-row textarea:focus {
+  border-color: #6366f1;
+  background: #fff;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.btn-cancel {
+  padding: 0.45rem 1.1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #334155;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.btn-cancel:hover:not([disabled]) { background: #f1f5f9; }
+
+.btn-save {
+  padding: 0.45rem 1.4rem;
+  border: none;
+  border-radius: 8px;
+  background: #6366f1;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-save:hover:not([disabled]) { background: #4f46e5; }
+.btn-save[disabled],
+.btn-cancel[disabled] { opacity: 0.55; cursor: not-allowed; }
+
+

@@ -2,6 +2,7 @@ import { NavItem } from '../../../core/models/nav-item.model';
 
 export const STUDENT_NAV: NavItem[] = [
   { label: 'Dashboard',  route: '/student/dashboard', icon: '🏠' },
+  { label: 'My Profile', route: '/student/profile',   icon: '👤' },
   //{ label: 'My Courses', route: '/student/courses',   icon: '📚' },
   //{ label: 'Progress',   route: '/student/progress',  icon: '📈' },
   //{ label: 'Schedule',   route: '/student/schedule',  icon: '🗓️' },

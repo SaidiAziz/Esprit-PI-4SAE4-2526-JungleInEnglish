@@ -80,4 +80,10 @@ export class AuthService {
   resetPassword(request: ResetPasswordRequest): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(`${this.API_URL}/reset-password`, request);
   }
+
+  updateCurrentUser(user: UserResponse): void {
+    if (this.isBrowser()) {
+      localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+    }
+  }
 }
