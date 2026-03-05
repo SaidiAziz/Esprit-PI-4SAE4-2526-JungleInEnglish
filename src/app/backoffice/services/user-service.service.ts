@@ -56,4 +56,12 @@ export class UserServiceService {
   updateProfile(data: UpdateProfileRequest): Observable<UserResponse> {
     return this.http.put<UserResponse>(`${this.apiUrl}/me`, data);
   }
+
+  /** Upload profile picture for a given user id */
+  updateProfilePicture(userId: number, base64Image: string): Observable<UserResponse> {
+    return this.http.put<UserResponse>(
+      `${this.apiUrl}/${userId}/profile-picture`,
+      { profilePicture: base64Image }
+    );
+  }
 }

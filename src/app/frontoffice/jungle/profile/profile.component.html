@@ -13,7 +13,36 @@
 
     <!-- Avatar + info card -->
     <div class="profile-header">
-      <div class="avatar">{{ getInitials() }}</div>
+
+      <!-- Picture upload widget -->
+      <div class="avatar-wrapper">
+        <img
+          [src]="displayImage"
+          alt="Profile picture"
+          class="avatar-img"
+        />
+
+        <!-- Camera overlay -->
+        <label for="fileInput" class="avatar-overlay" title="Change picture">📷</label>
+        <input
+          id="fileInput"
+          type="file"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+          hidden
+        />
+      </div>
+
+      <!-- Preview actions -->
+      <div class="preview-actions" *ngIf="previewUrl">
+        <span class="preview-hint">Preview — click Save to apply</span>
+        <button (click)="uploadPicture()" [disabled]="uploading" class="btn-upload-save">
+          {{ uploading ? 'Saving…' : '✔ Save Picture' }}
+        </button>
+        <button (click)="cancelPreview()" class="btn-upload-cancel" [disabled]="uploading">✕</button>
+      </div>
+      <div class="upload-error" *ngIf="uploadError">⚠️ {{ uploadError }}</div>
+
       <div class="profile-info">
         <h2>{{ user.firstName }} {{ user.lastName }}</h2>
         <span class="role-pill role-{{ user.role | lowercase }}">{{ user.role }}</span>

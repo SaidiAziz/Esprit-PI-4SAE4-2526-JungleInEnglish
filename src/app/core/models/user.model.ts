@@ -12,6 +12,7 @@ export interface UserResponse {
   accountStatus: string;
   createdAt: string;
   updatedAt: string;
+  profilePicture?: string;
   // Student fields
   level?: string;
   learningGoals?: string;
@@ -48,6 +49,7 @@ export interface UpdateProfileRequest {
   firstName?: string;
   lastName?: string;
   email?: string;
+  profilePicture?: string;
   level?: string;
   learningGoals?: string;
   bio?: string;

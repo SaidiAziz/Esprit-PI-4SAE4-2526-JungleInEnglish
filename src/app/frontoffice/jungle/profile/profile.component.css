@@ -45,18 +45,90 @@
   flex-wrap: wrap;
 }
 
-.avatar {
-  width: 68px;
-  height: 68px;
+/* ── Avatar wrapper ─────────────────────────────────────────── */
+.avatar-wrapper {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+}
+
+.avatar-img {
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6366f1, #818cf8);
-  color: #fff;
-  font-size: 1.5rem;
-  font-weight: 800;
+  object-fit: cover;
+  border: 3px solid #6366f1;
+  display: block;
+}
+
+.avatar-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 26px;
+  height: 26px;
+  background: #6366f1;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  font-size: 13px;
+  cursor: pointer;
+  border: 2px solid #fff;
+  transition: background 0.15s;
+  line-height: 1;
+}
+.avatar-overlay:hover { background: #4f46e5; }
+
+/* ── Preview actions ────────────────────────────────────────── */
+.preview-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-left: -0.5rem; /* tighten gap from avatar */
+}
+
+.preview-hint {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+.btn-upload-save {
+  padding: 0.3rem 0.85rem;
+  background: #6366f1;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-upload-save:hover:not([disabled]) { background: #4f46e5; }
+.btn-upload-save[disabled] { opacity: 0.55; cursor: not-allowed; }
+
+.btn-upload-cancel {
+  padding: 0.3rem 0.6rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #fff;
+  color: #334155;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.btn-upload-cancel:hover:not([disabled]) { background: #fee2e2; border-color: #fca5a5; color: #b91c1c; }
+
+.upload-error {
+  font-size: 0.78rem;
+  color: #b91c1c;
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  border-radius: 6px;
+  padding: 0.25rem 0.65rem;
 }
 
 .profile-info {

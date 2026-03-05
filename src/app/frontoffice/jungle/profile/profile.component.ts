@@ -25,6 +25,11 @@ export class ProfileComponent implements OnInit {
 
   form: UpdateProfileRequest = {};
 
+  // ── Profile picture ─────────────────────────────────────
+  previewUrl: string | null = null;
+  uploading = false;
+  uploadError = '';
+
   constructor(
     private authService: AuthService,
     private userService: UserServiceService
@@ -102,6 +107,62 @@ export class ProfileComponent implements OnInit {
 
   isStudent(): boolean { return this.user?.role === 'STUDENT'; }
   isTutor():   boolean { return this.user?.role === 'TUTOR'; }
+
+  // ── Profile picture ─────────────────────────────────────
+
+  get displayImage(): string {
+    return this.previewUrl ?? this.user?.profilePicture ?? 'assets/default-avatar.svg';
+  }
+
+  onFileSelected(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    this.uploadError = '';
+
+    if (!file.type.startsWith('image/')) {
+      this.uploadError = 'Please select an image file.';
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      this.uploadError = 'Image must be less than 2MB.';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.previewUrl = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  uploadPicture(): void {
+    if (!this.previewUrl || !this.user) return;
+    this.uploading = true;
+    this.uploadError = '';
+
+    this.userService.updateProfilePicture(this.user.id, this.previewUrl).subscribe({
+      next: (updated) => {
+        this.user = updated;
+        this.authService.updateCurrentUser(updated);
+        this.previewUrl = null;
+        this.uploading  = false;
+        this.saveSuccess = true;
+        setTimeout(() => (this.saveSuccess = false), 3000);
+      },
+      error: (err) => {
+        this.uploading  = false;
+        this.uploadError = err.status === 413
+          ? 'Image too large. Please choose a smaller file.'
+          : 'Upload failed. Please try again.';
+      }
+    });
+  }
+
+  cancelPreview(): void {
+    this.previewUrl  = null;
+    this.uploadError = '';
+  }
 }
 
 
