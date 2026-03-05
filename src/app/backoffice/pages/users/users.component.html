@@ -35,6 +35,16 @@
       <span>{{ sortDir === 'desc' ? '↓' : '↑' }}</span>
     </button>
 
+    <!-- Export buttons -->
+    <div class="export-buttons">
+      <button (click)="exportCurrentPage()" class="btn-export">
+        ⬇ Export Page
+      </button>
+      <button (click)="exportAll()" class="btn-export btn-export-all">
+        ⬇ Export All
+      </button>
+    </div>
+
   </div>
 
   <!-- Loading -->

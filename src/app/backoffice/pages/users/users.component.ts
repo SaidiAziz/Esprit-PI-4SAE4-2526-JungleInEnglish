@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { UserServiceService } from '../../services/user-service.service';
+import { CsvExportService } from '../../../core/services/csv-export.service';
 import { UserSummary } from '../../../core/models/user.model';
 
 @Component({
@@ -33,7 +34,10 @@ export class UsersComponent implements OnInit {
 
   private searchSubject = new Subject<string>();
 
-  constructor(private userService: UserServiceService) {}
+  constructor(
+    private userService: UserServiceService,
+    private csvExportService: CsvExportService
+  ) {}
 
   ngOnInit(): void {
     this.loadUsers();
@@ -99,5 +103,23 @@ export class UsersComponent implements OnInit {
 
   get pages(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i);
+  }
+
+  exportCurrentPage(): void {
+    this.csvExportService.exportUsers(this.users, 'users-page.csv');
+  }
+
+  exportAll(): void {
+    this.userService.searchUsers(
+      this.searchTerm,
+      this.selectedRole,
+      'createdAt',
+      this.sortDir,
+      0,
+      10000
+    ).subscribe({
+      next: (res) => this.csvExportService.exportUsers(res.content, 'all-users.csv'),
+      error: (err) => console.error('Export failed', err)
+    });
   }
 }
