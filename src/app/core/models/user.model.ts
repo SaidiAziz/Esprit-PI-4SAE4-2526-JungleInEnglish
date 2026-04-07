@@ -13,6 +13,8 @@ export interface UserResponse {
   createdAt: string;
   updatedAt: string;
   profilePicture?: string;
+  twoFactorEnabled: boolean;
+  twoFactorMethod?: 'EMAIL' | 'TOTP';
   // Student fields
   level?: string;
   learningGoals?: string;
@@ -26,6 +28,9 @@ export interface UserResponse {
 export interface LoginResponse {
   token: string;
   user: UserResponse;
+  requires2FA: boolean;
+  twoFactorMethod?: 'EMAIL' | 'TOTP';
+  email?: string;
 }
 
 export interface RegisterRequest {

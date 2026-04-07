@@ -46,6 +46,16 @@ export class LoginComponent {
         next: (response) => {
           this.loading = false;
           this.loginForm.enable();
+
+          // 2FA required — redirect to verify step
+          if (response.requires2FA) {
+            sessionStorage.setItem('2fa_email', response.email ?? email);
+            sessionStorage.setItem('2fa_method', response.twoFactorMethod ?? 'EMAIL');
+            this.router.navigate(['/verify-2fa']);
+            return;
+          }
+
+          // No 2FA — navigate by role
           const role = response.user.role;
           if (role === 'STUDENT') {
             this.router.navigate(['/student/dashboard']);

@@ -34,12 +34,28 @@ export class AuthService {
   login(request: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.API_URL}/login`, request).pipe(
       tap(response => {
-        if (this.isBrowser()) {
+        if (this.isBrowser() && !response.requires2FA && response.token) {
           localStorage.setItem(this.TOKEN_KEY, response.token);
           localStorage.setItem(this.USER_KEY, JSON.stringify(response.user));
         }
       })
     );
+  }
+
+  verify2FA(email: string, code: string): Observable<{ token: string }> {
+    return this.http.post<{ token: string }>(`${this.API_URL}/verify-2fa`, { email, code });
+  }
+
+  setupTotp(email: string): Observable<{ secret: string; qrCodeBase64: string }> {
+    return this.http.post<{ secret: string; qrCodeBase64: string }>(`${this.API_URL}/2fa/setup-totp`, { email });
+  }
+
+  enable2FA(email: string, method: string, code?: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.API_URL}/2fa/enable`, { email, method, code });
+  }
+
+  disable2FA(email: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.API_URL}/2fa/disable`, { email });
   }
 
   register(request: RegisterRequest): Observable<UserResponse> {
