@@ -2,6 +2,7 @@ package exp.usermicroservice.Controllers;
 
 import exp.usermicroservice.DTO.Request.RegisterUserRequest;
 import exp.usermicroservice.DTO.Request.UpdateUserRequest;
+import exp.usermicroservice.DTO.Response.PagedResponse;
 import exp.usermicroservice.DTO.Response.UserResponse;
 import exp.usermicroservice.Entities.User;
 import exp.usermicroservice.Mapper.UserMapper;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -65,6 +67,20 @@ public class UserController {
                 .toList();
     }
 
+  @GetMapping("/search")
+  public ResponseEntity<PagedResponse<UserResponse>> searchUsers(
+    @RequestParam(required = false) String search,
+    @RequestParam(required = false, defaultValue = "ALL") String role,
+    @RequestParam(required = false, defaultValue = "createdAt") String sortBy,
+    @RequestParam(required = false, defaultValue = "desc") String sortDir,
+    @RequestParam(defaultValue = "0") int page,
+    @RequestParam(defaultValue = "10") int size) {
+
+    return ResponseEntity.ok(
+      userService.searchUsers(search, role, sortBy, sortDir, page, size)
+    );
+  }
+
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getCurrentUser() {
         Long userId = SecurityUtils.getCurrentUserId();
@@ -77,4 +93,22 @@ public class UserController {
         }
         return ResponseEntity.ok(userMapper.toResponse(user));
     }
+
+    @PutMapping("/{id}/profile-picture")
+    public ResponseEntity<UserResponse> updateProfilePicture(@PathVariable Long id, @RequestBody Map<String, String> body) {
+        User user = userService.getUserById(id);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String base64Image = body.get("profilePicture");
+        if (base64Image == null || base64Image.isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        user.setProfilePicture(base64Image);
+        User updated = userService.updateUser(id, user);
+        return ResponseEntity.ok(userMapper.toResponse(updated));
+    }
+
 }

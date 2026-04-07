@@ -27,6 +27,7 @@ public class UserMapper {
         if (request.getLastName() != null) existing.setLastName(request.getLastName());
         if (request.getEmail() != null) existing.setEmail(request.getEmail());
         if (request.getPassword() != null) existing.setPassword(request.getPassword());
+        if (request.getProfilePicture() != null) existing.setProfilePicture(request.getProfilePicture());
         if (request.getRole() != null) existing.setRole(request.getRole());
         if (request.getAccountStatus() != null) existing.setAccountStatus(request.getAccountStatus());
     }
@@ -38,10 +39,13 @@ public class UserMapper {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
+                .profilePicture(user.getProfilePicture())
                 .role(user.getRole())
                 .accountStatus(user.getAccountStatus())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
+                .twoFactorEnabled(user.isTwoFactorEnabled())
+                .twoFactorMethod(user.getTwoFactorMethod())
                 .build();
     }
 }

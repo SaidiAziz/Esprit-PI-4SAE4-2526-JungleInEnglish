@@ -2,6 +2,7 @@ package exp.usermicroservice.DTO.Response;
 
 import exp.usermicroservice.Entities.AccountStatus;
 import exp.usermicroservice.Entities.Role;
+import exp.usermicroservice.Entities.TwoFactorMethod;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,8 +19,11 @@ public class UserResponse {
     private String firstName;
     private String lastName;
     private String email;
+    private String profilePicture;
     private Role role;
     private AccountStatus accountStatus;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private boolean twoFactorEnabled;
+    private TwoFactorMethod twoFactorMethod;
 }

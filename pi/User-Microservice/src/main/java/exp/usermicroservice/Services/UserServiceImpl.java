@@ -1,6 +1,8 @@
 package exp.usermicroservice.Services;
 
 import exp.usermicroservice.DTO.Request.RegisterUserRequest;
+import exp.usermicroservice.DTO.Response.PagedResponse;
+import exp.usermicroservice.DTO.Response.UserResponse;
 import exp.usermicroservice.Entities.Role;
 import exp.usermicroservice.Entities.StudentProfile;
 import exp.usermicroservice.Entities.TutorProfile;
@@ -9,6 +11,10 @@ import exp.usermicroservice.Repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,11 +90,14 @@ public class UserServiceImpl implements UserServiceI{
 
     @Override
     public User updateUser(Long id, User user) {
-        return userRepository.findById(id).map(existingUser -> {;
+        return userRepository.findById(id).map(existingUser -> {
             existingUser.setFirstName(user.getFirstName());
             existingUser.setLastName(user.getLastName());
             existingUser.setEmail(user.getEmail());
             existingUser.setPassword(user.getPassword());
+            existingUser.setProfilePicture(user.getProfilePicture());
+            existingUser.setRole(user.getRole());
+            existingUser.setAccountStatus(user.getAccountStatus());
             return userRepository.save(existingUser);
         }).orElse(null);
     }
@@ -101,5 +110,53 @@ public class UserServiceImpl implements UserServiceI{
     @Override
     public List<User> getUsers() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public PagedResponse<UserResponse> searchUsers(
+      String search,
+      String role,
+      String sortBy,
+      String sortDir,
+      int page,
+      int size) {
+
+      // Build sort
+      Sort sort = sortDir.equalsIgnoreCase("asc")
+        ? Sort.by(sortBy).ascending()
+        : Sort.by(sortBy).descending();
+
+      Pageable pageable = PageRequest.of(page, size, sort);
+
+      // Parse role (null if "ALL" or blank)
+      Role roleEnum = (role == null || role.isBlank() || role.equalsIgnoreCase("ALL"))
+        ? null
+        : Role.valueOf(role.toUpperCase());
+
+      // Empty search → null so query ignores it
+      String searchParam = (search == null || search.isBlank()) ? null : search.trim();
+
+      Page<User> result = userRepository.searchUsers(searchParam, roleEnum, pageable);
+
+      List<UserResponse> content = result.getContent().stream()
+        .map(u -> UserResponse.builder()
+          .id(u.getId())
+          .firstName(u.getFirstName())
+          .lastName(u.getLastName())
+          .email(u.getEmail())
+          .role(u.getRole())
+  //        .status(u.getStatus())
+          .createdAt(u.getCreatedAt())
+          .build())
+        .toList();
+
+      return PagedResponse.<UserResponse>builder()
+        .content(content)
+        .page(result.getNumber())
+        .size(result.getSize())
+        .totalElements(result.getTotalElements())
+        .totalPages(result.getTotalPages())
+        .last(result.isLast())
+        .build();
     }
 }

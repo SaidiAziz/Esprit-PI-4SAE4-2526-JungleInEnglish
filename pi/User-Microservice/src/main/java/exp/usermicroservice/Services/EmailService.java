@@ -47,4 +47,15 @@ public class EmailService {
                 "Cordialement,\nL'équipe Jungle";
         sendEmail(email, subject, body);
     }
+
+    public void send2FAEmail(String email, String name, String code) {
+        String subject = "Your Login Verification Code";
+        String body = "Hi " + name + ",\n\n" +
+                "Your verification code is:\n\n" +
+                "  " + code + "\n\n" +
+                "This code expires in 15 minutes.\n" +
+                "If you didn't request this, please secure your account.\n\n" +
+                "Regards,\nThe Jungle Team";
+        sendEmail(email, subject, body);
+    }
 }

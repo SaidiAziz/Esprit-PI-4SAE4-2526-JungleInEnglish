@@ -25,11 +25,23 @@ public class User {
     private String email;
     private String password;
 
+    @Column(columnDefinition = "TEXT")
+    private String profilePicture;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @Enumerated(EnumType.STRING)
     private AccountStatus accountStatus;
+
+    @Column(nullable = false)
+    private boolean twoFactorEnabled = false;
+
+    @Enumerated(EnumType.STRING)
+    private TwoFactorMethod twoFactorMethod;
+
+    @Column
+    private String totpSecret;
 
     private LocalDateTime createdAt;
 
