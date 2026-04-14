@@ -6,23 +6,23 @@ import {
   LoginRequest,
   LoginResponse,
   RegisterRequest,
-  UserResponse
+  UserResponse,
 } from '../models/user.model';
 
 // Re-export so existing imports from auth.service still work
 export type { LoginRequest, LoginResponse, RegisterRequest, UserResponse };
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  private readonly API_URL = 'http://localhost:8081/auth';
+  private readonly API_URL = 'http://localhost:8222/auth';
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'auth_user';
 
   constructor(
     private http: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: object
+    @Inject(PLATFORM_ID) private platformId: object,
   ) {}
 
   private isBrowser(): boolean {
@@ -31,12 +31,12 @@ export class AuthService {
 
   login(request: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.API_URL}/login`, request).pipe(
-      tap(response => {
+      tap((response) => {
         if (this.isBrowser()) {
           localStorage.setItem(this.TOKEN_KEY, response.token);
           localStorage.setItem(this.USER_KEY, JSON.stringify(response.user));
         }
-      })
+      }),
     );
   }
 

@@ -1,7 +1,8 @@
 import { NavItem } from '../../../core/models/nav-item.model';
 
 export const TUTOR_NAV: NavItem[] = [
-  { label: 'Dashboard',   route: '/tutor/dashboard', icon: '🏠' },
+  { label: 'Dashboard', route: '/tutor/dashboard', icon: '🏠' },
+  { label: 'Events', route: '/events', icon: '🎯' },
   //{ label: 'My Students', route: '#',                icon: '🎓' },
   //{ label: 'My Courses',  route: '#',                icon: '📖' },
   //{ label: 'Schedule',    route: '#',                icon: '🗓️' },

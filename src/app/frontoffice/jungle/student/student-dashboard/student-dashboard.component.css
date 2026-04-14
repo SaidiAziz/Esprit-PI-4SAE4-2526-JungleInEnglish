@@ -1,16 +1,18 @@
 /* ── Student Dashboard ── uses --fd-* tokens exclusively ── */
-.sd-page { max-width: 1100px; }
+.sd-page {
+  max-width: 1100px;
+}
 
 /* Welcome banner */
 .fd-welcome-banner {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: var(--fd-header-bg);           /* teal */
+  background: var(--fd-header-bg); /* teal */
   border-radius: 12px;
   padding: 1.75rem 2rem;
   margin-bottom: 2rem;
-  border-bottom: 4px solid var(--fd-header-border);  /* gold */
+  border-bottom: 4px solid var(--fd-header-border); /* gold */
   box-shadow: 0 4px 16px rgba(45, 87, 87, 0.2);
 }
 
@@ -56,7 +58,9 @@
   align-items: center;
   gap: 1rem;
   box-shadow: 0 1px 4px rgba(45, 87, 87, 0.07);
-  transition: box-shadow 0.2s, transform 0.2s;
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s;
 }
 
 .fd-stat-card:hover {
@@ -64,8 +68,14 @@
   transform: translateY(-2px);
 }
 
-.fd-stat-icon { font-size: 2rem; line-height: 1; }
-.fd-stat-info { display: flex; flex-direction: column; }
+.fd-stat-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+.fd-stat-info {
+  display: flex;
+  flex-direction: column;
+}
 
 .fd-stat-label {
   font-size: 0.7rem;
@@ -92,7 +102,11 @@
   margin-bottom: 1rem;
 }
 
-.fd-quick-links { display: flex; gap: 1rem; flex-wrap: wrap; }
+.fd-quick-links {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
 
 .fd-quick-link {
   display: inline-flex;
@@ -106,8 +120,11 @@
   color: var(--color-dark-teal);
   font-size: 0.875rem;
   font-weight: 500;
-  transition: background 0.2s, border-color 0.2s, transform 0.2s;
-  box-shadow: 0 1px 3px rgba(45,87,87,0.06);
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    transform 0.2s;
+  box-shadow: 0 1px 3px rgba(45, 87, 87, 0.06);
 }
 
 .fd-quick-link:hover {
@@ -117,6 +134,399 @@
   transform: translateY(-2px);
 }
 
-@media (max-width: 900px) { .fd-stats-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 500px) { .fd-stats-grid { grid-template-columns: 1fr; } }
+@media (max-width: 900px) {
+  .fd-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 500px) {
+  .fd-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
 
+/* Events Banner */
+/* ── Events Section ── */
+.fd-events-section {
+  margin-top: 2rem;
+  background: var(--fd-card-bg);
+  border: 1px solid var(--fd-card-border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(45, 87, 87, 0.08);
+}
+
+.fd-events-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--fd-header-bg);
+  border-bottom: 3px solid var(--color-accent-gold);
+  padding: 1.25rem 1.75rem;
+}
+
+.fd-events-section-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.fd-events-icon-wrap {
+  font-size: 2rem;
+  background: rgba(255, 255, 255, 0.15);
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fd-events-section-left h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--fd-header-text);
+  margin: 0 0 0.2rem;
+}
+
+.fd-events-section-left p {
+  font-size: 0.82rem;
+  color: rgba(247, 237, 226, 0.7);
+  margin: 0;
+}
+
+.fd-btn-events {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-accent-gold);
+  color: var(--color-dark-teal);
+  padding: 0.6rem 1.25rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  text-decoration: none;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  white-space: nowrap;
+}
+
+.fd-btn-events:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(210, 176, 5, 0.4);
+}
+
+.fd-btn-arrow {
+  font-size: 1rem;
+  transition: transform 0.2s;
+}
+
+.fd-btn-events:hover .fd-btn-arrow {
+  transform: translateX(4px);
+}
+
+/* Preview cards */
+.fd-events-preview {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.75rem;
+  flex-wrap: wrap;
+}
+
+.fd-event-preview-card {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1.1rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: transform 0.2s;
+  cursor: default;
+}
+
+.fd-event-preview-card:hover {
+  transform: translateY(-2px);
+}
+
+.fd-ep-emoji {
+  font-size: 1.2rem;
+}
+
+.fd-ep-1 {
+  background: rgba(6, 46, 32, 0.08);
+  color: var(--color-dark-teal);
+  border: 1px solid rgba(6, 46, 32, 0.15);
+}
+
+.fd-ep-2 {
+  background: rgba(210, 176, 5, 0.1);
+  color: #7a6000;
+  border: 1px solid rgba(210, 176, 5, 0.25);
+}
+
+.fd-ep-3 {
+  background: rgba(45, 87, 87, 0.08);
+  color: var(--color-dark-teal);
+  border: 1px solid rgba(45, 87, 87, 0.15);
+}
+
+.fd-events-cta {
+  margin-left: auto;
+  text-align: right;
+}
+
+.fd-events-cta p {
+  font-size: 0.78rem;
+  color: var(--color-gray-medium);
+  margin-bottom: 0.3rem;
+}
+
+.fd-events-cta-link {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-dark-teal);
+  text-decoration: none;
+  border-bottom: 2px solid var(--color-accent-gold);
+  padding-bottom: 1px;
+  transition: color 0.2s;
+}
+
+.fd-events-cta-link:hover {
+  color: #d2b005;
+}
+/* ── Loyalty Banner ── */
+.sd-loyalty-banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  border-radius: 16px;
+  padding: 1.75rem 2rem;
+  margin: 1.5rem 0 2rem;
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s;
+  border: 2px solid transparent;
+}
+
+.sd-loyalty-banner:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(45, 87, 87, 0.22);
+}
+
+/* ── Tier color schemes ── */
+.sd-loyalty-banner.bronze {
+  background: linear-gradient(135deg, #3d2b1f 0%, #5c3d26 60%, #7a5230 100%);
+  border-color: #cd7f32;
+  box-shadow: 0 4px 20px rgba(205, 127, 50, 0.25);
+}
+
+.sd-loyalty-banner.silver {
+  background: linear-gradient(135deg, #2d4a50 0%, #3a6068 60%, #4a7a84 100%);
+  border-color: #a8b8be;
+  box-shadow: 0 4px 20px rgba(168, 184, 190, 0.25);
+}
+
+.sd-loyalty-banner.gold {
+  background: linear-gradient(
+    135deg,
+    #2d5757 0%,
+    var(--fd-header-bg) 60%,
+    #1e4040 100%
+  );
+  border-color: var(--color-accent-gold);
+  box-shadow: 0 4px 20px rgba(210, 176, 5, 0.3);
+}
+
+/* ── Shine overlay ── */
+.sd-lb-shine {
+  position: absolute;
+  top: -60%;
+  left: -20%;
+  width: 55%;
+  height: 200%;
+  background: linear-gradient(
+    105deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.07) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  pointer-events: none;
+  transform: skewX(-15deg);
+  transition: left 0.6s ease;
+}
+
+.sd-loyalty-banner:hover .sd-lb-shine {
+  left: 110%;
+}
+
+/* ── Left side ── */
+.sd-lb-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.sd-lb-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--fd-header-text);
+  margin-bottom: 0.4rem;
+}
+
+.sd-lb-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.sd-lb-sub {
+  font-size: 0.83rem;
+  color: rgba(247, 237, 226, 0.7);
+  margin: 0 0 0.85rem;
+}
+
+/* Progress bar */
+.sd-lb-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sd-lb-bar {
+  flex: 1;
+  height: 7px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.sd-lb-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bronze .sd-lb-fill {
+  background: linear-gradient(90deg, #cd7f32, #e8a56a);
+}
+
+.silver .sd-lb-fill {
+  background: linear-gradient(90deg, #8fa8b0, #c8d8de);
+}
+
+.gold .sd-lb-fill {
+  background: linear-gradient(90deg, var(--color-accent-gold), #f0d060);
+}
+
+.sd-lb-pct {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: rgba(247, 237, 226, 0.85);
+  white-space: nowrap;
+}
+
+/* ── Right side ── */
+.sd-lb-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
+
+.sd-lb-big {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: var(--fd-header-text);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.sd-lb-lbl {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(247, 237, 226, 0.6);
+}
+
+.sd-lb-btn {
+  margin-top: 0.5rem;
+  background: var(--color-accent-gold);
+  color: var(--color-dark-teal);
+  border: none;
+  border-radius: 8px;
+  padding: 0.45rem 1.1rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  white-space: nowrap;
+}
+
+.sd-lb-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(210, 176, 5, 0.45);
+}
+
+/* ── Loyalty stat card (in the stats grid) ── */
+.fd-stat-loyalty {
+  cursor: pointer;
+  position: relative;
+}
+
+.fd-stat-loyalty.bronze {
+  border-left: 4px solid #cd7f32;
+}
+.fd-stat-loyalty.silver {
+  border-left: 4px solid #a8b8be;
+}
+.fd-stat-loyalty.gold {
+  border-left: 4px solid var(--color-accent-gold);
+}
+
+.fd-loyalty-arrow {
+  margin-left: auto;
+  font-size: 1rem;
+  color: var(--color-gray-medium);
+  transition:
+    transform 0.2s,
+    color 0.2s;
+}
+
+.fd-stat-loyalty:hover .fd-loyalty-arrow {
+  transform: translateX(4px);
+  color: var(--color-dark-teal);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .sd-loyalty-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 1.5rem;
+  }
+
+  .sd-lb-right {
+    align-self: stretch;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .sd-lb-big {
+    font-size: 2rem;
+  }
+}

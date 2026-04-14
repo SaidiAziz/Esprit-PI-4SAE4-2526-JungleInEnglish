@@ -1,5 +1,4 @@
 <div class="sd-page">
-
   <!-- Welcome banner -->
   <div class="fd-welcome-banner">
     <div class="fd-welcome-left">
@@ -9,7 +8,7 @@
     <span class="fd-role-pill">Student</span>
   </div>
 
-  <!-- Stats -->
+  <!-- Stats row -->
   <div class="fd-stats-grid">
     <div class="fd-stat-card">
       <div class="fd-stat-icon">📚</div>
@@ -32,14 +31,58 @@
         <span class="fd-stat-value">—</span>
       </div>
     </div>
-    <div class="fd-stat-card">
-      <div class="fd-stat-icon">🏆</div>
+    <!-- Loyalty stat card -->
+    <div
+      class="fd-stat-card fd-stat-loyalty"
+      [class.bronze]="!loyalty || loyalty.tier === 'BRONZE'"
+      [class.silver]="loyalty?.tier === 'SILVER'"
+      [class.gold]="loyalty?.tier === 'GOLD'"
+      routerLink="/loyalty"
+    >
+      <div class="fd-stat-icon">{{ tierIcon }}</div>
       <div class="fd-stat-info">
-        <span class="fd-stat-label">Achievements</span>
-        <span class="fd-stat-value">—</span>
+        <span class="fd-stat-label"
+          >{{ loyalty?.tier || "BRONZE" }} Member</span
+        >
+        <span class="fd-stat-value"
+          >{{ loyalty?.totalPoints ?? 0 }} events</span
+        >
       </div>
+      <span class="fd-loyalty-arrow">→</span>
     </div>
   </div>
+
+  <!-- ── Loyalty banner ───────────────────────────────────────── -->
+  <div
+    class="sd-loyalty-banner"
+    [class.bronze]="!loyalty || loyalty.tier === 'BRONZE'"
+    [class.silver]="loyalty?.tier === 'SILVER'"
+    [class.gold]="loyalty?.tier === 'GOLD'"
+    routerLink="/loyalty"
+  >
+    <div class="sd-lb-left">
+      <div class="sd-lb-title">
+        <span class="sd-lb-icon">{{ tierIcon }}</span>
+        <span>My Loyalty Rewards</span>
+      </div>
+      <p class="sd-lb-sub">{{ nextMilestone }}</p>
+      <div class="sd-lb-bar-wrap">
+        <div class="sd-lb-bar">
+          <div class="sd-lb-fill" [style.width.%]="progressPercent"></div>
+        </div>
+        <span class="sd-lb-pct">{{ progressPercent | number: "1.0-0" }}%</span>
+      </div>
+    </div>
+
+    <div class="sd-lb-right">
+      <div class="sd-lb-big">{{ loyalty?.totalPoints ?? 0 }}</div>
+      <div class="sd-lb-lbl">events attended</div>
+      <button class="sd-lb-btn">View Rewards →</button>
+    </div>
+
+    <div class="sd-lb-shine"></div>
+  </div>
+  <!-- ────────────────────────────────────────────────────────── -->
 
   <!-- Quick links -->
   <div class="fd-quick-section">
@@ -48,8 +91,9 @@
       <a href="#" class="fd-quick-link">📚 My Courses</a>
       <a href="#" class="fd-quick-link">📈 My Progress</a>
       <a href="#" class="fd-quick-link">🗓️ Schedule</a>
-      <a href="#" class="fd-quick-link">💬 My Tutor</a>
+      <a routerLink="/loyalty" class="fd-quick-link fd-quick-link--rewards"
+        >🎁 My Rewards</a
+      >
     </div>
   </div>
-
 </div>

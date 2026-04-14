@@ -1,13 +1,40 @@
 <aside class="sidebar">
   <nav class="sidebar-nav">
-    <a
-      *ngFor="let item of navItems"
-      [routerLink]="item.route"
-      routerLinkActive="active"
-      class="sidebar-link"
-    >
-      <span class="sidebar-icon" *ngIf="item.icon">{{ item.icon }}</span>
-      <span class="sidebar-label">{{ item.label }}</span>
-    </a>
+    <ng-container *ngFor="let item of navItems">
+      <!-- Item simple sans enfants -->
+
+      <a
+        *ngIf="!item.children"
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        class="sidebar-link"
+      >
+        <span class="sidebar-icon" *ngIf="item.icon">{{ item.icon }}</span>
+        <span class="sidebar-label">{{ item.label }}</span>
+      </a>
+
+      <!-- Item avec sous-menu -->
+      <div *ngIf="item.children" class="sidebar-group">
+        <button
+          class="sidebar-link sidebar-toggle"
+          (click)="toggle(item.label)"
+        >
+          <span class="sidebar-icon" *ngIf="item.icon">{{ item.icon }}</span>
+          <span class="sidebar-label">{{ item.label }}</span>
+          <span class="arrow">{{ isOpen(item.label) ? "▲" : "▼" }}</span>
+        </button>
+
+        <div class="sidebar-children" *ngIf="isOpen(item.label)">
+          <a
+            *ngFor="let child of item.children"
+            [routerLink]="child.route"
+            routerLinkActive="active"
+            class="sidebar-link sidebar-child"
+          >
+            <span class="sidebar-label">{{ child.label }}</span>
+          </a>
+        </div>
+      </div>
+    </ng-container>
   </nav>
 </aside>

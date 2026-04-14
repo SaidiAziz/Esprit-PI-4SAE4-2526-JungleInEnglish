@@ -12,7 +12,7 @@
 
 /* Section label above nav items */
 .sidebar::before {
-  content: 'NAVIGATION';
+  content: "NAVIGATION";
   display: block;
   font-size: 0.62rem;
   font-weight: 700;
@@ -41,7 +41,9 @@
   font-weight: 500;
   border-radius: 8px;
   border-left: none;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
 }
 
 .sidebar-icon {
@@ -63,10 +65,35 @@
 
 .sidebar-link.active {
   background: #312e81;
-  color: #c7d2fe;
+  color: #ffffff;
   font-weight: 600;
 }
 
 .sidebar-link.active .sidebar-icon {
   filter: none;
+}
+.sidebar-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  text-align: left;
+}
+
+.arrow {
+  margin-left: auto;
+  font-size: 0.7rem;
+}
+
+.sidebar-children {
+  padding-left: 1rem;
+  border-left: 2px solid rgba(255, 255, 255, 0.1);
+  margin-left: 1rem;
+}
+
+.sidebar-child {
+  font-size: 0.9rem;
+  opacity: 0.85;
 }
