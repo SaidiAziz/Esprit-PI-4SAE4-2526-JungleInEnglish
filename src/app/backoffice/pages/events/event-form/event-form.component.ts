@@ -32,6 +32,9 @@ export class EventFormComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedFile!: File;
   event?: EventModel;
 
+  /** 'save' → liste events | 'configure' → page sessions */
+  private submitAction: 'save' | 'configure' = 'save';
+
   // ── Leaflet ──────────────────────────────────────────────────────────
   private map: any;
   private marker: any;
@@ -182,15 +185,14 @@ export class EventFormComponent implements OnInit, AfterViewInit, OnDestroy {
     const locationCtrl = this.form.get('location')!;
     const meetLinkCtrl = this.form.get('meetLink')!;
 
-    if (format === 'Présentiel') {
-      locationCtrl.setValidators([Validators.required]);
-      meetLinkCtrl.clearValidators();
-      meetLinkCtrl.setValue('');
-    } else if (format === 'En Ligne') {
-      locationCtrl.clearValidators();
+    // Location et meetLink sont optionnels au niveau de l'événement :
+    // les détails de localisation/lien sont portés par chaque session.
+    locationCtrl.clearValidators();
+    meetLinkCtrl.clearValidators();
+
+    // Vider les champs non pertinents selon le format
+    if (format === 'En Ligne') {
       locationCtrl.setValue('');
-      meetLinkCtrl.setValidators([Validators.required]);
-      // Détruire la carte si elle existe
       if (this.map) {
         this.map.remove();
         this.map = null;
@@ -198,12 +200,8 @@ export class EventFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.selectedLat = null;
         this.selectedLng = null;
       }
-    } else if (format === 'Hybride') {
-      locationCtrl.setValidators([Validators.required]);
-      meetLinkCtrl.setValidators([Validators.required]);
-    } else {
-      locationCtrl.clearValidators();
-      meetLinkCtrl.clearValidators();
+    } else if (format === 'Présentiel') {
+      meetLinkCtrl.setValue('');
     }
 
     locationCtrl.updateValueAndValidity();
@@ -351,7 +349,21 @@ export class EventFormComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  // ── Submit ───────────────────────────────────────────────────────────
+  // ── Actions publiques (boutons) ──────────────────────────────────────
+
+  /** Enregistrer l'événement et revenir à la liste */
+  saveEvent(): void {
+    this.submitAction = 'save';
+    this.submit();
+  }
+
+  /** Enregistrer l'événement puis accéder à la configuration des sessions */
+  configureSession(): void {
+    this.submitAction = 'configure';
+    this.submit();
+  }
+
+  // ── Submit (interne) ─────────────────────────────────────────────────
 
   submit(): void {
     if (this.form.invalid) {
@@ -382,7 +394,6 @@ export class EventFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (this.isEdit) {
-      // En mode édition : retour à la liste
       this.service.update(this.id, formData).subscribe({
         next: () => this.router.navigate(['/admin/events']),
         error: (err) => {
@@ -391,11 +402,8 @@ export class EventFormComponent implements OnInit, AfterViewInit, OnDestroy {
         },
       });
     } else {
-      // En mode création : redirect vers la page sessions de l'event créé
       this.service.create(formData).subscribe({
         next: (createdEvent: any) => {
-          console.log('RAW RESPONSE:', JSON.stringify(createdEvent)); // remove after fix
-
           let eventId: number | null = null;
 
           if (createdEvent && typeof createdEvent === 'object') {
@@ -407,14 +415,19 @@ export class EventFormComponent implements OnInit, AfterViewInit, OnDestroy {
               const parsed = JSON.parse(createdEvent);
               eventId = parsed?.id ?? null;
             } catch {
-              // maybe the response IS the id as a string
               const num = Number(createdEvent);
               if (!isNaN(num)) eventId = num;
             }
           }
 
           if (eventId && !isNaN(eventId)) {
-            this.router.navigate(['/admin/events', eventId, 'sessions', 'add']);
+            if (this.submitAction === 'configure') {
+              // Aller sur la page de gestion des sessions
+              this.router.navigate(['/admin/events', eventId, 'sessions']);
+            } else {
+              // Save direct → retour à la liste
+              this.router.navigate(['/admin/events']);
+            }
           } else {
             console.error('eventId not found in response:', createdEvent);
             this.submitError =

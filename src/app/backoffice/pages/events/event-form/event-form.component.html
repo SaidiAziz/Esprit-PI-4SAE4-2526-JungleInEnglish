@@ -127,21 +127,15 @@
           <div class="section-title">📍 Localisation</div>
 
           <div class="field-group">
-            <label class="field-label"
-              >Lieu <span class="required">*</span></label
-            >
+            <label class="field-label">Lieu </label>
             <input
               formControlName="location"
               class="field-input"
               placeholder="Sélectionnez sur la carte ci-dessous"
-              [class.invalid]="f['location'].invalid && f['location'].touched"
+              [class.invalid]="false"
             />
-            <div
-              class="field-error"
-              *ngIf="f['location'].invalid && f['location'].touched"
-            >
-              ⚠ Lieu requis
-            </div>
+            <!-- [class.invalid]="f['location'].invalid && f['location'].touched" -->
+            <!-- <div class="field-error" *ngIf="f['location'].invalid && f['location'].touched"> ⚠ Lieu requis</div>-->
           </div>
 
           <!-- Carte Leaflet -->
@@ -202,21 +196,15 @@
           </div>
 
           <div class="field-group">
-            <label class="field-label">
-              Lien Meet / Zoom <span class="required">*</span>
-            </label>
+            <label class="field-label"> Lien Meet / Zoom </label>
             <input
               formControlName="meetLink"
               class="field-input"
               placeholder="https://meet.google.com/... ou https://zoom.us/..."
-              [class.invalid]="f['meetLink'].invalid && f['meetLink'].touched"
+              [class.invalid]="false"
             />
-            <div
-              class="field-error"
-              *ngIf="f['meetLink'].invalid && f['meetLink'].touched"
-            >
-              ⚠ Lien de réunion requis
-            </div>
+            <!--[class.invalid]="f['meetLink'].invalid && f['meetLink'].touched"-->
+            <!--<div class="field-error"*ngIf="f['meetLink'].invalid && f['meetLink'].touched">⚠ Lien de réunion requis</div>-->
           </div>
         </ng-container>
       </div>
@@ -345,10 +333,42 @@
 
       <!-- ══ ACTIONS ══ -->
       <div class="form-actions">
+        <!-- Cancel : annuler sans sauvegarder -->
         <a routerLink="/admin/events" class="btn-cancel">Cancel</a>
-        <button type="submit" class="btn-submit" [disabled]="loading">
+
+        <ng-container *ngIf="!isEdit">
+          <!-- Save Event : enregistrer sans créer de session supplémentaire -->
+          <button
+            type="button"
+            class="btn-save"
+            [disabled]="loading"
+            (click)="saveEvent()"
+          >
+            <span class="spin-sm" *ngIf="loading"></span>
+            Save Event
+          </button>
+
+          <!-- Configure Session : enregistrer puis gérer les sessions -->
+          <button
+            type="button"
+            class="btn-submit"
+            [disabled]="loading"
+            (click)="configureSession()"
+          >
+            <span class="spin-sm" *ngIf="loading"></span>
+            Configure Session →
+          </button>
+        </ng-container>
+
+        <!-- Mode édition : bouton unique -->
+        <button
+          *ngIf="isEdit"
+          type="submit"
+          class="btn-submit"
+          [disabled]="loading"
+        >
           <span class="spin-sm" *ngIf="loading"></span>
-          {{ isEdit ? "Save updates" : "Add Event & configure sessions →" }}
+          Save updates
         </button>
       </div>
     </form>

@@ -29,10 +29,11 @@ export class SessionFormComponent implements OnInit {
   sessionTypes = ['ONLINE', 'PRESENTIEL', 'HYBRID'];
   sessionId?: number;
 
-  // ── Event parent ─────────────────────────────────────────────────────
-  eventId!: number;
-  parentEvent: EventModel | null = null;
-  parentEventLoading = true;
+  events: EventModel[] = [];
+  eventsLoading = false;
+
+  // ✅ Titre de l'événement lié (mode édition)
+  linkedEventTitle: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -42,32 +43,8 @@ export class SessionFormComponent implements OnInit {
     private route: ActivatedRoute,
   ) {}
 
-  // ── Getters pour les champs conditionnels ────────────────────────────
-
-  /** Afficher Room + Maps si l'event parent est Présentiel ou Hybride */
-  get showRoom(): boolean {
-    const format = this.parentEvent?.format || '';
-    return format === 'Présentiel' || format === 'Hybride';
-  }
-
-  /** Afficher MeetingLink si l'event parent est En Ligne ou Hybride */
-  get showMeetingLink(): boolean {
-    const format = this.parentEvent?.format || '';
-    return format === 'En Ligne' || format === 'Hybride';
-  }
-
-  get f() {
-    return this.form.controls;
-  }
-
   ngOnInit(): void {
-    // ── Lire eventId et sessionId depuis la route ─────────────────────
-    // Route : /admin/events/:eventId/sessions/add
-    //         /admin/events/:eventId/sessions/edit/:id
-    this.eventId = +this.route.snapshot.params['eventId'];
-    this.sessionId = this.route.snapshot.params['id']
-      ? +this.route.snapshot.params['id']
-      : undefined;
+    this.sessionId = this.route.snapshot.params['id'];
     this.isEdit = !!this.sessionId;
 
     this.form = this.fb.group({
@@ -76,65 +53,56 @@ export class SessionFormComponent implements OnInit {
       endTime: ['', Validators.required],
       type: ['', Validators.required],
       availableSeats: [0, [Validators.required, Validators.min(1)]],
-      room: [''],
-      meetingLink: [''],
+      eventId: [null, Validators.required],
+      room: ['', Validators.required],
+      meetingLink: ['', Validators.required],
     });
 
-    // ── Charger l'event parent pour les champs conditionnels ─────────
-    this.eventService.getById(this.eventId).subscribe({
-      next: (data) => {
-        this.parentEvent = data;
-        this.parentEventLoading = false;
-        this.updateSessionValidators(data.format || '');
+    if (this.isEdit) {
+      this.form.get('eventId')?.disable();
+      // ✅ Charger les événements ET la session en parallèle
+      this.loadEventsAndSession();
+    } else {
+      this.loadEvents();
+    }
+  }
 
-        // Pré-remplir le type de session selon le format de l'event
-        if (!this.isEdit) {
-          this.preselectSessionType(data.format || '');
-        }
-
-        if (this.isEdit && this.sessionId) {
-          this.loadSession();
-        }
+  // ✅ Charger les événements pour le dropdown (mode création)
+  loadEvents(): void {
+    this.eventsLoading = true;
+    this.eventService.getAll().subscribe({
+      next: (data: EventModel[]) => {
+        this.events = data;
+        this.eventsLoading = false;
       },
       error: () => {
-        this.parentEventLoading = false;
-        this.submitError = "Impossible de charger l'événement parent.";
+        this.eventsLoading = false;
       },
     });
   }
 
-  private preselectSessionType(format: string): void {
-    const typeMap: Record<string, string> = {
-      Présentiel: 'PRESENTIEL',
-      'En Ligne': 'ONLINE',
-      Hybride: 'HYBRID',
-    };
-    const preselected = typeMap[format];
-    if (preselected) {
-      this.form.patchValue({ type: preselected });
-    }
+  // ✅ Charger événements + session ensemble pour résoudre le titre en mode édition
+  loadEventsAndSession(): void {
+    this.loading = true;
+    this.eventsLoading = true;
+
+    this.eventService.getAll().subscribe({
+      next: (data: EventModel[]) => {
+        this.events = data;
+        this.eventsLoading = false;
+
+        // Une fois les events chargés, charger la session
+        this.loadSession();
+      },
+      error: () => {
+        this.eventsLoading = false;
+        this.loadSession(); // continuer même si events échoue
+      },
+    });
   }
 
-  private updateSessionValidators(format: string): void {
-    const roomCtrl = this.form.get('room')!;
-    const meetCtrl = this.form.get('meetingLink')!;
-
-    if (format === 'Présentiel') {
-      roomCtrl.setValidators([Validators.required]);
-      meetCtrl.clearValidators();
-    } else if (format === 'En Ligne') {
-      roomCtrl.clearValidators();
-      meetCtrl.setValidators([Validators.required]);
-    } else if (format === 'Hybride') {
-      roomCtrl.setValidators([Validators.required]);
-      meetCtrl.setValidators([Validators.required]);
-    } else {
-      roomCtrl.clearValidators();
-      meetCtrl.clearValidators();
-    }
-
-    roomCtrl.updateValueAndValidity();
-    meetCtrl.updateValueAndValidity();
+  get f() {
+    return this.form.controls;
   }
 
   loadSession(): void {
@@ -143,6 +111,14 @@ export class SessionFormComponent implements OnInit {
     this.sessionService.getSessionById(this.sessionId).subscribe({
       next: (data: Session) => {
         this.form.patchValue(data);
+
+        // ✅ Résoudre le titre de l'événement lié
+        const eventId = (data as any).eventId;
+        if (eventId && this.events.length > 0) {
+          const found = this.events.find((e) => e.id === eventId);
+          this.linkedEventTitle = found ? found.title : `ID ${eventId}`;
+        }
+
         this.loading = false;
       },
       error: (err) => {
@@ -160,17 +136,11 @@ export class SessionFormComponent implements OnInit {
     }
 
     this.loading = true;
-
-    // Toujours inclure l'eventId dans la session
-    const session: Session = {
-      ...this.form.getRawValue(),
-      eventId: this.eventId,
-    };
+    const session: Session = this.form.getRawValue();
 
     if (this.isEdit && this.sessionId) {
       this.sessionService.updateSession(this.sessionId, session).subscribe({
-        next: () =>
-          this.router.navigate(['/admin/events', this.eventId, 'sessions']),
+        next: () => this.router.navigate(['/admin/sessionevents']),
         error: (err) => {
           this.submitError = err.message || 'Erreur lors de la mise à jour';
           this.loading = false;
@@ -178,17 +148,12 @@ export class SessionFormComponent implements OnInit {
       });
     } else {
       this.sessionService.addSession(session).subscribe({
-        next: () =>
-          this.router.navigate(['/admin/events', this.eventId, 'sessions']),
+        next: () => this.router.navigate(['/admin/sessionevents']),
         error: (err) => {
           this.submitError = err.message || 'Erreur lors de la création';
           this.loading = false;
         },
       });
     }
-  }
-
-  cancel(): void {
-    this.router.navigate(['/admin/events', this.eventId, 'sessions']);
   }
 }

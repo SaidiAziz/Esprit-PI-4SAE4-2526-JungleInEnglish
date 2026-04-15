@@ -2,31 +2,15 @@
   <div class="form-inner">
     <!-- ── HEADER ── -->
     <div class="page-header">
-      <div>
-        <h2 class="page-title">{{ isEdit ? "Update" : "Add" }} Session</h2>
-        <p class="page-subtitle" *ngIf="parentEvent">
-          Événement : <strong>{{ parentEvent.title }}</strong>
-          <span class="format-badge">{{ parentEvent.format }}</span>
-        </p>
-      </div>
-      <button class="btn-back" (click)="cancel()">← Back</button>
+      <h2 class="page-title">{{ isEdit ? " Update" : " Add" }} session</h2>
+      <a routerLink="/admin/sessionevents" class="btn-back">← Back</a>
     </div>
 
-    <!-- ── ERREUR ── -->
+    <!-- ── ERREUR GLOBALE ── -->
     <div *ngIf="submitError" class="alert-error">⚠️ {{ submitError }}</div>
 
-    <!-- ── LOADING parent event ── -->
-    <div *ngIf="parentEventLoading" class="loading-hint">
-      <span class="spin-sm"></span> Chargement de l'événement parent...
-    </div>
-
-    <form
-      *ngIf="!parentEventLoading"
-      [formGroup]="form"
-      (ngSubmit)="submit()"
-      class="form-card"
-    >
-      <!-- ══ SECTION 1 : Planification ══ -->
+    <form [formGroup]="form" (ngSubmit)="submit()" class="form-card">
+      <!-- ── SECTION 1 : Planification ── -->
       <div class="form-section">
         <div class="section-title">📅 Planification</div>
 
@@ -109,43 +93,12 @@
         </div>
       </div>
 
-      <!-- ══ SECTION 2 : Places ══ -->
+      <!-- ── SECTION 2 : Lieu & Accès ── -->
       <div class="form-section">
-        <div class="section-title">💺 Places disponibles</div>
-        <div class="field-group">
-          <label class="field-label"
-            >Places <span class="required">*</span></label
-          >
-          <input
-            type="number"
-            formControlName="availableSeats"
-            class="field-input"
-            min="1"
-            placeholder="Ex: 50"
-            [class.invalid]="
-              f['availableSeats'].invalid && f['availableSeats'].touched
-            "
-          />
-          <div
-            class="field-error"
-            *ngIf="f['availableSeats'].invalid && f['availableSeats'].touched"
-          >
-            ⚠ Doit être un nombre positif
-          </div>
-        </div>
-      </div>
+        <div class="section-title">🏢 Lieu &amp; Accès</div>
 
-      <!-- ══ SECTION 3 : Localisation — conditionnelle selon format parent ══ -->
-      <div class="form-section">
-        <!-- ── Présentiel ou Hybride → Salle ── -->
-        <ng-container *ngIf="showRoom">
-          <div class="section-title">🏢 Salle</div>
-          <div class="format-inherited-hint">
-            <span class="hint-icon">ℹ️</span>
-            Format de l'événement : <strong>{{ parentEvent?.format }}</strong> —
-            une salle est requise.
-          </div>
-          <div class="field-group">
+        <div class="field-row">
+          <div class="field-col">
             <label class="field-label"
               >Salle <span class="required">*</span></label
             >
@@ -163,65 +116,107 @@
               ⚠ La salle est obligatoire
             </div>
           </div>
-        </ng-container>
-
-        <!-- ── En Ligne ou Hybride → Lien réunion ── -->
-        <ng-container *ngIf="showMeetingLink">
-          <div
-            class="section-title"
-            [style.margin-top]="showRoom ? '20px' : '0'"
-          >
-            🌐 Lien de réunion
-          </div>
-          <div class="format-inherited-hint">
-            <span class="hint-icon">ℹ️</span>
-            Format de l'événement : <strong>{{ parentEvent?.format }}</strong> —
-            un lien est requis.
-          </div>
-          <div class="field-group">
+          <div class="field-col">
             <label class="field-label"
-              >Lien Meet / Zoom <span class="required">*</span></label
+              >Places disponibles <span class="required">*</span></label
             >
             <input
-              type="text"
-              formControlName="meetingLink"
+              type="number"
+              formControlName="availableSeats"
               class="field-input"
-              placeholder="https://meet.google.com/... ou https://zoom.us/..."
+              min="1"
+              placeholder="Ex: 50"
               [class.invalid]="
-                f['meetingLink'].invalid && f['meetingLink'].touched
+                f['availableSeats'].invalid && f['availableSeats'].touched
               "
             />
             <div
               class="field-error"
-              *ngIf="f['meetingLink'].invalid && f['meetingLink'].touched"
+              *ngIf="f['availableSeats'].invalid && f['availableSeats'].touched"
             >
-              ⚠ Le lien de réunion est obligatoire
+              ⚠ Doit être un nombre positif
             </div>
           </div>
-        </ng-container>
+        </div>
 
-        <!-- ── Aucun format reconnu ── -->
-        <ng-container *ngIf="!showRoom && !showMeetingLink && parentEvent">
-          <div class="format-unknown-hint">
-            Format non reconnu — aucun champ de localisation requis.
+        <div class="field-group">
+          <label class="field-label"
+            >Lien de réunion <span class="required">*</span></label
+          >
+          <input
+            type="text"
+            formControlName="meetingLink"
+            class="field-input"
+            placeholder="https://zoom.us/..."
+            [class.invalid]="
+              f['meetingLink'].invalid && f['meetingLink'].touched
+            "
+          />
+          <div
+            class="field-error"
+            *ngIf="f['meetingLink'].invalid && f['meetingLink'].touched"
+          >
+            ⚠ Le lien de réunion est obligatoire
           </div>
-        </ng-container>
+        </div>
       </div>
 
-      <!-- ══ ACTIONS ══ -->
+      <!-- ── SECTION 3 : Événement lié ── -->
+      <div class="form-section">
+        <div class="section-title">🎯 Événement lié</div>
+
+        <!-- CRÉATION : dropdown titres -->
+        <div class="field-group" *ngIf="!isEdit">
+          <label class="field-label"
+            >Événement <span class="required">*</span></label
+          >
+          <div *ngIf="eventsLoading" class="map-hint">
+            <span class="spin-sm"></span> Chargement des événements...
+          </div>
+          <select
+            formControlName="eventId"
+            class="field-select"
+            [class.invalid]="f['eventId'].invalid && f['eventId'].touched"
+          >
+            <option [ngValue]="null" disabled>
+              -- Sélectionner un événement --
+            </option>
+            <option *ngFor="let event of events" [ngValue]="event.id">
+              {{ event.title }}
+            </option>
+          </select>
+          <div
+            class="field-error"
+            *ngIf="f['eventId'].invalid && f['eventId'].touched"
+          >
+            ⚠ L'événement est obligatoire
+          </div>
+        </div>
+
+        <!-- ÉDITION : lecture seule avec titre -->
+        <div class="field-group" *ngIf="isEdit">
+          <label class="field-label">Événement lié</label>
+          <div class="event-readonly">
+            🔒
+            <span *ngIf="linkedEventTitle; else loadingTitle">
+              <strong>{{ linkedEventTitle }}</strong>
+              <span class="event-readonly-hint"
+                >— conservé automatiquement</span
+              >
+            </span>
+            <ng-template #loadingTitle>
+              <span class="map-hint">Chargement...</span>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ACTIONS ── -->
       <div class="form-actions">
-        <button type="button" class="btn-cancel" (click)="cancel()">
-          Cancel
-        </button>
-        <a
-          [routerLink]="['/admin/events', eventId, 'sessions']"
-          class="btn-back"
-        >
-          ← Back to sessions
-        </a>
+        <a routerLink="/admin/sessionevents" class="btn-cancel">Cancel</a>
         <button type="submit" class="btn-submit" [disabled]="loading">
           <span class="spin-sm" *ngIf="loading"></span>
-          {{ isEdit ? "Save updates" : "Add session" }}
+          {{ isEdit ? " Save updates" : " Add session" }}
         </button>
       </div>
     </form>

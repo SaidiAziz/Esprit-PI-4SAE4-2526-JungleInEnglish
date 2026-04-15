@@ -84,7 +84,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminLayoutComponent,
-    //canActivate: [authGuard, roleGuard('ADMIN')],
+    canActivate: [authGuard, roleGuard('ADMIN')],
     children: [
       { path: 'dashboard', component: AdminDashboardComponent },
       { path: 'users', component: UsersComponent },
@@ -110,8 +110,8 @@ export const routes: Routes = [
 
       // ── Sessions ──
       { path: 'sessionevents', component: SessionListComponent },
-      //{ path: 'sessionevents/add', component: SessionFormComponent },
-      //{ path: 'sessionevents/edit/:id', component: SessionFormComponent },
+      { path: 'sessionevents/add', component: SessionFormComponent },
+      { path: 'sessionevents/edit/:id', component: SessionFormComponent },
 
       // ── Participations ──
       { path: 'participations', component: ParticipationListComponent },

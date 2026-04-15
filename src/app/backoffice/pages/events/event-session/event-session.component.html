@@ -3,24 +3,20 @@
     <!-- ── HEADER ── -->
     <div class="page-header">
       <div>
-        <h2 class="page-title">Sessions de l'événement</h2>
+        <h2 class="page-title">Configure Sessions</h2>
         <p class="page-subtitle" *ngIf="event">
           <strong>{{ event.title }}</strong>
           <span class="format-badge">{{ event.format }}</span>
         </p>
       </div>
-      <a routerLink="/admin/events" class="btn-back">← Back to events</a>
     </div>
 
-    <!-- ── BANDEAU INFO ── -->
+    <!-- ── BANDEAU SUCCÈS ── -->
     <div class="info-banner">
       <span class="info-icon">✅</span>
       <div class="info-text">
         <strong>Événement créé avec succès !</strong>
-        <p>
-          Vous pouvez maintenant ajouter des sessions à cet événement, ou passer
-          cette étape.
-        </p>
+        <p>Ajoutez une ou plusieurs sessions, ou terminez directement.</p>
       </div>
     </div>
 
@@ -61,9 +57,7 @@
             >
           </div>
           <div class="session-item-actions">
-            <button class="btn-edit" (click)="editSession(session.id!)">
-              ✏️
-            </button>
+            <button class="btn-edit" (click)="openEditForm(session)">✏️</button>
             <button class="btn-delete" (click)="deleteSession(session.id!)">
               🗑️
             </button>
@@ -72,23 +66,230 @@
       </div>
 
       <!-- Empty state -->
-      <div *ngIf="sessions.length === 0" class="empty-sessions">
+      <div *ngIf="sessions.length === 0 && !showForm" class="empty-sessions">
         <div class="empty-icon">📭</div>
         <p>Aucune session configurée pour cet événement.</p>
-        <p class="empty-hint">
-          Sans session, les clients pourront quand même rejoindre l'événement
-          directement.
-        </p>
+        <p class="empty-hint">Cliquez sur "Add Session" pour en ajouter une.</p>
       </div>
 
-      <!-- ── ACTIONS ── -->
+      <!-- ════════════════════════════════════════════
+           FORMULAIRE INLINE — ajout / édition session
+           ════════════════════════════════════════════ -->
+      <div *ngIf="showForm" id="inline-session-form" class="inline-form-card">
+        <div class="inline-form-header">
+          <span class="inline-form-title">
+            {{
+              editingSessionId
+                ? "✏️ Modifier la session"
+                : "➕ Nouvelle session"
+            }}
+          </span>
+          <button
+            class="inline-form-close"
+            type="button"
+            (click)="cancelForm()"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div *ngIf="formError" class="alert-error">⚠️ {{ formError }}</div>
+
+        <form
+          [formGroup]="sessionForm"
+          (ngSubmit)="submitSession()"
+          class="inline-form-body"
+        >
+          <!-- Date + Type -->
+          <div class="field-row">
+            <div class="field-col">
+              <label class="field-label"
+                >Date <span class="required">*</span></label
+              >
+              <input
+                type="date"
+                formControlName="date"
+                class="field-input"
+                [class.invalid]="f['date'].invalid && f['date'].touched"
+              />
+              <div
+                class="field-error"
+                *ngIf="f['date'].invalid && f['date'].touched"
+              >
+                ⚠ Date obligatoire
+              </div>
+            </div>
+            <div class="field-col">
+              <label class="field-label"
+                >Type <span class="required">*</span></label
+              >
+              <select
+                formControlName="type"
+                class="field-select"
+                [class.invalid]="f['type'].invalid && f['type'].touched"
+                (change)="onTypeChange()"
+              >
+                <option value="" disabled>Sélectionner</option>
+                <option *ngFor="let t of sessionTypes" [value]="t">
+                  {{ t }}
+                </option>
+              </select>
+              <div
+                class="field-error"
+                *ngIf="f['type'].invalid && f['type'].touched"
+              >
+                ⚠ Type obligatoire
+              </div>
+            </div>
+          </div>
+
+          <!-- Heure début + Heure fin -->
+          <div class="field-row">
+            <div class="field-col">
+              <label class="field-label"
+                >Heure de début <span class="required">*</span></label
+              >
+              <input
+                type="time"
+                formControlName="startTime"
+                class="field-input"
+                [class.invalid]="
+                  f['startTime'].invalid && f['startTime'].touched
+                "
+              />
+              <div
+                class="field-error"
+                *ngIf="f['startTime'].invalid && f['startTime'].touched"
+              >
+                ⚠ Heure de début obligatoire
+              </div>
+            </div>
+            <div class="field-col">
+              <label class="field-label"
+                >Heure de fin <span class="required">*</span></label
+              >
+              <input
+                type="time"
+                formControlName="endTime"
+                class="field-input"
+                [class.invalid]="f['endTime'].invalid && f['endTime'].touched"
+              />
+              <div
+                class="field-error"
+                *ngIf="f['endTime'].invalid && f['endTime'].touched"
+              >
+                ⚠ Heure de fin obligatoire
+              </div>
+            </div>
+          </div>
+
+          <!-- Places disponibles -->
+          <div class="field-group">
+            <label class="field-label"
+              >Places disponibles <span class="required">*</span></label
+            >
+            <input
+              type="number"
+              formControlName="availableSeats"
+              class="field-input"
+              min="1"
+              placeholder="Ex: 50"
+              [class.invalid]="
+                f['availableSeats'].invalid && f['availableSeats'].touched
+              "
+            />
+            <div
+              class="field-error"
+              *ngIf="f['availableSeats'].invalid && f['availableSeats'].touched"
+            >
+              ⚠ Minimum 1 place
+            </div>
+          </div>
+
+          <!-- Salle (Présentiel / Hybride) -->
+          <div class="field-group" *ngIf="showRoom">
+            <label class="field-label"
+              >Salle <span class="required">*</span></label
+            >
+            <input
+              type="text"
+              formControlName="room"
+              class="field-input"
+              placeholder="Ex: Salle A, Amphi 3..."
+              [class.invalid]="f['room'].invalid && f['room'].touched"
+            />
+            <div
+              class="field-error"
+              *ngIf="f['room'].invalid && f['room'].touched"
+            >
+              ⚠ Salle obligatoire
+            </div>
+          </div>
+
+          <!-- Lien réunion (En Ligne / Hybride) -->
+          <div class="field-group" *ngIf="showMeetingLink">
+            <label class="field-label"
+              >Lien Meet / Zoom <span class="required">*</span></label
+            >
+            <input
+              type="text"
+              formControlName="meetingLink"
+              class="field-input"
+              placeholder="https://meet.google.com/... ou https://zoom.us/..."
+              [class.invalid]="
+                f['meetingLink'].invalid && f['meetingLink'].touched
+              "
+            />
+            <div
+              class="field-error"
+              *ngIf="f['meetingLink'].invalid && f['meetingLink'].touched"
+            >
+              ⚠ Lien de réunion obligatoire
+            </div>
+          </div>
+
+          <!-- Boutons du formulaire inline -->
+          <div class="inline-form-actions">
+            <button
+              type="button"
+              class="btn-cancel-form"
+              (click)="cancelForm()"
+            >
+              Annuler
+            </button>
+            <button
+              type="submit"
+              class="btn-save-form"
+              [disabled]="formLoading"
+            >
+              <span class="spin-sm" *ngIf="formLoading"></span>
+              {{
+                editingSessionId
+                  ? "Enregistrer les modifications"
+                  : "Enregistrer la session"
+              }}
+            </button>
+          </div>
+        </form>
+      </div>
+      <!-- FIN formulaire inline -->
+
+      <!-- ── ACTIONS PRINCIPALES ── -->
       <div class="sessions-actions">
-        <button class="btn-add-session" (click)="addSession()">
-          ➕ Ajouter une session
+        <!-- Back : retour au formulaire de l'événement -->
+        <button class="btn-back-event" (click)="back()">← Back</button>
+
+        <!-- Add Session : ouvrir le formulaire inline -->
+        <button
+          class="btn-add-session"
+          (click)="openAddForm()"
+          [disabled]="showForm"
+        >
+          ➕ Add Session
         </button>
-        <button class="btn-skip" (click)="skip()">
-          {{ sessions.length > 0 ? "✅ Terminer" : "Passer cette étape →" }}
-        </button>
+
+        <!-- Save : terminer et aller à la liste des événements -->
+        <button class="btn-save-sessions" (click)="save()">✅ Save</button>
       </div>
     </div>
   </div>
