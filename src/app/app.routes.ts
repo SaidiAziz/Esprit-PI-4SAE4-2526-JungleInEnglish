@@ -12,29 +12,47 @@ import { StudentDashboardComponent } from './frontoffice/jungle/student/student-
 import { TutorDashboardComponent } from './frontoffice/jungle/tutor/tutor-dashboard/tutor-dashboard.component';
 import { ProfileComponent } from './frontoffice/jungle/profile/profile.component';
 import { SettingsComponent } from './frontoffice/jungle/settings/settings.component';
+import { EventCardsComponent } from './frontoffice/pages/events/event-cards.component';
+import { EventDashboardFrontComponent } from './frontoffice/pages/event-dashboard-front/event-dashboard-front.component';
+import { LoyaltyComponent } from './frontoffice/pages/loyalty/loyalty.component';
+import { ParticipateSessionComponent } from './frontoffice/pages/participate-session/participate-session.component';
+
 import { AdminDashboardComponent } from './backoffice/pages/admin-dashboard/admin-dashboard.component';
+import { EventDashboardComponent } from './backoffice/pages/event-dashboard/event-dashboard.component';
 import { UsersComponent } from './backoffice/pages/users/users.component';
 import { UserDetailComponent } from './backoffice/pages/users/user-detail/user-detail.component';
+import { EventListComponent } from './backoffice/pages/events/event-list/event-list.component';
+import { EventFormComponent } from './backoffice/pages/events/event-form/event-form.component';
+import { EventSessionComponent } from './backoffice/pages/events/event-session/event-session.component';
+import { SessionListComponent } from './backoffice/pages/sessionevents/session-list/session-list.component';
+import { SessionFormComponent } from './backoffice/pages/sessionevents/session-form/session-form.component';
+import { ParticipationListComponent } from './backoffice/pages/participations/participation-list/participation-list.component';
+import { ParticipationFormComponent } from './backoffice/pages/participations/participation-form/participation-form.component';
+import { PaymentDashboardComponent } from './backoffice/pages/payments/payment-dashboard/payment-dashboard.component';
+import { PaymentEventsComponent } from './backoffice/pages/payments/payment-events/payment-events.component';
+import { PaymentCoursComponent } from './backoffice/pages/payments/payment-cours/payment-cours.component';
+import { LoyaltyCodesComponent } from './backoffice/pages/payments/loyalty-codes/loyalty-codes.component';
+
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
 
-  // ── Public Shell ──────────────────────────────
+  // -- Public Shell --
   {
     path: '',
     component: PublicLayoutComponent,
     children: [
-      { path: '',                 component: LandingpageComponent },
-      { path: 'login',            component: LoginComponent },
-      { path: 'signup',           component: SignupComponent },
-      { path: 'forgot-password',  component: ForgotPasswordComponent },
-      { path: 'reset-password',   component: ResetPasswordComponent },
-      { path: 'verify-2fa',       component: Verify2FAComponent },
+      { path: '', component: LandingpageComponent },
+      { path: 'login', component: LoginComponent },
+      { path: 'signup', component: SignupComponent },
+      { path: 'forgot-password', component: ForgotPasswordComponent },
+      { path: 'reset-password', component: ResetPasswordComponent },
+      { path: 'verify-2fa', component: Verify2FAComponent },
     ]
   },
 
-  // ── Authenticated Shell ────────────────────────
+  // -- Authenticated Shell --
   {
     path: '',
     component: DashboardLayoutComponent,
@@ -70,18 +88,47 @@ export const routes: Routes = [
         component: SettingsComponent,
         canActivate: [roleGuard('TUTOR')]
       },
+
+      // Shared event features for authenticated learners
+      { path: 'events', component: EventCardsComponent },
+      { path: 'events/:id/participate', component: ParticipateSessionComponent },
+      { path: 'stats-events', component: EventDashboardFrontComponent },
+      { path: 'loyalty', component: LoyaltyComponent },
     ]
   },
 
-  // ── Admin Shell ────────────────────────────────
+  // -- Admin Shell --
   {
     path: 'admin',
     component: AdminLayoutComponent,
     canActivate: [authGuard, roleGuard('ADMIN')],
     children: [
       { path: 'dashboard', component: AdminDashboardComponent },
-      { path: 'users',     component: UsersComponent },
+      { path: 'event-dashboard', component: EventDashboardComponent },
+
+      { path: 'users', component: UsersComponent },
       { path: 'users/:id', component: UserDetailComponent },
+
+      { path: 'events', component: EventListComponent },
+      { path: 'events/add', component: EventFormComponent },
+      { path: 'events/edit/:id', component: EventFormComponent },
+      { path: 'events/:id/sessions', component: EventSessionComponent },
+      { path: 'events/:eventId/sessions/add', component: SessionFormComponent },
+      { path: 'events/:eventId/sessions/edit/:id', component: SessionFormComponent },
+
+      { path: 'sessionevents', component: SessionListComponent },
+      { path: 'sessionevents/add', redirectTo: 'events', pathMatch: 'full' },
+      { path: 'sessionevents/edit/:id', redirectTo: 'events', pathMatch: 'full' },
+
+      { path: 'participations', component: ParticipationListComponent },
+      { path: 'participations/add', component: ParticipationFormComponent },
+      { path: 'participations/edit/:id', component: ParticipationFormComponent },
+
+      { path: 'payments', redirectTo: 'payments/dashboard', pathMatch: 'full' },
+      { path: 'payments/dashboard', component: PaymentDashboardComponent },
+      { path: 'payments/events', component: PaymentEventsComponent },
+      { path: 'payments/courses', component: PaymentCoursComponent },
+      { path: 'payments/loyalty-codes', component: LoyaltyCodesComponent },
     ]
   },
 
