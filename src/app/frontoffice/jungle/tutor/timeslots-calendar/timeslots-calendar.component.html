@@ -1,0 +1,101 @@
+<h2>Timeslots Calendar</h2>
+
+<p *ngIf="loading">Loading...</p>
+<p *ngIf="error" style="color:red">{{ error }}</p>
+
+<div class="calendar">
+  <div class="row header">
+    <div class="time-col"></div>
+    <div class="day-col" *ngFor="let d of days">{{ d.label }}</div>
+  </div>
+
+  <div class="row body">
+    <div class="time-col">
+      <div class="time-slot" *ngFor="let h of hours">{{ h }}:00</div>
+    </div>
+
+    <div class="day-col" *ngFor="let d of days">
+      <div class="day-grid" (click)="onDayClick($event, d.dayOfWeek)">
+        <div class="grid-line" *ngFor="let _ of hours"></div>
+
+        <div
+          class="event"
+          *ngFor="let e of (eventsByDay[d.dayOfWeek] || [])"
+          [style.top.px]="e.top"
+          [style.height.px]="e.height"
+          [class.platform]="e.ownerType === 'PLATFORM'"
+          [class.tutor]="e.ownerType === 'TUTOR'"
+          (click)="$event.stopPropagation(); openEdit($event, e)"
+        >
+          <div class="title">
+            {{ e.ownerType }}
+            <span *ngIf="e.ownerType === 'TUTOR'">#{{ e.ownerId }}</span>
+          </div>
+          <div class="time">{{ e.startTime }} - {{ e.endTime }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" *ngIf="modalOpen">
+  <div class="modal">
+    <h3>{{ editingId !== null ? 'Edit Timeslot' : 'Add Timeslot' }}</h3>
+
+    <form (ngSubmit)="save()" #f="ngForm">
+      <label>
+        Owner Type:
+        <select [(ngModel)]="form.ownerType" name="ownerType" required (change)="onOwnerTypeChange()">
+          <option value="PLATFORM">PLATFORM</option>
+          <option value="TUTOR">TUTOR</option>
+        </select>
+      </label>
+
+      <label *ngIf="form.ownerType === 'TUTOR'">
+        Tutor ID:
+        <input type="number" [(ngModel)]="form.ownerId" name="ownerId" required min="1" />
+      </label>
+
+      <label>
+        Day:
+        <select [(ngModel)]="form.dayOfWeek" name="dayOfWeek" required>
+          <option [ngValue]="1">MONDAY</option>
+          <option [ngValue]="2">TUESDAY</option>
+          <option [ngValue]="3">WEDNESDAY</option>
+          <option [ngValue]="4">THURSDAY</option>
+          <option [ngValue]="5">FRIDAY</option>
+          <option [ngValue]="6">SATURDAY</option>
+          <option [ngValue]="7">SUNDAY</option>
+        </select>
+      </label>
+
+      <label>
+        Start:
+        <input type="time" [(ngModel)]="form.startTime" name="startTime" required />
+      </label>
+
+      <label>
+        End:
+        <input type="time" [(ngModel)]="form.endTime" name="endTime" required />
+      </label>
+
+      <div class="actions">
+        <button type="submit" [disabled]="saving">
+          {{ editingId !== null ? 'Update' : 'Create' }}
+        </button>
+
+        <button type="button" (click)="closeModal()" [disabled]="saving">Cancel</button>
+
+        <button
+          *ngIf="editingId !== null"
+          type="button"
+          class="danger"
+          (click)="remove()"
+          [disabled]="saving"
+        >
+          Delete
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

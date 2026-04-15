@@ -1,0 +1,75 @@
+.calendar { width: 100%; }
+.row { display: flex; }
+.header { font-weight: 600; }
+
+.time-col { width: 70px; }
+.day-col { flex: 1; border-left: 1px solid #ddd; }
+
+.time-slot {
+  height: 60px;
+  border-top: 1px solid #eee;
+  font-size: 12px;
+  padding-top: 4px;
+}
+
+.day-grid {
+  position: relative;
+  height: calc(60px * 24);
+  border-top: 1px solid #eee;
+  cursor: pointer;
+}
+
+.grid-line {
+  height: 60px;
+  border-top: 1px solid #eee;
+}
+
+.event {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  border-radius: 6px;
+  padding: 6px;
+  font-size: 12px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.event.platform { background: #3b82f6; }
+.event.tutor { background: #10b981; }
+
+.title { font-weight: 700; }
+.time { opacity: .9; }
+
+/* MODAL */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal {
+  background: #fff;
+  padding: 18px;
+  width: 420px;
+  border-radius: 10px;
+}
+
+.modal form { display: grid; gap: 10px; }
+.modal label { display: grid; gap: 6px; font-size: 14px; }
+
+.actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+.danger {
+  background: #ef4444;
+  color: #fff;
+}

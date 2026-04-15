@@ -1,0 +1,93 @@
+<div class="container">
+
+  <div class="header">
+    <h2>Sessions</h2>
+    <button routerLink="/admin/sessions/audit" class="audit-btn">
+  History & Audit
+</button>
+    <button routerLink="/admin/sessions/statistics" class="stats-btn">
+  📊 Voir Statistiques
+</button>
+    <a class="btn primary" [routerLink]="['/admin/sessions/new']">+ Nouvelle Session</a>
+  </div>
+
+  <!-- ✅ FILTRES -->
+  <div class="filters" [formGroup]="filters">
+    <input class="input" type="text" placeholder="Rechercher (tutor, course, status, date...)" formControlName="q">
+
+    <select class="input" formControlName="status">
+      <option *ngFor="let st of statuses" [value]="st">{{ st }}</option>
+    </select>
+
+    <input class="input" type="number" placeholder="Tutor ID" formControlName="tutorId">
+    <input class="input" type="number" placeholder="Course ID" formControlName="courseId">
+
+    <input class="input" type="date" formControlName="dateFrom">
+    <input class="input" type="date" formControlName="dateTo">
+
+    <button class="btn" type="button" (click)="resetFilters()">Reset</button>
+  </div>
+
+  <div class="count" *ngIf="!loading">
+    Affichage: {{ filteredSessions.length }} / {{ sessions.length }}
+  </div>
+
+  <p *ngIf="loading">Chargement...</p>
+  <p *ngIf="error" class="error">{{ error }}</p>
+
+  <div class="table-wrap" *ngIf="!loading && filteredSessions.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>Tutor</th>
+          <th>Course</th>
+          <th>Date</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <!-- ✅ IMPORTANT: sessions -> filteredSessions -->
+        <tr *ngFor="let s of filteredSessions">
+          <td>{{ s.tutorId }}</td>
+          <td>{{ s.courseId }}</td>
+          <td>{{ s.sessionDate }}</td>
+          <td>{{ formatTime(s.startTime) }}</td>
+          <td>{{ formatTime(s.endTime) }}</td>
+
+          <td>
+            <span class="badge"
+              [ngClass]="{
+                'planned': s.status === 'PLANNED',
+                'completed': s.status === 'COMPLETED',
+                'canceled': s.status === 'CANCELED'
+              }">
+              {{ s.status }}
+            </span>
+          </td>
+
+          <td>
+            <div class="actions">
+              <a class="btn" [routerLink]="['/admin/sessions', s.id, 'edit']">Modifier</a>
+
+              <button class="btn danger" type="button" (click)="deleteSession(s.id)">
+                Supprimer
+              </button>
+
+              <button (click)="completeSession(s.id)" [disabled]="!canComplete(s)">Complete</button>
+              <button (click)="cancelSession(s.id)" [disabled]="!canCancel(s)">Cancel</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p *ngIf="!loading && filteredSessions.length === 0">
+    Aucune session disponible.
+  </p>
+
+</div>

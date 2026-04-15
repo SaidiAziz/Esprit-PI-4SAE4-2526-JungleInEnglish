@@ -1,0 +1,68 @@
+<div class="container">
+
+  <div class="header">
+    <h2>{{ isEdit ? 'Modifier Session' : 'Nouvelle Session' }}</h2>
+    <button class="btn" type="button" (click)="cancel()">← Retour</button>
+  </div>
+
+  <p *ngIf="loading">Chargement...</p>
+  <p *ngIf="error" class="error">{{ error }}</p>
+
+  <form *ngIf="!loading" (ngSubmit)="submit()" novalidate class="card">
+
+    <div class="grid">
+      <div class="field">
+        <label>Tutor ID</label>
+        <input type="number" [(ngModel)]="form.tutorId" name="tutorId" required />
+      </div>
+
+      <div class="field">
+        <label>Course ID</label>
+        <input type="number" [(ngModel)]="form.courseId" name="courseId" required />
+      </div>
+
+      <div class="field">
+        <label>Session Date</label>
+        <input type="date" [(ngModel)]="form.sessionDate" name="sessionDate" required />
+      </div>
+
+      <div class="field">
+        <label>TimeSlot ID</label>
+        <input type="number" [(ngModel)]="form.timeSlotId" name="timeSlotId" />
+      </div>
+
+      <div class="field">
+        <label>Start Time</label>
+        <input type="time" [(ngModel)]="startTimeStr" name="startTimeStr" required />
+      </div>
+
+      <div class="field">
+        <label>End Time</label>
+        <input type="time" [(ngModel)]="endTimeStr" name="endTimeStr" required />
+      </div>
+
+      <div class="field">
+        <label>Status</label>
+        <select [(ngModel)]="form.status" name="status">
+          <option *ngFor="let st of statuses" [value]="st">{{ st }}</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Mode</label>
+        <select [(ngModel)]="form.mode" name="mode" required>
+          <option *ngFor="let m of modes" [value]="m">{{ m }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" type="submit">
+        {{ isEdit ? 'Mettre à jour' : 'Créer' }}
+      </button>
+      <button class="btn" type="button" (click)="cancel()">Annuler</button>
+    </div>
+
+  </form>
+
+</div>

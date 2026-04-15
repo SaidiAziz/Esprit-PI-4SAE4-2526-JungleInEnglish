@@ -1,0 +1,78 @@
+<div class="td-page">
+
+  <section class="ts-section">
+    <div class="ts-section-header">
+      <h3>My Sessions</h3>
+      <p>Manage and join your teaching sessions</p>
+    </div>
+
+    <p *ngIf="loading">Loading sessions...</p>
+    <p *ngIf="error" class="error">{{ error }}</p>
+
+    <div class="ts-cards-grid" *ngIf="!loading && sessions.length > 0">
+      <article
+        class="ts-card"
+        *ngFor="let session of sessions; trackBy: trackBySession">
+
+        <div class="ts-card-body">
+
+          <div class="ts-status-row">
+            <span class="ts-status"
+                  [class.planned]="session.status === 'PLANNED'"
+                  [class.completed]="session.status === 'COMPLETED'"
+                  [class.canceled]="session.status === 'CANCELED'">
+              {{ session.status }}
+            </span>
+
+            <span class="ts-date">
+              {{ session.sessionDate }} | {{ formatTime(session.startTime) }} - {{ formatTime(session.endTime) }}
+            </span>
+          </div>
+
+          <h4 class="ts-card-title">
+            Session #{{ session.id }}
+          </h4>
+
+          <p class="ts-card-subtitle">
+            Mode: {{ session.mode || 'ONSITE' }}
+          </p>
+
+          <div class="ts-meta">
+            <div class="ts-meta-item">👨‍🏫 Tutor: {{ session.tutorId }}</div>
+            <div class="ts-meta-item">📘 Course: {{ session.courseId }}</div>
+          </div>
+
+          <div class="ts-actions">
+
+            <button
+              class="ts-btn ts-btn--primary"
+              *ngIf="session.mode === 'ONLINE' && session.status === 'PLANNED' && session.meetingLink"
+              (click)="joinSession(session.meetingLink)">
+              🎥 Join Session
+            </button>
+
+            <button
+              class="ts-btn ts-btn--secondary"
+              *ngIf="session.mode === 'ONSITE' && session.status === 'PLANNED'">
+              📍 Onsite Session
+            </button>
+
+            <button
+              class="ts-btn ts-btn--disabled"
+              *ngIf="session.status !== 'PLANNED'"
+              disabled>
+              {{ session.status }}
+            </button>
+
+          </div>
+
+        </div>
+      </article>
+    </div>
+
+    <p *ngIf="!loading && sessions.length === 0">
+      No sessions found.
+    </p>
+  </section>
+
+</div>

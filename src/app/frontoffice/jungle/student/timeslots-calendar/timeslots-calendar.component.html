@@ -1,0 +1,41 @@
+<h2>My Schedule</h2>
+
+<div class="calendar">
+  <!-- header -->
+  <div class="row header">
+    <div class="time-col"></div>
+    <div class="day-col" *ngFor="let d of days">{{ d.label }}</div>
+  </div>
+
+  <!-- body -->
+  <div class="row body">
+    <!-- heures -->
+    <div class="time-col">
+      <div class="time-slot" *ngFor="let h of hours">{{ h }}:00</div>
+    </div>
+
+    <!-- jours -->
+    <div class="day-col" *ngFor="let d of days">
+      <div class="day-grid readonly">
+        <div class="grid-line" *ngFor="let _ of hours"></div>
+
+        <!-- events -->
+        <div
+          class="event"
+          *ngFor="let e of (eventsByDay[d.dayOfWeek] || [])"
+          [style.top.px]="e.top"
+          [style.height.px]="e.height"
+          [class.platform]="e.ownerType === 'PLATFORM'"
+          [class.tutor]="e.ownerType === 'TUTOR'"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="title">
+            {{ e.ownerType }}
+            <span *ngIf="e.ownerType === 'TUTOR'">#{{ e.ownerId }}</span>
+          </div>
+          <div class="time">{{ e.startTime }} - {{ e.endTime }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
