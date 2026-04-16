@@ -56,6 +56,20 @@ export class ParticipationService {
       { responseType: 'text' },
     );
   }
+  sendCertificate(
+    email: string,
+    participantName: string,
+    eventTitle: string,
+    sessionDate: string,
+    sessionId: number,
+  ): Observable<any> {
+    return this.http.post(
+      `${this.emailUrl}/send-certificate`,
+      { email, participantName, eventTitle, sessionDate, sessionId },
+      { responseType: 'text' },
+    );
+  }
+
   getParticipationsByEmail(email: string): Observable<Participation[]> {
     return this.http
       .get<Participation[]>(`${this.baseUrl}/getAll`)

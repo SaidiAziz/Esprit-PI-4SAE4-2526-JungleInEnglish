@@ -33,6 +33,7 @@ import { PaymentCoursComponent } from './backoffice/pages/payments/payment-cours
 import { EventDashboardComponent } from './backoffice/pages/event-dashboard/event-dashboard.component';
 import { EventDashboardFrontComponent } from './frontoffice/pages/event-dashboard-front/event-dashboard-front.component';
 import { LoyaltyComponent } from './frontoffice/pages/loyalty/loyalty.component';
+import { PaymentDashboardFrontComponent } from './frontoffice/pages/payment-dashboard-front/payment-dashboard-front.component';
 export const routes: Routes = [
   // ── Public Shell ──────────────────────────────
   {
@@ -76,6 +77,10 @@ export const routes: Routes = [
       {
         path: 'loyalty',
         component: LoyaltyComponent,
+      },
+      {
+        path: 'payments',
+        component: PaymentDashboardFrontComponent,
       },
     ],
   },

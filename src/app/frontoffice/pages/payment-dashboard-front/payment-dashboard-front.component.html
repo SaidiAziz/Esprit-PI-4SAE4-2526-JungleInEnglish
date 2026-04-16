@@ -1,0 +1,212 @@
+<div class="pdf-page">
+
+  <!-- ══ HERO HEADER ══════════════════════════════════════════════ -->
+  <div class="pdf-hero">
+    <div class="pdf-hero-left">
+      <div class="pdf-avatar">{{ getInitials() }}</div>
+      <div class="pdf-hero-info">
+        <h1>Mes Paiements</h1>
+        <p class="pdf-subtitle">{{ currentUser?.firstName }} {{ currentUser?.lastName }} · {{ currentUser?.email }}</p>
+      </div>
+    </div>
+    <div class="pdf-hero-badge">
+      <span class="pdf-hero-icon">💳</span>
+    </div>
+  </div>
+
+  <!-- ══ LOADING ═══════════════════════════════════════════════════ -->
+  <div *ngIf="loading" class="pdf-loading">
+    <div class="pdf-spinner"></div>
+    <p>Chargement de vos paiements…</p>
+  </div>
+
+  <ng-container *ngIf="!loading">
+
+    <!-- ══ KPI CARDS ═════════════════════════════════════════════ -->
+    <div class="pdf-kpis">
+      <div class="pdf-kpi pdf-kpi-total">
+        <div class="pdf-kpi-icon">💰</div>
+        <div>
+          <div class="pdf-kpi-value">{{ totalSpent | number:'1.0-0' }} TND</div>
+          <div class="pdf-kpi-label">Total dépensé</div>
+        </div>
+      </div>
+      <div class="pdf-kpi pdf-kpi-paid" (click)="setFilter('PAID')" [class.kpi-active]="activeFilter === 'PAID'">
+        <div class="pdf-kpi-icon">✅</div>
+        <div>
+          <div class="pdf-kpi-value">{{ paidCount }}</div>
+          <div class="pdf-kpi-label">Paiements réussis</div>
+        </div>
+      </div>
+      <div class="pdf-kpi pdf-kpi-pending" (click)="setFilter('PENDING')" [class.kpi-active]="activeFilter === 'PENDING'">
+        <div class="pdf-kpi-icon">⏳</div>
+        <div>
+          <div class="pdf-kpi-value">{{ pendingCount }}</div>
+          <div class="pdf-kpi-label">En attente</div>
+        </div>
+      </div>
+      <div class="pdf-kpi pdf-kpi-failed" (click)="setFilter('FAILED')" [class.kpi-active]="activeFilter === 'FAILED'">
+        <div class="pdf-kpi-icon">❌</div>
+        <div>
+          <div class="pdf-kpi-value">{{ failedCount }}</div>
+          <div class="pdf-kpi-label">Échoués</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SEARCH & FILTERS ══════════════════════════════════════ -->
+    <div class="pdf-controls">
+      <div class="pdf-search-wrap">
+        <span class="pdf-search-icon">🔍</span>
+        <input
+          class="pdf-search"
+          type="text"
+          placeholder="Rechercher par référence, événement…"
+          [(ngModel)]="searchTerm"
+        />
+      </div>
+      <div class="pdf-filter-tabs">
+        <button [class.active]="activeFilter === 'ALL'" (click)="setFilter('ALL')">Tous</button>
+        <button [class.active]="activeFilter === 'PAID'" (click)="setFilter('PAID')">Payés</button>
+        <button [class.active]="activeFilter === 'PENDING'" (click)="setFilter('PENDING')">En attente</button>
+        <button [class.active]="activeFilter === 'FAILED'" (click)="setFilter('FAILED')">Échoués</button>
+      </div>
+    </div>
+
+    <!-- ══ EMPTY STATE ═══════════════════════════════════════════ -->
+    <div *ngIf="filteredPayments.length === 0" class="pdf-empty">
+      <div class="pdf-empty-icon">📭</div>
+      <p>Aucun paiement trouvé</p>
+    </div>
+
+    <!-- ══ PAYMENTS LIST ═════════════════════════════════════════ -->
+    <div class="pdf-list" *ngIf="filteredPayments.length > 0">
+      <div
+        class="pdf-card"
+        *ngFor="let pay of filteredPayments"
+        [class.pdf-card-event]="isEventPayment(pay)"
+      >
+        <!-- Left — icon + info -->
+        <div class="pdf-card-left">
+          <div class="pdf-method-icon">{{ getMethodIcon(pay.paymentMethod) }}</div>
+          <div class="pdf-card-info">
+            <div class="pdf-card-ref">{{ pay.reference || ('Paiement #' + pay.id) }}</div>
+            <div class="pdf-card-meta">
+              {{ pay.paymentDate | date:'dd MMM yyyy' }}
+              · {{ getMethodLabel(pay.paymentMethod) }}
+            </div>
+            <!-- Event tag -->
+            <div class="pdf-event-tag" *ngIf="isEventPayment(pay)">
+              <span class="pdf-event-dot"></span>
+              {{ getEventTitle(pay) }}
+              <span *ngIf="getSessionDate(pay)"> · {{ getSessionDate(pay) | date:'dd MMM yyyy' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right — amount + status + actions -->
+        <div class="pdf-card-right">
+          <div class="pdf-card-amount">{{ pay.amount | number:'1.0-0' }} TND</div>
+          <span class="pdf-status" [ngClass]="getStatusClass(pay.status)">
+            {{ getStatusLabel(pay.status) }}
+          </span>
+          <div class="pdf-card-actions">
+            <!-- Detail button only for event payments -->
+            <button
+              *ngIf="isEventPayment(pay)"
+              class="pdf-btn-detail"
+              (click)="openDetail(pay)"
+              title="Voir les détails de ce paiement"
+            >
+              🎟️ Détail
+            </button>
+            <!-- Receipt for paid -->
+            <button
+              *ngIf="pay.status === 'PAID'"
+              class="pdf-btn-receipt"
+              (click)="downloadReceipt(pay)"
+              title="Télécharger le reçu"
+            >
+              📄 Reçu
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+</div>
+
+<!-- ══ DETAIL MODAL ══════════════════════════════════════════════ -->
+<div class="pdf-overlay" *ngIf="showDetail" (click)="closeDetail()">
+  <div class="pdf-modal" (click)="$event.stopPropagation()">
+
+    <button class="pdf-modal-close" (click)="closeDetail()">✕</button>
+
+    <div class="pdf-modal-header">
+      <div class="pdf-modal-icon">🎟️</div>
+      <div>
+        <h2>Détail du paiement</h2>
+        <p class="pdf-modal-ref">{{ selectedPayment?.reference || ('Paiement #' + selectedPayment?.id) }}</p>
+      </div>
+    </div>
+
+    <!-- Status banner -->
+    <div class="pdf-modal-banner" [ngClass]="getStatusClass(selectedPayment?.status)">
+      <span>{{ getStatusLabel(selectedPayment?.status) }}</span>
+      <span class="pdf-modal-amount">{{ selectedPayment?.amount | number:'1.0-0' }} TND</span>
+    </div>
+
+    <!-- Event info -->
+    <div class="pdf-modal-section">
+      <div class="pdf-modal-section-title">🎯 Événement</div>
+      <div class="pdf-detail-row">
+        <span class="pdf-detail-key">Événement</span>
+        <span class="pdf-detail-val">{{ getEventTitle(selectedPayment) }}</span>
+      </div>
+      <div class="pdf-detail-row">
+        <span class="pdf-detail-key">Date de session</span>
+        <span class="pdf-detail-val">
+          <ng-container *ngIf="getSessionDate(selectedPayment) as sd; else noSession">
+            {{ sd | date:'EEEE dd MMMM yyyy' }}
+          </ng-container>
+          <ng-template #noSession>—</ng-template>
+        </span>
+      </div>
+    </div>
+
+    <!-- Payment info -->
+    <div class="pdf-modal-section">
+      <div class="pdf-modal-section-title">💳 Paiement</div>
+      <div class="pdf-detail-row">
+        <span class="pdf-detail-key">Méthode</span>
+        <span class="pdf-detail-val">{{ getMethodIcon(selectedPayment?.paymentMethod) }} {{ getMethodLabel(selectedPayment?.paymentMethod) }}</span>
+      </div>
+      <div class="pdf-detail-row">
+        <span class="pdf-detail-key">Date</span>
+        <span class="pdf-detail-val">{{ selectedPayment?.paymentDate | date:'dd MMMM yyyy, HH:mm' }}</span>
+      </div>
+      <div class="pdf-detail-row">
+        <span class="pdf-detail-key">Participant</span>
+        <span class="pdf-detail-val">{{ selectedPayment?.participantName || '—' }}</span>
+      </div>
+      <div class="pdf-detail-row">
+        <span class="pdf-detail-key">Email</span>
+        <span class="pdf-detail-val">{{ selectedPayment?.participantEmail }}</span>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="pdf-modal-footer">
+      <button
+        *ngIf="selectedPayment?.status === 'PAID'"
+        class="pdf-btn-receipt pdf-btn-lg"
+        (click)="downloadReceipt(selectedPayment)"
+      >
+        📄 Télécharger le reçu
+      </button>
+      <button class="pdf-btn-close-modal" (click)="closeDetail()">Fermer</button>
+    </div>
+
+  </div>
+</div>

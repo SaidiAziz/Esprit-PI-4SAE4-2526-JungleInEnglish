@@ -1,0 +1,614 @@
+/* ══════════════════════════════════════════════════════════════
+   Payment Dashboard Front  —  Frontoffice (warm sand palette)
+══════════════════════════════════════════════════════════════ */
+
+.pdf-page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* ── HERO ──────────────────────────────────────────────────── */
+
+.pdf-hero-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.pdf-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding: 1.5rem 1.75rem;
+  background: linear-gradient(200deg, #0e7756 30%, #0f5940 70%);
+  border-radius: 16px;
+  color: #fff;
+}
+
+.pdf-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.pdf-hero-info h1 {
+  margin: 0 0 4px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.pdf-subtitle {
+  margin: 0;
+  font-size: 12px;
+  opacity: 0.82;
+}
+
+.pdf-hero-icon {
+  font-size: 2rem;
+  opacity: 0.8;
+}
+
+/* ── KPI CARDS ─────────────────────────────────────────────── */
+.pdf-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 1.75rem;
+}
+
+.pdf-kpi {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 1rem 1.1rem;
+  border-radius: 12px;
+  background: #f8f7f4;
+  border: 1px solid #ece9e0;
+  cursor: pointer;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+
+.pdf-kpi:hover,
+.pdf-kpi.kpi-active {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+}
+
+.pdf-kpi-total {
+  cursor: default;
+  background: #eef9f5;
+  border-color: #c3e8d8;
+}
+.pdf-kpi-paid.kpi-active {
+  background: #e2f6ed;
+  border-color: #1d9e75;
+}
+.pdf-kpi-pending.kpi-active {
+  background: #fef5e4;
+  border-color: #f59e0b;
+}
+.pdf-kpi-failed.kpi-active {
+  background: #fde8e8;
+  border-color: #ef4444;
+}
+
+.pdf-kpi-icon {
+  font-size: 1.4rem;
+}
+
+.pdf-kpi-value {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  line-height: 1.1;
+}
+
+.pdf-kpi-label {
+  font-size: 11px;
+  color: #888;
+  margin-top: 2px;
+}
+
+/* ── CONTROLS ──────────────────────────────────────────────── */
+.pdf-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.pdf-search-wrap {
+  flex: 1;
+  min-width: 180px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid #e0dfd7;
+  border-radius: 10px;
+  padding: 0 12px;
+}
+
+.pdf-search-icon {
+  font-size: 14px;
+  color: #aaa;
+}
+
+.pdf-search {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 13px;
+  padding: 9px 0;
+  color: #1a1a1a;
+}
+
+.pdf-filter-tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.pdf-filter-tabs button {
+  background: transparent;
+  border: 1px solid #e0dfd7;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #666;
+  font-weight: 500;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
+}
+
+.pdf-filter-tabs button.active {
+  background: #1a1a1a;
+  color: #fff;
+  border-color: #1a1a1a;
+}
+
+/* ── EMPTY STATE ────────────────────────────────────────────── */
+.pdf-empty {
+  text-align: center;
+  padding: 3.5rem 2rem;
+  color: #aaa;
+}
+
+.pdf-empty-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+.pdf-empty p {
+  font-size: 14px;
+  margin: 0;
+}
+
+/* ── LIST & CARDS ────────────────────────────────────────────── */
+.pdf-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pdf-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border: 1px solid #e8e7de;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  gap: 12px;
+  transition: box-shadow 0.15s;
+}
+
+.pdf-card:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Left accent line for event payments */
+.pdf-card-event {
+  border-left: 3px solid #1d9e75;
+}
+
+.pdf-card-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.pdf-method-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  background: #f4f3ef;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pdf-card-info {
+  min-width: 0;
+}
+
+.pdf-card-ref {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a1a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pdf-card-meta {
+  font-size: 11px;
+  color: #888;
+  margin-top: 2px;
+}
+
+.pdf-event-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #1d9e75;
+  background: #edf8f3;
+  border-radius: 6px;
+  padding: 2px 8px;
+}
+
+.pdf-event-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #1d9e75;
+  flex-shrink: 0;
+}
+
+/* Right side */
+.pdf-card-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.pdf-card-amount {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  white-space: nowrap;
+}
+
+/* ── STATUS BADGES ────────────────────────────────────────── */
+.pdf-status {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.status-paid {
+  background: #e1f5ee;
+  color: #085041;
+}
+.status-pending {
+  background: #fef5e4;
+  color: #854d0e;
+}
+.status-failed {
+  background: #fee2e2;
+  color: #7f1d1d;
+}
+.status-refunded {
+  background: #eff6ff;
+  color: #1e40af;
+}
+
+/* ── BUTTONS ──────────────────────────────────────────────── */
+.pdf-card-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.pdf-btn-detail {
+  background: #edf8f3;
+  border: 1px solid #c3e8d8;
+  color: #0a6444;
+  border-radius: 8px;
+  padding: 5px 11px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.pdf-btn-detail:hover {
+  background: #c3e8d8;
+}
+
+.pdf-btn-receipt {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+  border-radius: 8px;
+  padding: 5px 11px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.pdf-btn-receipt:hover {
+  background: #bfdbfe;
+}
+
+/* ── LOADING ───────────────────────────────────────────────── */
+.pdf-loading {
+  text-align: center;
+  padding: 3rem;
+  color: #888;
+}
+
+.pdf-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #f0f0f0;
+  border-top-color: #1d9e75;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DETAIL MODAL
+══════════════════════════════════════════════════════════════ */
+.pdf-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.38);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.pdf-modal {
+  background: #fff;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 460px;
+  padding: 1.75rem 2rem;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+  animation: slideUp 0.22s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.pdf-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #f4f3ef;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pdf-modal-close:hover {
+  background: #e8e7de;
+}
+
+.pdf-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.25rem;
+}
+
+.pdf-modal-icon {
+  font-size: 2rem;
+  width: 50px;
+  height: 50px;
+  background: #edf8f3;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pdf-modal-header h2 {
+  margin: 0 0 3px;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.pdf-modal-ref {
+  margin: 0;
+  font-size: 12px;
+  color: #888;
+}
+
+/* Status banner in modal */
+.pdf-modal-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pdf-modal-banner.status-paid {
+  background: #e1f5ee;
+  color: #085041;
+}
+.pdf-modal-banner.status-pending {
+  background: #fef5e4;
+  color: #854d0e;
+}
+.pdf-modal-banner.status-failed {
+  background: #fee2e2;
+  color: #7f1d1d;
+}
+.pdf-modal-banner.status-refunded {
+  background: #eff6ff;
+  color: #1e40af;
+}
+
+.pdf-modal-amount {
+  font-size: 18px;
+}
+
+/* Sections */
+.pdf-modal-section {
+  margin-bottom: 1.25rem;
+}
+
+.pdf-modal-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #aaa;
+  margin-bottom: 0.6rem;
+}
+
+.pdf-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid #f4f3ef;
+  gap: 8px;
+}
+
+.pdf-detail-row:last-child {
+  border-bottom: none;
+}
+
+.pdf-detail-key {
+  font-size: 12px;
+  color: #888;
+  flex-shrink: 0;
+}
+
+.pdf-detail-val {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1a1a1a;
+  text-align: right;
+  word-break: break-word;
+}
+
+/* Modal footer */
+.pdf-modal-footer {
+  display: flex;
+  gap: 8px;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f4f3ef;
+}
+
+.pdf-btn-lg {
+  padding: 9px 18px !important;
+  font-size: 13px !important;
+}
+
+.pdf-btn-close-modal {
+  flex: 1;
+  background: #f4f3ef;
+  border: none;
+  border-radius: 10px;
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.pdf-btn-close-modal:hover {
+  background: #e8e7de;
+}
+
+/* ── RESPONSIVE ─────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .pdf-kpis {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .pdf-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .pdf-filter-tabs {
+    flex-wrap: wrap;
+  }
+  .pdf-card {
+    flex-wrap: wrap;
+  }
+  .pdf-card-right {
+    flex-wrap: wrap;
+  }
+  .pdf-hero {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
