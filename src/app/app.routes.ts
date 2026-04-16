@@ -84,6 +84,11 @@ export const routes: Routes = [
       },
       { path: 'student/tutors', component: TutorListComponent, canActivate: [roleGuard('STUDENT')] },
       { path: 'student/sessions', component: StudentSessionsComponent, canActivate: [roleGuard('STUDENT')] },
+      {
+        path: 'student/timeslots',
+        canActivate: [roleGuard('STUDENT')],
+        loadComponent: () => import('./frontoffice/jungle/student/timeslots-calendar/timeslots-calendar.component').then(m => m.TimeslotsCalendarComponent)
+      },
       { path: 'student/booking-history', component: StudentBookingHistoryComponent, canActivate: [roleGuard('STUDENT')] },
       { path: 'student/bookings/new', component: BookingFormComponent, canActivate: [roleGuard('STUDENT')] },
       {
@@ -125,12 +130,17 @@ export const routes: Routes = [
       {
         path: 'tutor/sessions',
         canActivate: [roleGuard('TUTOR')],
-        loadComponent: () => import('./frontoffice/jungle/tutor/Session/tutor-sessions.component').then(m => m.TutorSessionsComponent)
+        loadChildren: () => import('./frontoffice/jungle/tutor/sessions/sessions.routes').then(m => m.sessionsRoutes)
       },
       {
         path: 'tutor/bookings',
         canActivate: [roleGuard('TUTOR')],
         loadComponent: () => import('./frontoffice/jungle/tutor/Booking/Tutor-bookings.component').then(m => m.TutorBookingsComponent)
+      },
+      {
+        path: 'tutor/timeslots',
+        canActivate: [roleGuard('TUTOR')],
+        loadComponent: () => import('./frontoffice/jungle/tutor/timeslots-calendar/timeslots-calendar.component').then(m => m.TimeslotsCalendarComponent)
       },
       {
         path: 'tutor/availability',
@@ -184,7 +194,14 @@ export const routes: Routes = [
       { path: 'users', component: UsersComponent },
       { path: 'users/:id', component: UserDetailComponent },
 
-      { path: 'sessions', component: SessionListComponent },
+      {
+        path: 'sessions',
+        loadChildren: () => import('./backoffice/pages/sessions/sessions.routes').then(m => m.sessionsRoutes)
+      },
+      {
+        path: 'timeslots',
+        loadComponent: () => import('./backoffice/pages/timeslots-calendar/timeslots-calendar.component').then(m => m.TimeslotsCalendarComponent)
+      },
       { path: 'availability', component: AvailabilityComponent },
       { path: 'feedbacks', component: AdminFeedbacksComponent },
 

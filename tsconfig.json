@@ -26,6 +26,9 @@
       "@frontoffice/*": [
         "app/frontoffice/*"
       ],
+      "@shared/*": [
+        "app/shared/*"
+      ],
       "sweetalert2": [
         "app/shims/sweetalert2"
       ],

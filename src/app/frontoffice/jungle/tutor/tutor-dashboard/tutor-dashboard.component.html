@@ -5,6 +5,7 @@
     <div class="fd-welcome-left">
       <h2>Welcome back, {{ user?.firstName }} 👋</h2>
       <p>Manage your students, sessions, and track your earnings.</p>
+      <a routerLink="/tutor/sessions" class="fd-dashboard-cta">Go to My Sessions</a>
     </div>
     <span class="fd-role-pill fd-role-pill--tutor">Tutor</span>
   </div>
@@ -47,7 +48,8 @@
     <div class="fd-quick-links">
       <a href="#" class="fd-quick-link">🎓 My Students</a>
       <a href="#" class="fd-quick-link">📖 My Courses</a>
-      <a href="#" class="fd-quick-link">🗓️ Schedule</a>
+      <a routerLink="/tutor/sessions" class="fd-quick-link">🗓️ My Sessions</a>
+      <a routerLink="/tutor/bookings" class="fd-quick-link">🧾 Session Bookings</a>
       <a href="#" class="fd-quick-link">💰 Earnings</a>
     </div>
   </div>

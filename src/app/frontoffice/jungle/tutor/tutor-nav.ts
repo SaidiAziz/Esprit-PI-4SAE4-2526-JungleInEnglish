@@ -7,9 +7,10 @@ export const TUTOR_NAV: NavItem[] = [
   { label: 'Loyalty', route: '/loyalty', icon: '🏆' },
   { label: 'My Profile', route: '/tutor/profile', icon: '👤' },
   { label: 'Settings', route: '/tutor/settings', icon: '⚙️' },
-  { label: 'Sessions Booking', route: '/tutor/sessions' },
+  { label: 'My Sessions', route: '/tutor/sessions' },
+  { label: 'Session Bookings', route: '/tutor/bookings' },
+  { label: 'Timeslots Calendar', route: '/tutor/timeslots' },
   { label: 'Availability', route: '/tutor/availability' },
   { label: 'My Students', route: '/tutor/students' },
-  { label: 'Bookings', route: '/tutor/bookings' },
   { label: 'Quizzes', route: '/tutor/quiz' }
 ];

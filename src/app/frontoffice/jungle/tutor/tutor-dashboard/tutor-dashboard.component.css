@@ -127,6 +127,25 @@
   transform: translateY(-2px);
 }
 
+/* CTA button for tutor sessions */
+.fd-dashboard-cta {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.85rem;
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.86rem;
+  font-weight: 600;
+  background: var(--color-accent-gold);
+  color: var(--color-dark-teal);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.fd-dashboard-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.14);
+}
+
 @media (max-width: 900px) { .fd-stats-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 500px) { .fd-stats-grid { grid-template-columns: 1fr; } }
-
