@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../../core/services/auth.service';
-import { UnsplashService, UnsplashImage } from '../../../../backoffice/services/Unsplash.service';
+import { UnsplashService } from '../../../../core/services/Unsplash.service';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -27,7 +27,7 @@ export class StudentQuizListComponent implements OnInit {
 
   levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 
-  private api = 'http://localhost:8081/api';
+  private api = 'http://localhost:8080/api';
 
   constructor(
     private http: HttpClient,
@@ -56,7 +56,7 @@ export class StudentQuizListComponent implements OnInit {
         // ✅ Charger image Unsplash pour chaque card
         data.forEach(q => {
           this.unsplashService.getImageForQuestion(q.title || 'education').subscribe({
-            next: (img: UnsplashImage) => { q.cardImage = img; },
+            next: (img) => { q.cardImage = img; },
             error: () => { q.cardImage = null; }
           });
         });

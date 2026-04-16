@@ -4,8 +4,8 @@
     <div>
       <h2>Sessions</h2>
     </div>
-    <a routerLink="/admin/events" class="btn btn-primary mb-3">
-      + Add session (choose event)
+    <a routerLink="/admin/sessionevents/add" class="btn btn-primary mb-3">
+      + Add session
     </a>
   </div>
 
@@ -79,7 +79,7 @@
             </td>
             <td>
               <a
-                [routerLink]="['/admin/events', s.eventId, 'sessions']"
+                [routerLink]="['/admin/sessionevents/edit', s.id]"
                 class="btn btn-warning btn-sm me-1"
                 >✏️</a
               >
@@ -97,7 +97,7 @@
             <td colspan="10" class="empty-state">
               <div style="font-size: 40px">📭</div>
               <p>Aucune session trouvée</p>
-              <a routerLink="/admin/events" class="btn btn-primary">
+              <a routerLink="/admin/sessionevents/add" class="btn btn-primary">
                 Créer la première session
               </a>
             </td>

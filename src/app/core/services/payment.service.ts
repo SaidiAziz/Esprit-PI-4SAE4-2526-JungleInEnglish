@@ -14,7 +14,7 @@ import {
   providedIn: 'root',
 })
 export class PaymentService {
-  private readonly url = 'http://localhost:8222/api/payments';
+  private readonly url = 'http://localhost:8080/api/payments';
   private stripeInstance: Stripe | null = null; //  cache Stripe
 
   // ✅ Les 3 éléments Stripe séparés (pour garder votre design)

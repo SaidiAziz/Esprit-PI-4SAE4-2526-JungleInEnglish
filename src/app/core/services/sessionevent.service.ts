@@ -3,9 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Session } from '../models/sessionevent.model';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class SessioneventService {
   private baseUrl = 'http://localhost:8222/api/sessions';
 
@@ -35,4 +33,3 @@ export class SessioneventService {
     return this.http.get<Session[]>(`${this.baseUrl}/event/${eventId}`);
   }
 }
-

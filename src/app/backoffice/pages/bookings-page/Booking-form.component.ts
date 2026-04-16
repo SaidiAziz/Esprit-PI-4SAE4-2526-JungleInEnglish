@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { BookingService } from './services/booking.service';
-import { AvailabilityService } from '../availability-page/services/availability.service';
+import { AvailabilityService } from '../../ReservationSession/Availability/services/availability.service';
 import { Booking } from '../../../core/models/booking';
 import { AuthService } from '../../../core/services/auth.service';
 
@@ -176,3 +176,11 @@ export class BookingFormComponent implements OnInit {
     });
   }
 }
+
+
+
+
+
+
+
+

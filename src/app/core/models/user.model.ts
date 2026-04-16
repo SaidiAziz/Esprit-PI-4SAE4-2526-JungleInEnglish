@@ -12,25 +12,23 @@ export interface UserResponse {
   accountStatus: string;
   createdAt: string;
   updatedAt: string;
-  profilePicture?: string;
-  twoFactorEnabled: boolean;
-  twoFactorMethod?: 'EMAIL' | 'TOTP';
-  // Student fields
   level?: string;
   learningGoals?: string;
-  // Tutor fields
   bio?: string;
   specialization?: string;
   experienceYears?: number;
   hourlyRate?: number;
+  profilePicture?: string;
+  twoFactorEnabled?: boolean;
+  twoFactorMethod?: 'EMAIL' | 'TOTP';
 }
 
 export interface LoginResponse {
   token: string;
   user: UserResponse;
-  requires2FA: boolean;
-  twoFactorMethod?: 'EMAIL' | 'TOTP';
+  requires2FA?: boolean;
   email?: string;
+  twoFactorMethod?: 'EMAIL' | 'TOTP';
 }
 
 export interface RegisterRequest {
@@ -54,13 +52,24 @@ export interface UpdateProfileRequest {
   firstName?: string;
   lastName?: string;
   email?: string;
-  profilePicture?: string;
   level?: string;
   learningGoals?: string;
   bio?: string;
   specialization?: string;
   experienceYears?: number;
   hourlyRate?: number;
+}
+
+export interface Tutor extends UserResponse {
+
+  bio?: string;
+  specialization?: string | string[];
+  experienceYears?: number;
+  hourlyRate?: number;
+  rating?: number;
+  reviewCount?: number;
+  profileImage?: string;
+  languages?: string[];
 }
 
 export interface ForgotPasswordRequest {
@@ -78,15 +87,14 @@ export interface UserSummary {
   lastName: string;
   email: string;
   role: 'STUDENT' | 'TUTOR' | 'ADMIN';
-  status: string;
+  accountStatus: string;
   createdAt: string;
 }
 
 export interface PagedResponse<T> {
   content: T[];
-  page: number;
-  size: number;
   totalElements: number;
   totalPages: number;
-  last: boolean;
+  size: number;
+  number: number;
 }

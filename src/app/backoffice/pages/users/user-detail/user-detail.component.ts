@@ -9,7 +9,7 @@ import { UserServiceService } from '../../../services/user-service.service';
   standalone: true,
   imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './user-detail.component.html',
-  styleUrl: './user-detail.component.css'
+  styleUrls: ['./user-detail.component.css']
 })
 export class UserDetailComponent implements OnInit {
   user: any = null;

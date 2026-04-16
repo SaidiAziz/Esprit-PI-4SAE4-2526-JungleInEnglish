@@ -84,7 +84,6 @@ export class PaymentDashboardComponent implements OnInit {
   async buildCharts(): Promise<void> {
     if (!this.isBrowser) return;
 
-    // Import dynamique pour éviter le SSR
     const { Chart, registerables } = await import('chart.js');
     Chart.register(...registerables);
 

@@ -79,8 +79,7 @@ export class AvailabilityComponent implements OnInit {
     this.availabilityService.toggle(slot.id!).subscribe(() => this.loadAvailabilities());
   }
 
-  deleteSlot(id: number | undefined): void {
-    if (!id) return;
+  deleteSlot(id: number): void {
     if (confirm('Delete this availability slot?')) {
       this.availabilityService.delete(id).subscribe(() => this.loadAvailabilities());
     }

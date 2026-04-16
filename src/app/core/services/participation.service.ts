@@ -1,12 +1,9 @@
-// src/app/services/participation.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { Participation } from '../models/participation.model';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ParticipationService {
   private baseUrl = 'http://localhost:8222/api/participations';
   private emailUrl = 'http://localhost:8222/api/email';

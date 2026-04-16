@@ -6,8 +6,8 @@ export interface Question {
   points: number;
   answers?: Answer[];
   showAnswerForm?: boolean;
-newAnswerText?: string;
-newAnswerCorrect?: boolean;
+  newAnswerText?: string;
+  newAnswerCorrect?: boolean;
 }
 
 export interface Answer {
