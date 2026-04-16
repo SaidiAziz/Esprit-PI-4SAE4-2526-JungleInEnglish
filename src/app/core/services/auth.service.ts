@@ -16,7 +16,7 @@ export type { LoginRequest, LoginResponse, RegisterRequest, UserResponse };
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly API_URL = 'http://localhost:8090/admin/api/admin';
+  private readonly API_URL = 'http://localhost:8090/user/auth';
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'auth_user';
 

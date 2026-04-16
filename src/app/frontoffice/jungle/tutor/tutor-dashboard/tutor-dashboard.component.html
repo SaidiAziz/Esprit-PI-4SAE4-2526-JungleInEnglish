@@ -1,6 +1,5 @@
 <div class="td-page">
 
-  <!-- Welcome banner -->
   <div class="fd-welcome-banner fd-welcome-banner--tutor">
     <div class="fd-welcome-left">
       <h2>Welcome back, {{ user?.firstName }} 👋</h2>
@@ -9,7 +8,6 @@
     <span class="fd-role-pill fd-role-pill--tutor">Tutor</span>
   </div>
 
-  <!-- Stats -->
   <div class="fd-stats-grid">
     <div class="fd-stat-card">
       <div class="fd-stat-icon">🎓</div>
@@ -18,6 +16,7 @@
         <span class="fd-stat-value">—</span>
       </div>
     </div>
+
     <div class="fd-stat-card">
       <div class="fd-stat-icon">📖</div>
       <div class="fd-stat-info">
@@ -25,6 +24,7 @@
         <span class="fd-stat-value">—</span>
       </div>
     </div>
+
     <div class="fd-stat-card">
       <div class="fd-stat-icon">🗓️</div>
       <div class="fd-stat-info">
@@ -32,6 +32,7 @@
         <span class="fd-stat-value">—</span>
       </div>
     </div>
+
     <div class="fd-stat-card">
       <div class="fd-stat-icon">💰</div>
       <div class="fd-stat-info">
@@ -41,14 +42,17 @@
     </div>
   </div>
 
-  <!-- Quick links -->
   <div class="fd-quick-section">
     <h3>Quick Access</h3>
     <div class="fd-quick-links">
-      <a href="#" class="fd-quick-link">🎓 My Students</a>
-      <a href="#" class="fd-quick-link">📖 My Courses</a>
-      <a href="#" class="fd-quick-link">🗓️ Schedule</a>
-      <a href="#" class="fd-quick-link">💰 Earnings</a>
+      <a routerLink="/tutor/dashboard" class="fd-quick-link">🎓 My Students</a>
+      <a routerLink="/tutor/sessions" class="fd-quick-link">
+        <span>📚</span> My Courses
+      </a>
+      <a routerLink="/tutor/timeslots" class="fd-quick-link">
+        <span>🗓️</span> Schedule
+      </a>
+      <a routerLink="/tutor/dashboard" class="fd-quick-link">💰 Earnings</a>
     </div>
   </div>
 

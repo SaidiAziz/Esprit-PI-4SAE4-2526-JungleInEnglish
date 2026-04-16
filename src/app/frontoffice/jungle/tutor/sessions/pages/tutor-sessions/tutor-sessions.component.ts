@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { SessionService } from '../../services/session.service';
 import { Session } from '../../models/session.model';
+import { AuthService } from '../../../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-tutor-sessions',
@@ -16,12 +17,22 @@ export class TutorSessionsComponent implements OnInit {
   loading = false;
   error = '';
 
-  // mets ici l'id réel du tutor à tester
-  tutorId = 20;
+  tutorId!: number;
 
-  constructor(private sessionService: SessionService) {}
+  constructor(
+    private sessionService: SessionService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
+    const currentUser = this.authService.getCurrentUser();
+
+    if (!currentUser || !currentUser.id) {
+      this.error = 'Utilisateur non connecté.';
+      return;
+    }
+
+    this.tutorId = currentUser.id;
     this.loadSessions();
   }
 
