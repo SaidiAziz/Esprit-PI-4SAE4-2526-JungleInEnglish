@@ -12,6 +12,48 @@
     "skipLibCheck": true,
     "isolatedModules": true,
     "esModuleInterop": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@app/*": [
+        "app/*"
+      ],
+      "@core/*": [
+        "app/core/*"
+      ],
+      "@backoffice/*": [
+        "app/backoffice/*"
+      ],
+      "@frontoffice/*": [
+        "app/frontoffice/*"
+      ],
+      "sweetalert2": [
+        "app/shims/sweetalert2"
+      ],
+      "ngx-lottie": [
+        "app/shims/ngx-lottie"
+      ],
+      "@ng-bootstrap/ng-bootstrap": [
+        "app/shims/ng-bootstrap"
+      ],
+      "@angular/cdk/drag-drop": [
+        "app/shims/angular-cdk-drag-drop"
+      ],
+      "primeng/button": [
+        "app/shims/primeng-button"
+      ],
+      "primeng/confirmdialog": [
+        "app/shims/primeng-confirmdialog"
+      ],
+      "primeng/toast": [
+        "app/shims/primeng-toast"
+      ],
+      "primeng/radiobutton": [
+        "app/shims/primeng-radiobutton"
+      ],
+      "primeng/api": [
+        "app/shims/primeng-api"
+      ]
+    },
     "sourceMap": true,
     "declaration": false,
     "experimentalDecorators": true,

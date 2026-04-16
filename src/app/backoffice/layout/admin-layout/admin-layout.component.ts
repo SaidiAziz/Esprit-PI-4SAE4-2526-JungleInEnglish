@@ -14,6 +14,13 @@ export const ADMIN_NAV: NavItem[] = [
   { label: 'Payments', route: '/admin/payments/dashboard' },
   { label: 'Loyalty Codes', route: '/admin/payments/loyalty-codes' },
   { label: 'Users', route: '/admin/users' },
+  { label: 'Sessions Booking', route: '/admin/sessions' },
+  { label: 'Availability', route: '/admin/availability' },
+  { label: 'Bookings', route: '/admin/bookings' },
+  { label: 'Feedbacks', route: '/admin/feedbacks' },
+  // New quiz management section
+  { label: 'Quizzes', route: '/admin/quiz' }
+
 ];
 
 @Component({

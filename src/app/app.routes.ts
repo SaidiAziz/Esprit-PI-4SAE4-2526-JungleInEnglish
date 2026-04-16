@@ -9,7 +9,13 @@ import { ForgotPasswordComponent } from './frontoffice/pages/forgot-password/for
 import { ResetPasswordComponent } from './frontoffice/pages/reset-password/reset-password.component';
 import { Verify2FAComponent } from './frontoffice/pages/verify-2fa/verify-2fa.component';
 import { StudentDashboardComponent } from './frontoffice/jungle/student/student-dashboard/student-dashboard.component';
+import { StudentSessionsComponent } from './frontoffice/jungle/student/student-sessions/student-sessions.component';
+import { StudentBookingsComponent } from './frontoffice/jungle/student/student-bookings/student-bookings.component';
+import { StudentBookingHistoryComponent } from './frontoffice/jungle/student/student-booking-history/student-booking-history.component';
 import { TutorDashboardComponent } from './frontoffice/jungle/tutor/tutor-dashboard/tutor-dashboard.component';
+import { TutorQuizStatsComponent } from './frontoffice/jungle/tutor/Quiz/Tutor quiz stats.component';
+import { TutorListComponent } from './frontoffice/jungle/student/tutor-list/tutor-list.component';
+import { BookingFormComponent } from './frontoffice/jungle/student/booking-form/booking-form.component';
 import { ProfileComponent } from './frontoffice/jungle/profile/profile.component';
 import { SettingsComponent } from './frontoffice/jungle/settings/settings.component';
 import { EventCardsComponent } from './frontoffice/pages/events/event-cards.component';
@@ -32,6 +38,9 @@ import { PaymentDashboardComponent } from './backoffice/pages/payments/payment-d
 import { PaymentEventsComponent } from './backoffice/pages/payments/payment-events/payment-events.component';
 import { PaymentCoursComponent } from './backoffice/pages/payments/payment-cours/payment-cours.component';
 import { LoyaltyCodesComponent } from './backoffice/pages/payments/loyalty-codes/loyalty-codes.component';
+import { AvailabilityComponent } from './backoffice/pages/availability-page/Availability.component';
+import { AdminFeedbacksComponent } from './backoffice/pages/admin-feedbacks/admin-feedbacks.component';
+import { BookingListComponent } from './backoffice/pages/bookings-page/Booking-list.component';
 
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
@@ -73,6 +82,31 @@ export const routes: Routes = [
         component: SettingsComponent,
         canActivate: [roleGuard('STUDENT')]
       },
+      { path: 'student/tutors', component: TutorListComponent, canActivate: [roleGuard('STUDENT')] },
+      { path: 'student/sessions', component: StudentSessionsComponent, canActivate: [roleGuard('STUDENT')] },
+      { path: 'student/booking-history', component: StudentBookingHistoryComponent, canActivate: [roleGuard('STUDENT')] },
+      { path: 'student/bookings/new', component: BookingFormComponent, canActivate: [roleGuard('STUDENT')] },
+      {
+        path: 'student/bookings/edit/:id',
+        canActivate: [roleGuard('STUDENT')],
+        loadComponent: () => import('./backoffice/pages/bookings-page/Booking-form.component').then(m => m.BookingFormComponent)
+      },
+      { path: 'student/bookings', component: StudentBookingsComponent, canActivate: [roleGuard('STUDENT')] },
+      {
+        path: 'student/quiz',
+        canActivate: [roleGuard('STUDENT')],
+        loadComponent: () => import('./frontoffice/jungle/student/Quiz/student-quiz-list.component').then(m => m.StudentQuizListComponent)
+      },
+      {
+        path: 'student/quiz/:id/take',
+        canActivate: [roleGuard('STUDENT')],
+        loadComponent: () => import('./frontoffice/jungle/student/Quiz/student-quiz-take.component').then(m => m.StudentQuizTakeComponent)
+      },
+      {
+        path: 'student/results',
+        canActivate: [roleGuard('STUDENT')],
+        loadComponent: () => import('./frontoffice/jungle/student/Quiz/student-quiz-history.component').then(m => m.StudentQuizHistoryComponent)
+      },
       {
         path: 'tutor/dashboard',
         component: TutorDashboardComponent,
@@ -88,6 +122,47 @@ export const routes: Routes = [
         component: SettingsComponent,
         canActivate: [roleGuard('TUTOR')]
       },
+      {
+        path: 'tutor/sessions',
+        canActivate: [roleGuard('TUTOR')],
+        loadComponent: () => import('./frontoffice/jungle/tutor/Session/tutor-sessions.component').then(m => m.TutorSessionsComponent)
+      },
+      {
+        path: 'tutor/bookings',
+        canActivate: [roleGuard('TUTOR')],
+        loadComponent: () => import('./frontoffice/jungle/tutor/Booking/Tutor-bookings.component').then(m => m.TutorBookingsComponent)
+      },
+      {
+        path: 'tutor/availability',
+        canActivate: [roleGuard('TUTOR')],
+        loadComponent: () => import('./backoffice/pages/availability-page/Availability.component').then(m => m.AvailabilityComponent)
+      },
+      {
+        path: 'tutor/students',
+        canActivate: [roleGuard('TUTOR')],
+        loadComponent: () => import('./frontoffice/jungle/tutor/Student/tutor-students.component').then(m => m.TutorStudentsComponent)
+      },
+      {
+        path: 'tutor/quiz',
+        canActivate: [roleGuard('TUTOR')],
+        loadComponent: () => import('./frontoffice/jungle/tutor/Quiz/Tutor quiz list.component').then(m => m.TutorQuizListComponent)
+      },
+      {
+        path: 'tutor/quiz/new',
+        canActivate: [roleGuard('TUTOR')],
+        loadComponent: () => import('./frontoffice/jungle/tutor/Quiz/Tutor quiz form.component').then(m => m.TutorQuizFormComponent)
+      },
+      {
+        path: 'tutor/quiz/edit/:id',
+        canActivate: [roleGuard('TUTOR')],
+        loadComponent: () => import('./frontoffice/jungle/tutor/Quiz/Tutor quiz form.component').then(m => m.TutorQuizFormComponent)
+      },
+      {
+        path: 'tutor/quiz/:id/results',
+        canActivate: [roleGuard('TUTOR')],
+        loadComponent: () => import('./frontoffice/jungle/tutor/Quiz/Tutor quiz results component').then(m => m.TutorQuizResultsComponent)
+      },
+      { path: 'tutor/quiz/:id/stats', component: TutorQuizStatsComponent, canActivate: [roleGuard('TUTOR')] },
 
       // Shared event features for authenticated learners
       { path: 'events', component: EventCardsComponent },
@@ -109,6 +184,10 @@ export const routes: Routes = [
       { path: 'users', component: UsersComponent },
       { path: 'users/:id', component: UserDetailComponent },
 
+      { path: 'sessions', component: SessionListComponent },
+      { path: 'availability', component: AvailabilityComponent },
+      { path: 'feedbacks', component: AdminFeedbacksComponent },
+
       { path: 'events', component: EventListComponent },
       { path: 'events/add', component: EventFormComponent },
       { path: 'events/edit/:id', component: EventFormComponent },
@@ -123,6 +202,13 @@ export const routes: Routes = [
       { path: 'participations', component: ParticipationListComponent },
       { path: 'participations/add', component: ParticipationFormComponent },
       { path: 'participations/edit/:id', component: ParticipationFormComponent },
+
+      { path: 'bookings/new', loadComponent: () => import('./backoffice/pages/bookings-page/Booking-form.component').then(m => m.BookingFormComponent) },
+      { path: 'bookings/edit/:id', loadComponent: () => import('./backoffice/pages/bookings-page/Booking-form.component').then(m => m.BookingFormComponent) },
+      { path: 'bookings', component: BookingListComponent },
+      { path: 'quiz', loadComponent: () => import('./backoffice/pages/AdminQuiz/admin-quiz.component').then(m => m.AdminQuizComponent) },
+      { path: 'quiz/:id/questions', loadComponent: () => import('./backoffice/pages/Question/question-list/question-list.component').then(m => m.QuestionListComponent) },
+      { path: 'quiz/:id/take', loadComponent: () => import('./backoffice/pages/Quiz/quiz-take/quiz-take.component').then(m => m.QuizTakeComponent) },
 
       { path: 'payments', redirectTo: 'payments/dashboard', pathMatch: 'full' },
       { path: 'payments/dashboard', component: PaymentDashboardComponent },
