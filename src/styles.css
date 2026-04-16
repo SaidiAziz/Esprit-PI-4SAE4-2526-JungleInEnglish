@@ -170,4 +170,264 @@ img {
   background: var(--color-dark-teal);
 }
 
+/* ── Shared shell styles for integrated AI/Collaboration pages ───────────── */
+.fd-page-shell {
+  display: grid;
+  gap: 1.1rem;
+  padding: 0;
+}
 
+.fd-page-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.05rem 1.2rem;
+  border-radius: 14px;
+  border: 1px solid var(--fd-card-border);
+  background: linear-gradient(135deg, rgba(45, 87, 87, 0.09), rgba(246, 189, 96, 0.14));
+}
+
+.fd-page-hero h1 {
+  margin: 0.2rem 0 0.25rem;
+  font-size: 1.28rem;
+  color: var(--color-dark-teal);
+}
+
+.fd-eyebrow {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent-purple);
+}
+
+.fd-muted,
+.fd-muted-inline {
+  color: #61717d;
+  font-size: 0.88rem;
+}
+
+.fd-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.fd-grid--two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.fd-grid--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.fd-surface-card,
+.fd-metric-card,
+.fd-action-card {
+  border: 1px solid var(--fd-card-border) !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+  box-shadow: 0 1px 6px rgba(15, 23, 42, 0.06) !important;
+}
+
+.fd-section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.8rem;
+}
+
+.fd-section-head h2 {
+  margin: 0;
+  font-size: 1.04rem;
+  color: #0f172a;
+}
+
+.fd-form-grid {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.fd-form-grid--compact {
+  gap: 0.45rem;
+}
+
+.fd-analytics-list,
+.fd-room-stack,
+.fd-insight-list,
+.fd-progress-stack,
+.fd-step-list {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.fd-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.fd-pill,
+.fd-status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: #ede9fe;
+  color: #4f46e5;
+}
+
+.fd-status-pill--accepted {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.fd-feedback {
+  color: #4f46e5;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.fd-empty-state {
+  padding: 0.9rem 1rem;
+  border: 1px dashed var(--fd-card-border);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.75);
+  color: #64748b;
+  font-size: 0.88rem;
+}
+
+/* Backoffice visual consistency for AI admin pages */
+.users-page {
+  padding: 0;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.page-header h2,
+.page-header h3 {
+  margin: 0;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.page-header h2 {
+  font-size: 1.3rem;
+}
+
+.page-header h3 {
+  font-size: 1rem;
+}
+
+.page-header--compact {
+  margin: 0;
+  border-bottom: none;
+  padding: 0.9rem 1rem 0.7rem;
+}
+
+.state-msg {
+  color: #94a3b8;
+  font-size: 0.86rem;
+}
+
+.admin-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.admin-metric-card,
+.detail-panel,
+.table-wrapper {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 1px 8px rgba(15, 23, 42, 0.05);
+}
+
+.admin-metric-card {
+  padding: 0.9rem 1rem;
+}
+
+.admin-metric-card span {
+  display: block;
+  color: #64748b;
+  font-size: 0.82rem;
+}
+
+.admin-metric-card strong {
+  font-size: 1.6rem;
+  color: #0f172a;
+}
+
+.admin-two-col,
+.admin-split-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  font-size: 0.86rem;
+}
+
+.users-table thead {
+  background: #1e293b;
+}
+
+.users-table th {
+  text-align: left;
+  padding: 0.75rem 0.95rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+}
+
+.users-table td {
+  padding: 0.72rem 0.95rem;
+  color: #334155;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.btn-view {
+  border: 1px solid #6366f1;
+  color: #6366f1;
+  background: transparent;
+  border-radius: 8px;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-view:hover {
+  background: #6366f1;
+  color: #fff;
+}
+
+@media (max-width: 980px) {
+  .fd-grid--two,
+  .fd-grid--three,
+  .admin-two-col,
+  .admin-split-grid {
+    grid-template-columns: 1fr;
+  }
+}

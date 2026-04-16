@@ -85,6 +85,56 @@ export const routes: Routes = [
       { path: 'student/tutors', component: TutorListComponent, canActivate: [roleGuard('STUDENT')] },
       { path: 'student/sessions', component: StudentSessionsComponent, canActivate: [roleGuard('STUDENT')] },
       {
+        path: 'student/ai-insights',
+        canActivate: [roleGuard('STUDENT')],
+        loadComponent: () => import('./frontoffice/jungle/student/student-ai-insights/student-ai-insights.component').then(m => m.StudentAiInsightsComponent)
+      },
+      {
+        path: 'student/courses',
+        canActivate: [roleGuard('STUDENT')],
+        loadComponent: () => import('./frontoffice/jungle/student/student-courses/student-courses.component').then(m => m.StudentCoursesComponent)
+      },
+      {
+        path: 'student/forum',
+        canActivate: [roleGuard('STUDENT')],
+        loadComponent: () => import('./frontoffice/jungle/student/student-forum/student-forum.component').then(m => m.StudentForumComponent)
+      },
+      {
+        path: 'student/forum/new',
+        canActivate: [roleGuard('STUDENT')],
+        loadComponent: () => import('./frontoffice/jungle/student/student-forum-new/student-forum-new.component').then(m => m.StudentForumNewComponent)
+      },
+      {
+        path: 'student/forum/:id',
+        canActivate: [roleGuard('STUDENT')],
+        loadComponent: () => import('./frontoffice/jungle/student/student-forum-detail/student-forum-detail.component').then(m => m.StudentForumDetailComponent)
+      },
+      {
+        path: 'student/learning-path',
+        canActivate: [roleGuard('STUDENT')],
+        loadComponent: () => import('./frontoffice/jungle/student/student-learning-path/student-learning-path.component').then(m => m.StudentLearningPathComponent)
+      },
+      {
+        path: 'student/recommendations',
+        canActivate: [roleGuard('STUDENT')],
+        loadComponent: () => import('./frontoffice/jungle/student/student-recommendations/student-recommendations.component').then(m => m.StudentRecommendationsComponent)
+      },
+      {
+        path: 'student/collaboration',
+        canActivate: [roleGuard('STUDENT')],
+        loadComponent: () => import('./frontoffice/jungle/student/student-collaboration-hub/student-collaboration-hub.component').then(m => m.StudentCollaborationHubComponent)
+      },
+      {
+        path: 'student/collaboration/room/:id',
+        canActivate: [roleGuard('STUDENT')],
+        loadComponent: () => import('./frontoffice/jungle/shared/collaboration-room-view/collaboration-room-view.component').then(m => m.CollaborationRoomViewComponent)
+      },
+      {
+        path: 'student/badges',
+        canActivate: [roleGuard('STUDENT')],
+        loadComponent: () => import('./frontoffice/jungle/student/student-badges/student-badges.component').then(m => m.StudentBadgesComponent)
+      },
+      {
         path: 'student/timeslots',
         canActivate: [roleGuard('STUDENT')],
         loadComponent: () => import('./frontoffice/jungle/student/timeslots-calendar/timeslots-calendar.component').then(m => m.TimeslotsCalendarComponent)
@@ -126,6 +176,26 @@ export const routes: Routes = [
         path: 'tutor/settings',
         component: SettingsComponent,
         canActivate: [roleGuard('TUTOR')]
+      },
+      {
+        path: 'tutor/rooms',
+        canActivate: [roleGuard('TUTOR')],
+        loadComponent: () => import('./frontoffice/jungle/tutor/tutor-rooms/tutor-rooms.component').then(m => m.TutorRoomsComponent)
+      },
+      {
+        path: 'tutor/challenges',
+        canActivate: [roleGuard('TUTOR')],
+        loadComponent: () => import('./frontoffice/jungle/tutor/tutor-challenges/tutor-challenges.component').then(m => m.TutorChallengesComponent)
+      },
+      {
+        path: 'tutor/analytics',
+        canActivate: [roleGuard('TUTOR')],
+        loadComponent: () => import('./frontoffice/jungle/tutor/tutor-analytics/tutor-analytics.component').then(m => m.TutorAnalyticsComponent)
+      },
+      {
+        path: 'tutor/collaboration/room/:id',
+        canActivate: [roleGuard('TUTOR')],
+        loadComponent: () => import('./frontoffice/jungle/shared/collaboration-room-view/collaboration-room-view.component').then(m => m.CollaborationRoomViewComponent)
       },
       {
         path: 'tutor/sessions',
@@ -193,6 +263,10 @@ export const routes: Routes = [
 
       { path: 'users', component: UsersComponent },
       { path: 'users/:id', component: UserDetailComponent },
+      { path: 'courses', loadComponent: () => import('./backoffice/pages/courses/admin-courses.component').then(m => m.AdminCoursesComponent) },
+      { path: 'courses/new', loadComponent: () => import('./backoffice/pages/courses/admin-course-form.component').then(m => m.AdminCourseFormComponent) },
+      { path: 'courses/:id', loadComponent: () => import('./backoffice/pages/courses/admin-course-form.component').then(m => m.AdminCourseFormComponent) },
+      { path: 'forum', loadComponent: () => import('./backoffice/pages/forum-moderation/forum-moderation.component').then(m => m.ForumModerationComponent) },
 
       {
         path: 'sessions',
@@ -202,6 +276,12 @@ export const routes: Routes = [
         path: 'timeslots',
         loadComponent: () => import('./backoffice/pages/timeslots-calendar/timeslots-calendar.component').then(m => m.TimeslotsCalendarComponent)
       },
+      { path: 'collaboration', loadComponent: () => import('./backoffice/pages/collaboration-admin/collaboration-admin-dashboard.component').then(m => m.CollaborationAdminDashboardComponent) },
+      { path: 'collaboration/rooms', loadComponent: () => import('./backoffice/pages/collaboration-admin/collaboration-admin-rooms.component').then(m => m.CollaborationAdminRoomsComponent) },
+      { path: 'collaboration/activity', loadComponent: () => import('./backoffice/pages/collaboration-admin/collaboration-admin-activity.component').then(m => m.CollaborationAdminActivityComponent) },
+      { path: 'ai', loadComponent: () => import('./backoffice/pages/ai-admin/ai-admin-dashboard.component').then(m => m.AiAdminDashboardComponent) },
+      { path: 'ai/students', loadComponent: () => import('./backoffice/pages/ai-admin/ai-admin-students.component').then(m => m.AiAdminStudentsComponent) },
+      { path: 'ai/recommendations', loadComponent: () => import('./backoffice/pages/ai-admin/ai-admin-recommendations.component').then(m => m.AiAdminRecommendationsComponent) },
       { path: 'availability', component: AvailabilityComponent },
       { path: 'feedbacks', component: AdminFeedbacksComponent },
 
