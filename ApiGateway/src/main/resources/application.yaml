@@ -1,0 +1,69 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: API-Gateway
+
+  cloud:
+    gateway:
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:4200"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - PATCH
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+      discovery:
+        locator:
+          enabled: false
+      routes:
+        - id: COLLABORATION-ROOM-SERVICE-WS
+          uri: lb:ws://COLLABORATION-ROOM-SERVICE
+          predicates:
+            - Path=/api/collaboration/ws/**
+        - id: USER-SERVICE
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user/**
+          filters:
+            - StripPrefix=1
+        - id: AI-LEARNING-ASSISTANT-SERVICE
+          uri: lb://AI-LEARNING-ASSISTANT-SERVICE
+          predicates:
+            - Path=/api/ai/**
+        - id: COLLABORATION-ROOM-SERVICE
+          uri: lb://COLLABORATION-ROOM-SERVICE
+          predicates:
+            - Path=/api/collaboration/**
+        - id: COURSE-MS
+          uri: lb://COURSE-MS
+          predicates:
+            - Path=/api/courses/**
+        - id: COURSE-MS-FORUM
+          uri: lb://COURSE-MS
+          predicates:
+            - Path=/api/forum/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+    hostname: localhost
+    instance-id: ${spring.application.name}:${server.port}
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.client: DEBUG
