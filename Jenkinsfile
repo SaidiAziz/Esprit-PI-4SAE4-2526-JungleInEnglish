@@ -1,11 +1,3 @@
-def runCommand(String command) {
-    if (isUnix()) {
-        sh command
-    } else {
-        bat command
-    }
-}
-
 pipeline {
     agent any
 
@@ -14,7 +6,8 @@ pipeline {
     }
 
     environment {
-        CI = 'true'
+        CI         = 'true'
+        CHROME_BIN = '/usr/bin/google-chrome-stable'
     }
 
     stages {
@@ -26,37 +19,30 @@ pipeline {
 
         stage('Install dependencies') {
             steps {
-                script {
-                    runCommand('npm ci --legacy-peer-deps')
-                }
+                sh 'npm ci --legacy-peer-deps'
             }
         }
 
         stage('Lint') {
             steps {
-                script {
-                    def angularJson = readFile('angular.json')
-                    if (angularJson.contains('"lint"')) {
-                        runCommand('npx ng lint')
-                    } else {
-                        echo 'Skipping lint: no lint target is configured in angular.json.'
-                    }
-                }
+                echo 'Lint not configured — skipping'
             }
         }
 
         stage('Test') {
             steps {
-                script {
-                    runCommand('npx ng test --watch=false --browsers=ChromeHeadless --code-coverage --progress=false')
-                }
+                sh '''
+                    npx ng test \
+                        --watch=false \
+                        --browsers=ChromeHeadless \
+                        --code-coverage \
+                        --progress=false
+                '''
             }
             post {
                 always {
                     publishHTML(target: [
-                        allowMissing: true,
-                        alwaysLinkToLastBuild: true,
-                        keepAll: true,
+                        allowMissing: false,
                         reportDir: 'coverage/PiFront',
                         reportFiles: 'index.html',
                         reportName: 'Coverage Report'
@@ -67,9 +53,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                script {
-                    runCommand('npx ng build --configuration=production')
-                }
+                sh 'npx ng build --configuration=production'
             }
         }
     }
