@@ -27,7 +27,7 @@ pipeline {
         stage('Install dependencies') {
             steps {
                 script {
-                    runCommand('npm ci')
+                    runCommand('npm ci --legacy-peer-deps')
                 }
             }
         }
