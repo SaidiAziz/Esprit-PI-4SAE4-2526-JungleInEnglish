@@ -158,7 +158,7 @@
         <p class="bio">{{ tutor.bio }}</p>
 
         <div class="specializations">
-          <span *ngFor="let spec of (tutor.specialization ?? []).slice(0, 3)" class="spec-tag">{{ spec }}</span>
+          <span class="spec-tag" *ngIf="tutor.specialization">{{ tutor.specialization }}</span>
         </div>
 
         <p class="ai-snippet" *ngIf="isRecommended(tutor.id)">

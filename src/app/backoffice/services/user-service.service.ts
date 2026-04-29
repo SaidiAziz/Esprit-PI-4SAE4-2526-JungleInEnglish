@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {PagedResponse, UpdateProfileRequest, UserResponse, UserSummary} from '../../core/models/user.model';
+import {PagedResponse, TutorProfile, UpdateProfileRequest, UserResponse, UserSummary} from '@core/models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -9,11 +9,16 @@ import {PagedResponse, UpdateProfileRequest, UserResponse, UserSummary} from '..
 export class UserServiceService {
 
   private apiUrl = 'http://localhost:8081/users'
+  private tutorProfileApiUrl = 'http://localhost:8081/tutorProfile'
 
   constructor(private http: HttpClient) { }
 
   getAllUsers(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/getAllUsers`);
+  }
+
+  getAllTutorProfiles(): Observable<TutorProfile[]> {
+    return this.http.get<TutorProfile[]>(`${this.tutorProfileApiUrl}/getAllTutorProfiles`);
   }
 
   searchUsers(

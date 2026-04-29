@@ -3,13 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { BookingService } from '../../../../backoffice/pages/bookings-page/services/booking.service';
-import { AvailabilityService } from '../../../../backoffice/ReservationSession/Availability/services/availability.service';
-import { EmailService } from '../../../../core/services/email.service';
-import { PusherBeamsService } from '../../../../core/services/pusher-beams.service';
-import { AuthService } from '../../../../core/services/auth.service';
-import { UserServiceService } from '../../../../backoffice/services/user-service.service';
-import { Booking } from '../../../../core/models/booking';
+import { BookingService } from '@backoffice/pages/bookings-page/services/booking.service';
+import { AvailabilityService } from '@backoffice/ReservationSession/Availability/services/availability.service';
+import { EmailService } from '@core/services/email.service';
+import { PusherBeamsService } from '@core/services/pusher-beams.service';
+import { AuthService } from '@core/services/auth.service';
+import { UserServiceService } from '@backoffice/services/user-service.service';
+import { Booking } from '@core/models/booking';
 import { forkJoin } from 'rxjs';
 
 interface TutorBooking extends Booking {
@@ -143,9 +143,8 @@ export class TutorBookingsComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Réservation acceptée !',
-          html: `Un email avec le lien de paiement a été envoyé à l'étudiant.`,
+          text: `Un email avec le lien de paiement a été envoyé à l'étudiant.`,
           timer: 3000,
-          showConfirmButton: false,
           timerProgressBar: true,
         });
       },

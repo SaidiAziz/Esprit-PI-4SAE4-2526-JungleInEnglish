@@ -11,8 +11,6 @@ import { Tutor } from '@core/models/user.model';
 import { Stripe } from '@stripe/stripe-js';
 import Swal from 'sweetalert2';
 
-const swalBase = Swal.mixin({ confirmButtonColor: '#2563eb', cancelButtonColor: '#6b7280' });
-
 @Component({
   selector: 'app-student-pay',
   standalone: true,
@@ -46,7 +44,7 @@ export class StudentPayComponent implements OnInit {
     const bookingId = +this.route.snapshot.queryParams['bookingId'];
     if (!bookingId) {
       this.loading = false;
-      swalBase.fire({ icon: 'error', title: 'Lien invalide', text: 'Ce lien de paiement est incorrect.' });
+      Swal.fire({ icon: 'error', title: 'Lien invalide', text: 'Ce lien de paiement est incorrect.' });
       return;
     }
     this.loadBooking(bookingId);
@@ -57,12 +55,11 @@ export class StudentPayComponent implements OnInit {
       next: (booking) => {
         if (booking.status === 'CANCELLED' || booking.status === 'REJECTED') {
           this.loading = false;
-          swalBase.fire({
+          Swal.fire({
             icon: 'warning',
             title: 'This booking has expired',
             text: 'This booking has been cancelled and can no longer be paid.',
             confirmButtonText: 'Go to Home',
-            allowOutsideClick: false,
           }).then(() => this.router.navigate(['/']));
           return;
         }
@@ -71,7 +68,7 @@ export class StudentPayComponent implements OnInit {
       },
       error: () => {
         this.loading = false;
-        swalBase.fire({ icon: 'error', title: 'Réservation introuvable', text: 'Cette réservation n\'existe pas ou a expiré.' });
+        Swal.fire({ icon: 'error', title: 'Réservation introuvable', text: 'Cette réservation n\'existe pas ou a expiré.' });
       }
     });
   }
@@ -109,18 +106,18 @@ export class StudentPayComponent implements OnInit {
       this.stripeReady = true;
     } catch {
       this.showModal = false;
-      swalBase.fire({ icon: 'error', title: 'Formulaire de paiement indisponible', text: 'Impossible de charger Stripe. Vérifiez votre connexion.' });
+      Swal.fire({ icon: 'error', title: 'Formulaire de paiement indisponible', text: 'Impossible de charger Stripe. Vérifiez votre connexion.' });
     }
   }
 
   async pay(): Promise<void> {
     if (!this.cardName.trim()) {
-      Swal.fire({ toast: true, position: 'top-end', icon: 'warning', title: 'Veuillez saisir le nom sur la carte.', showConfirmButton: false, timer: 3000 });
+      Swal.fire({ icon: 'warning', title: 'Veuillez saisir le nom sur la carte.', timer: 3000 });
       return;
     }
     const user = this.authService.getCurrentUser();
     if (!user) {
-      swalBase.fire({ icon: 'warning', title: 'Non connecté', text: 'Veuillez vous connecter.' });
+      Swal.fire({ icon: 'warning', title: 'Non connecté', text: 'Veuillez vous connecter.' });
       return;
     }
 
@@ -136,14 +133,14 @@ export class StudentPayComponent implements OnInit {
         this.stripeInstance = await this.paymentService.getStripe(publishableKey);
         if (!this.stripeInstance) {
           this.paymentProcessing = false;
-          swalBase.fire({ icon: 'error', title: 'Stripe indisponible' });
+          Swal.fire({ icon: 'error', title: 'Stripe indisponible' });
           return;
         }
 
         const result = await this.paymentService.confirmCardPayment(this.stripeInstance, clientSecret, this.cardName);
         if (!result.success) {
           this.paymentProcessing = false;
-          swalBase.fire({ icon: 'error', title: 'Paiement refusé', text: result.error || 'Vérifiez vos informations bancaires.', confirmButtonText: 'Réessayer' });
+          Swal.fire({ icon: 'error', title: 'Paiement refusé', text: result.error || 'Vérifiez vos informations bancaires.', confirmButtonText: 'Réessayer' });
           return;
         }
 
@@ -161,7 +158,7 @@ export class StudentPayComponent implements OnInit {
       },
       error: () => {
         this.paymentProcessing = false;
-        swalBase.fire({ icon: 'error', title: 'Erreur de paiement', text: 'Impossible de créer la session de paiement. Réessayez.' });
+        Swal.fire({ icon: 'error', title: 'Erreur de paiement', text: 'Impossible de créer la session de paiement. Réessayez.' });
       }
     });
   }
@@ -170,12 +167,11 @@ export class StudentPayComponent implements OnInit {
     this.paymentProcessing = false;
     this.showModal = false;
     this.paymentService.destroyCardElements();
-    swalBase.fire({
+    Swal.fire({
       icon: 'success',
       title: 'Paiement confirmé !',
-      html: `Votre session est payée et confirmée.<br>À bientôt !`,
+      text: `Votre session est payée et confirmée. À bientôt !`,
       timer: 2500,
-      showConfirmButton: false,
       timerProgressBar: true,
     }).then(() => this.router.navigate(['/student/bookings']));
   }

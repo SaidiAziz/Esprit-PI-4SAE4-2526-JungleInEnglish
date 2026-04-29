@@ -7,12 +7,13 @@ import {
   LoginResponse,
   RegisterRequest,
   UserResponse,
+  TutorProfile,
   ForgotPasswordRequest,
   ResetPasswordRequest
 } from '../models/user.model';
 
 // Re-export so existing imports from auth.service still work
-export type { LoginRequest, LoginResponse, RegisterRequest, UserResponse, ForgotPasswordRequest, ResetPasswordRequest };
+export type { LoginRequest, LoginResponse, RegisterRequest, UserResponse, TutorProfile, ForgotPasswordRequest, ResetPasswordRequest };
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +45,35 @@ export class AuthService {
 
   register(request: RegisterRequest): Observable<UserResponse> {
     return this.http.post<UserResponse>(`${this.API_URL}/register`, request);
+  }
+
+  updateCurrentUser(updatedUser: UserResponse): void {
+    if (!this.isBrowser()) return;
+    localStorage.setItem(this.USER_KEY, JSON.stringify(updatedUser));
+  }
+
+  verify2FA(email: string, code: string): Observable<{ token: string }> {
+    return this.http.post<{ token: string }>(`${this.API_URL}/verify-2fa`, { email, code });
+  }
+
+  setupTotp(email: string): Observable<{ qrCodeBase64: string; secret: string }> {
+    return this.http.post<{ qrCodeBase64: string; secret: string }>(`${this.API_URL}/2fa/setup-totp`, { email });
+  }
+
+  enable2FA(
+    email: string,
+    method: 'EMAIL' | 'TOTP',
+    code?: string
+  ): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.API_URL}/2fa/enable`, {
+      email,
+      method,
+      ...(code ? { code } : {})
+    });
+  }
+
+  disable2FA(email: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.API_URL}/2fa/disable`, { email });
   }
 
   logout(): void {
@@ -81,3 +111,4 @@ export class AuthService {
     return this.http.post<{ message: string }>(`${this.API_URL}/reset-password`, request);
   }
 }
+

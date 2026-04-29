@@ -35,9 +35,6 @@ interface ScheduledSession {
   priceDiscounted: number;
 }
 
-const swalBase = Swal.mixin({ confirmButtonColor: '#2563eb', cancelButtonColor: '#6b7280' });
-const swalToast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 3500, timerProgressBar: true });
-
 @Component({
   selector: 'app-booking-form',
   standalone: true,
@@ -99,7 +96,7 @@ export class BookingFormComponent implements OnInit {
       this.loadTutor(tutorId);
     } else {
       this.loading = false;
-      swalBase.fire({ icon: 'warning', title: 'Aucun tuteur sélectionné', text: 'Veuillez choisir un tuteur depuis la liste.', confirmButtonText: 'Voir les tuteurs' })
+      Swal.fire({ icon: 'warning', title: 'Aucun tuteur sélectionné', text: 'Veuillez choisir un tuteur depuis la liste.', confirmButtonText: 'Voir les tuteurs' })
         .then(() => this.router.navigate(['/student/tutors']));
     }
   }
@@ -111,7 +108,7 @@ export class BookingFormComponent implements OnInit {
       next: (tutor: Tutor | null) => {
         if (!tutor) {
           this.loading = false;
-          swalBase.fire({ icon: 'error', title: 'Tuteur introuvable', text: 'Ce tuteur n\'existe pas.' });
+          Swal.fire({ icon: 'error', title: 'Tuteur introuvable', text: 'Ce tuteur n\'existe pas.' });
           return;
         }
         this.tutor = tutor;
@@ -120,7 +117,7 @@ export class BookingFormComponent implements OnInit {
       },
       error: () => {
         this.loading = false;
-        swalBase.fire({ icon: 'error', title: 'Erreur de chargement', text: 'Impossible de charger les informations du tuteur.' });
+        Swal.fire({ icon: 'error', title: 'Erreur de chargement', text: 'Impossible de charger les informations du tuteur.' });
       }
     });
   }
@@ -145,7 +142,7 @@ export class BookingFormComponent implements OnInit {
       },
       error: () => {
         this.slotsLoading = false;
-        swalToast.fire({ icon: 'error', title: 'Impossible de charger les créneaux disponibles.' });
+        Swal.fire({ icon: 'error', title: 'Impossible de charger les créneaux disponibles.' });
       }
     });
   }
@@ -172,16 +169,16 @@ export class BookingFormComponent implements OnInit {
     this.singleForm.markAllAsTouched();
 
     if (!this.selectedSlot) {
-      swalToast.fire({ icon: 'warning', title: 'Veuillez sélectionner un créneau horaire.' });
+      Swal.fire({ icon: 'warning', title: 'Veuillez sélectionner un créneau horaire.' });
       return;
     }
     if (this.singleForm.invalid) {
-      swalToast.fire({ icon: 'warning', title: 'Veuillez remplir tous les champs obligatoires.' });
+      Swal.fire({ icon: 'warning', title: 'Veuillez remplir tous les champs obligatoires.' });
       return;
     }
     const user = this.authService.getCurrentUser();
     if (!user?.id) {
-      swalBase.fire({ icon: 'warning', title: 'Non connecté', text: 'Vous devez être connecté pour réserver.' });
+      Swal.fire({ icon: 'warning', title: 'Non connecté', text: 'Vous devez être connecté pour réserver.' });
       return;
     }
 
@@ -200,10 +197,10 @@ export class BookingFormComponent implements OnInit {
     this.bookingService.createBooking(booking).subscribe({
       next: () => {
         this.submitting = false;
-        swalBase.fire({
+        Swal.fire({
           icon: 'success',
           title: 'Réservation envoyée !',
-          html: `Votre demande a été envoyée à <strong>${this.tutor!.firstName} ${this.tutor!.lastName}</strong>.<br>Vous recevrez un email avec le lien de paiement une fois acceptée.`,
+          text: `Votre demande a été envoyée à ${this.tutor!.firstName} ${this.tutor!.lastName}. Vous recevrez un email avec le lien de paiement une fois acceptée.`,
           timer: 3000,
           showConfirmButton: false,
           timerProgressBar: true,
@@ -214,7 +211,7 @@ export class BookingFormComponent implements OnInit {
       },
       error: () => {
         this.submitting = false;
-        swalBase.fire({ icon: 'error', title: 'Erreur', text: 'Impossible de créer la réservation. Réessayez.' });
+        Swal.fire({ icon: 'error', title: 'Erreur', text: 'Impossible de créer la réservation. Réessayez.' });
       }
     });
   }
@@ -270,12 +267,12 @@ export class BookingFormComponent implements OnInit {
 
   submitPack(): void {
     if (!this.isPackFormValid() || !this.tutor) {
-      swalToast.fire({ icon: 'warning', title: 'Veuillez compléter toutes les options du pack.' });
+      Swal.fire({ icon: 'warning', title: 'Veuillez compléter toutes les options du pack.' });
       return;
     }
     const user = this.authService.getCurrentUser();
     if (!user?.id) {
-      swalBase.fire({ icon: 'warning', title: 'Non connecté', text: 'Vous devez être connecté pour réserver.' });
+      Swal.fire({ icon: 'warning', title: 'Non connecté', text: 'Vous devez être connecté pour réserver.' });
       return;
     }
 
@@ -295,10 +292,10 @@ export class BookingFormComponent implements OnInit {
     const createNext = (index: number) => {
       if (index >= total) {
         this.submitting = false;
-        swalBase.fire({
+        Swal.fire({
           icon: 'success',
           title: 'Pack envoyé !',
-          html: `<strong>${total} sessions</strong> ont été soumises.<br>Vous recevrez un email de paiement dès que le tuteur accepte.`,
+          text: `${total} sessions ont été soumises. Vous recevrez un email de paiement dès que le tuteur accepte.`,
           timer: 3000, showConfirmButton: false, timerProgressBar: true,
         }).then(() => this.router.navigate(['/student/bookings']));
         this.pusherBeamsService.publishNotification(`tutor-${this.tutor!.id}`, 'New booking request', `You have ${total} pending booking(s) — check your dashboard.`).catch(() => {});
@@ -308,7 +305,7 @@ export class BookingFormComponent implements OnInit {
         next: () => { completed++; this.packSubmitProgress = Math.round((completed / total) * 100); createNext(index + 1); },
         error: () => {
           this.submitting = false;
-          swalBase.fire({ icon: 'error', title: 'Erreur', html: `Erreur à la session <strong>${index + 1}</strong>. ${completed} créée(s) sur ${total}.` });
+          Swal.fire({ icon: 'error', title: 'Erreur', text: `Erreur à la session ${index + 1}. ${completed} créée(s) sur ${total}.` });
         }
       });
     };

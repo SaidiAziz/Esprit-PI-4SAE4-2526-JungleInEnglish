@@ -63,13 +63,22 @@ export interface UpdateProfileRequest {
 export interface Tutor extends UserResponse {
 
   bio?: string;
-  specialization?: string | string[];
+  specialization?: string;
   experienceYears?: number;
   hourlyRate?: number;
   rating?: number;
   reviewCount?: number;
   profileImage?: string;
   languages?: string[];
+}
+
+export interface TutorProfile {
+  id: number;
+  bio?: string;
+  specialization?: string;
+  experienceYears?: number;
+  hourlyRate?: number;
+  user: UserResponse;
 }
 
 export interface ForgotPasswordRequest {

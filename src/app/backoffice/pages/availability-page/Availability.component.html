@@ -60,7 +60,7 @@
             <button class="btn btn-sm btn-outline-secondary" (click)="toggleSlot(slot)">
               {{ slot.available ? '🔒' : '🔓' }}
             </button>
-            <button class="btn btn-sm btn-outline-danger" (click)="deleteSlot(slot.id)">🗑️</button>
+            <button class="btn btn-sm btn-outline-danger" (click)="slot.id && deleteSlot(slot.id)">🗑️</button>
           </div>
         </div>
       </div>

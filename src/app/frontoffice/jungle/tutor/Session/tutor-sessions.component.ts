@@ -84,13 +84,13 @@ export class TutorSessionsComponent implements OnInit {
 
   startSession(id: number | undefined): void {
     if (!id) return;
-    
+
     const session = this.sessions.find(s => s.id === id);
     if (session && session.booking?.sessionDate && session.booking?.startTime) {
       const scheduledDateTimeStr = `${session.booking.sessionDate}T${session.booking.startTime}`;
       const scheduledDate = new Date(scheduledDateTimeStr);
       const now = new Date();
-      
+
       if (now < scheduledDate) {
         Swal.fire({
           icon: 'warning',
@@ -103,7 +103,7 @@ export class TutorSessionsComponent implements OnInit {
 
     this.sessionService.start(id).subscribe({
       next: () => this.loadSessions(),
-      error: (err) => Swal.fire('Erreur', err.error?.message || 'Error starting session', 'error')
+      error: (err) => Swal.fire({ icon: 'error', title: 'Erreur', text: err.error?.message || 'Error starting session' })
     });
   }
 
@@ -124,10 +124,10 @@ export class TutorSessionsComponent implements OnInit {
       if (result.isConfirmed) {
         this.sessionService.end(id).subscribe({
           next: () => {
-            Swal.fire('Terminée', 'La session a été terminée.', 'success');
+            Swal.fire({ icon: 'success', title: 'Terminée', text: 'La session a été terminée.' });
             this.loadSessions();
           },
-          error: (err) => Swal.fire('Erreur', err.error?.message || 'Error ending session', 'error')
+          error: (err) => Swal.fire({ icon: 'error', title: 'Erreur', text: err.error?.message || 'Error ending session' })
         });
       }
     });
@@ -151,10 +151,10 @@ export class TutorSessionsComponent implements OnInit {
       if (result.isConfirmed) {
         this.sessionService.missed(id).subscribe({
           next: () => {
-            Swal.fire('Signalé', "L'étudiant a été marqué comme absent.", 'success');
+            Swal.fire({ icon: 'success', title: 'Signalé', text: "L'étudiant a été marqué comme absent." });
             this.loadSessions();
           },
-          error: (err) => Swal.fire('Erreur', err.error?.message || 'Erreur', 'error')
+          error: (err) => Swal.fire({ icon: 'error', title: 'Erreur', text: err.error?.message || 'Erreur' })
         });
       }
     });
@@ -184,12 +184,12 @@ export class TutorSessionsComponent implements OnInit {
   viewFeedback(session: Session): void {
     const feedback = session.feedback;
     if (!feedback) {
-      Swal.fire('Info', 'Aucun feedback disponible pour cette session.', 'info');
+      Swal.fire({ icon: 'info', title: 'Info', text: 'Aucun feedback disponible pour cette session.' });
       return;
     }
     Swal.fire({
       title: `Feedback (Session #${session.id})`,
-      html: `<strong>Note:</strong> ${feedback.rating}/5<br><br><strong>Commentaire:</strong><br>${feedback.comment || 'Aucun commentaire'}`,
+      text: `Note: ${feedback.rating}/5\n\nCommentaire: ${feedback.comment || 'Aucun commentaire'}`,
       icon: 'info'
     });
   }

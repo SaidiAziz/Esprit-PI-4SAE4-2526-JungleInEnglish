@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { BookingService } from '@core/services/booking.service';
 import { AuthService } from '@core/services/auth.service';
 import { Session, getSessionDisplayStatus, getSessionStatusLabel } from '@core/models/Session';
@@ -41,8 +40,7 @@ export class StudentSessionsComponent implements OnInit {
   constructor(
     private bookingService: BookingService,
     private authService: AuthService,
-    private feedbackService: SessionFeedbackService,
-    private router: Router
+    private feedbackService: SessionFeedbackService
   ) {}
 
   ngOnInit(): void {
@@ -54,7 +52,7 @@ export class StudentSessionsComponent implements OnInit {
     if (!user?.id) {
       this.loading = false;
       return;
-     
+
     }
 
     this.bookingService.getStudentSessions(user.id).subscribe({
@@ -177,10 +175,10 @@ export class StudentSessionsComponent implements OnInit {
       if (result.isConfirmed) {
         this.bookingService.endSession(sessionId).subscribe({
           next: () => {
-             Swal.fire('Terminée', 'La session a été terminée avec succès.', 'success');
-             this.loadSessions();
+            Swal.fire({ icon: 'success', title: 'Terminée', text: 'La session a été terminée avec succès.' });
+            this.loadSessions();
           },
-          error: (error: any) => Swal.fire('Erreur', 'Une erreur est survenue en terminant la session.', 'error')
+          error: () => Swal.fire({ icon: 'error', title: 'Erreur', text: 'Une erreur est survenue en terminant la session.' })
         });
       }
     });
@@ -237,7 +235,7 @@ export class StudentSessionsComponent implements OnInit {
   deleteFeedback(session: Session): void {
     const feedbackId = session.feedback?.id;
     if (!feedbackId) return;
-    
+
     Swal.fire({
       title: 'Supprimer le feedback ?',
       text: 'Êtes-vous sûr de vouloir supprimer cet avis ?',
@@ -252,9 +250,9 @@ export class StudentSessionsComponent implements OnInit {
           next: () => {
             session.feedback = undefined;
             this.filterSessions();
-            Swal.fire('Supprimé', 'Le feedback a été supprimé.', 'success');
+            Swal.fire({ icon: 'success', title: 'Supprimé', text: 'Le feedback a été supprimé.' });
           },
-          error: (error: any) => Swal.fire('Erreur', 'Impossible de supprimer le feedback.', 'error')
+          error: () => Swal.fire({ icon: 'error', title: 'Erreur', text: 'Impossible de supprimer le feedback.' })
         });
       }
     });

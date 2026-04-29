@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, map, forkJoin, mergeMap, catchError } from 'rxjs';
+import { Observable, of, map, forkJoin, catchError } from 'rxjs';
 import { Booking } from '../models/booking';
 import { Session, SessionStatus, StudentDashboardDTO, TutorDashboardDTO } from '../models/Session';
 import { SessionFeedback } from '../models/SessionFeedback';
-import { UserServiceService } from '../../backoffice/services/user-service.service';
-import { Tutor } from '../models/user.model';
+import { UserServiceService } from '@backoffice/services/user-service.service';
+import { Tutor, TutorProfile } from '../models/user.model';
 import { Availability } from '../models/Availability';
 
 @Injectable({ providedIn: 'root' })
@@ -20,50 +20,34 @@ export class BookingService {
   // ── Tutors ───────────────────────────────────────────────────────
   getTutors(): Observable<Tutor[]> {
     return this.userService.getAllTutorProfiles().pipe(
-      mergeMap(profiles => {
-        const observables = profiles.map(p =>
-          this.userService.getUserById(p.id).pipe(
-            map(user => ({ profile: p, user })),
-            catchError(() => of(null))
-          )
-        );
-        return forkJoin(observables).pipe(
-          map(results =>
-            results
-              .filter(r => r !== null && r!.user.role === 'TUTOR')
-              .map(r => ({
-                ...r!.user,
-                bio: r!.profile.bio,
-                specialization: r!.profile.specialization
-                  ? [r!.profile.specialization]
-                  : [],
-                experienceYears: r!.profile.experienceYears,
-                hourlyRate: r!.profile.hourlyRate
-              } as Tutor))
-          )
-        );
-      })
+      map((profiles: TutorProfile[]) => profiles
+        .map(profile => this.toTutor(profile))
+        .filter((tutor): tutor is Tutor => tutor !== null)
+      ),
+      catchError(() => of([] as Tutor[]))
     );
   }
 
   getTutorById(id: number): Observable<Tutor | null> {
-    return forkJoin([
-      this.userService.getUserById(id),
-      this.userService.getAllTutorProfiles()
-    ]).pipe(
-      map(([user, profiles]: [any, any[]]) => {
-        if (!user || user.role !== 'TUTOR') return null;
-        const profile = profiles.find((p: any) => p.id === id);
-        return {
-          ...user,
-          bio: profile?.bio,
-          specialization: profile?.specialization ? [profile.specialization] : [],
-          experienceYears: profile?.experienceYears,
-          hourlyRate: profile?.hourlyRate
-        } as Tutor;
+    return this.userService.getAllTutorProfiles().pipe(
+      map((profiles: TutorProfile[]) => {
+        const profile = profiles.find(p => p.id === id || p.user?.id === id);
+        return profile ? this.toTutor(profile) : null;
       }),
       catchError(() => of(null))
     );
+  }
+
+  private toTutor(profile: TutorProfile): Tutor | null {
+    if (!profile.user) return null;
+
+    return {
+      ...profile.user,
+      bio: profile.bio,
+      specialization: profile.specialization,
+      experienceYears: profile.experienceYears,
+      hourlyRate: profile.hourlyRate
+    };
   }
 
   // ── Bookings ─────────────────────────────────────────────────────

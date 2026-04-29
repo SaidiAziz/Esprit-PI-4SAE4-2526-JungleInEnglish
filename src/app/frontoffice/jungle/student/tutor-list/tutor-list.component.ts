@@ -63,7 +63,7 @@ export class TutorListComponent implements OnInit {
     if (this.searchTerm.trim()) {
       const term = this.searchTerm.toLowerCase();
       filtered = filtered.filter(t =>
-        t.specialization?.some(s => s.toLowerCase().includes(term)) ||
+        t.specialization?.toLowerCase().includes(term) ||
         t.firstName.toLowerCase().includes(term) ||
         t.lastName.toLowerCase().includes(term) ||
         t.bio?.toLowerCase().includes(term)

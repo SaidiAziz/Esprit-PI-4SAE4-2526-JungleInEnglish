@@ -14,7 +14,7 @@
       <div class="tutor-avatar">{{ tutor.firstName[0] }}{{ tutor.lastName[0] }}</div>
       <div class="tutor-info">
         <h3>{{ tutor.firstName }} {{ tutor.lastName }}</h3>
-        <p class="tutor-spec">{{ tutor.specialization?.join(', ') }}</p>
+        <p class="tutor-spec">{{ tutor.specialization }}</p>
         <span class="tutor-rating">⭐ {{ tutor.rating }} ({{ tutor.reviewCount }} reviews)</span>
       </div>
       <div class="tutor-rate">{{ tutor.hourlyRate }} DT/h</div>

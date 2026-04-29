@@ -4,8 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AvailabilityService } from './services/availability.service';
-import { Availability } from '../../../core/models/Availability';
-import { isPlatformBrowser } from '@angular/common';
+import { Availability } from '@core/models/Availability';
 
 @Component({
   selector: 'app-availability',
@@ -79,7 +78,8 @@ export class AvailabilityComponent implements OnInit {
     this.availabilityService.toggle(slot.id!).subscribe(() => this.loadAvailabilities());
   }
 
-  deleteSlot(id: number): void {
+  deleteSlot(id?: number): void {
+    if (!id) return;
     if (confirm('Delete this availability slot?')) {
       this.availabilityService.delete(id).subscribe(() => this.loadAvailabilities());
     }
