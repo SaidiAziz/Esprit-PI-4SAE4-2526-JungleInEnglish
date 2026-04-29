@@ -21,7 +21,7 @@ declare const L: any;
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule],
   templateUrl: './event-form.component.html',
-  styleUrls: ['./event-form.component.scss', './event-form.component.css'],
+  styleUrl: './event-form.component.css',
 })
 export class EventFormComponent implements OnInit, AfterViewInit, OnDestroy {
   form!: FormGroup;

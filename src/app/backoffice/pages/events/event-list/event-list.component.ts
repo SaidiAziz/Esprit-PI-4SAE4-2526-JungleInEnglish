@@ -11,7 +11,7 @@ import {
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './event-list.component.html',
-  styleUrls: ['./event-list.component.scss'],
+  styleUrl: './event-list.component.css',
 })
 export class EventListComponent implements OnInit {
   events: EventModel[] = [];
