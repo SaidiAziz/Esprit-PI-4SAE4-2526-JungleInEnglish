@@ -20,10 +20,12 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('PiFront');
   });
 
-  it('should render title', () => {
+  it('should render the root shell outlets', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, PiFront');
+    expect(compiled.querySelector('router-outlet')).toBeTruthy();
+    expect(compiled.querySelector('app-toast')).toBeTruthy();
+    expect(compiled.querySelector('app-notification-center')).toBeTruthy();
   });
 });

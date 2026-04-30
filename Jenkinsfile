@@ -42,7 +42,7 @@ pipeline {
             post {
                 always {
                     publishHTML(target: [
-                        allowMissing: false,
+                        allowMissing: true,
                         reportDir: 'coverage/PiFront',
                         reportFiles: 'index.html',
                         reportName: 'Coverage Report'
