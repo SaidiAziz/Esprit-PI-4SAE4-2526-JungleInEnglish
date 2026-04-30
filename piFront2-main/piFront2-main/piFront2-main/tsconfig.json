@@ -1,0 +1,78 @@
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "outDir": "./dist/out-tsc",
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@app/*": [
+        "app/*"
+      ],
+      "@core/*": [
+        "app/core/*"
+      ],
+      "@backoffice/*": [
+        "app/backoffice/*"
+      ],
+      "@frontoffice/*": [
+        "app/frontoffice/*"
+      ],
+      "@shared/*": [
+        "app/shared/*"
+      ],
+      "ngx-lottie": [
+        "app/shims/ngx-lottie"
+      ],
+      "@emailjs/browser": [
+        "app/shims/emailjs-browser"
+      ],
+      "@ng-bootstrap/ng-bootstrap": [
+        "app/shims/ng-bootstrap"
+      ],
+      "@angular/cdk/drag-drop": [
+        "app/shims/angular-cdk-drag-drop"
+      ],
+      "primeng/button": [
+        "app/shims/primeng-button"
+      ],
+      "primeng/confirmdialog": [
+        "app/shims/primeng-confirmdialog"
+      ],
+      "primeng/toast": [
+        "app/shims/primeng-toast"
+      ],
+      "primeng/radiobutton": [
+        "app/shims/primeng-radiobutton"
+      ],
+      "primeng/api": [
+        "app/shims/primeng-api"
+      ]
+    },
+    "sourceMap": true,
+    "declaration": false,
+    "experimentalDecorators": true,
+    "moduleResolution": "bundler",
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "ES2022",
+    "lib": [
+      "ES2022",
+      "dom"
+    ]
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  }
+}

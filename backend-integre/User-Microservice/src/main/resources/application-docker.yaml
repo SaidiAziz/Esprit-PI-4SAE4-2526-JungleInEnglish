@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: ${SPRING_APPLICATION_NAME:USER-SERVICE}
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://mysql:3306/userdb?createDatabaseIfNotExist=true}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+
+server:
+  port: ${SERVER_PORT:8081}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://eureka-server:8761/eureka}
+  instance:
+    hostname: ${EUREKA_INSTANCE_HOSTNAME:user-microservice}
+    prefer-ip-address: ${EUREKA_INSTANCE_PREFER_IP_ADDRESS:false}
+    instance-id: ${EUREKA_INSTANCE_ID:${spring.application.name}:${server.port}}

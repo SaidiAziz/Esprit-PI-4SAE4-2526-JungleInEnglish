@@ -1,0 +1,91 @@
+name: Monorepo CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+  pull_request:
+
+jobs:
+  backend-maven-verify:
+    name: Backend Maven Verify - ${{ matrix.service.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - name: AI Learning Assistant
+            path: "backend-integre/AI-Learning-Assistant-Microservice"
+            java: "17"
+          - name: Collaboration Room
+            path: "backend-integre/Collaboration-Room-Microservice"
+            java: "17"
+          - name: User Microservice
+            path: "backend-integre/User-Microservice"
+            java: "21"
+          - name: API Gateway
+            path: "backend-integre/api-gateway"
+            java: "17"
+          - name: Eureka Server
+            path: "backend-integre/eureka-server"
+            java: "17"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java ${{ matrix.service.java }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.service.java }}
+          cache: maven
+
+      - name: Make Maven Wrapper executable
+        working-directory: ${{ matrix.service.path }}
+        run: chmod +x mvnw
+
+      - name: Run tests
+        working-directory: ${{ matrix.service.path }}
+        run: ./mvnw -B test
+
+      - name: Build package
+        working-directory: ${{ matrix.service.path }}
+        run: ./mvnw -B clean package -DskipTests
+
+  docker-build:
+    name: Docker Build - ${{ matrix.image.name }}
+    runs-on: ubuntu-latest
+    needs:
+      - backend-maven-verify
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - name: ai-learning-assistant
+            context: "backend-integre/AI-Learning-Assistant-Microservice"
+          - name: collaboration-room
+            context: "backend-integre/Collaboration-Room-Microservice"
+          - name: user-microservice
+            context: "backend-integre/User-Microservice"
+          - name: api-gateway
+            context: "backend-integre/api-gateway"
+          - name: eureka-server
+            context: "backend-integre/eureka-server"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.image.context }}
+          file: ${{ matrix.image.context }}/Dockerfile
+          push: false
+          tags: jungle/${{ matrix.image.name }}:ci

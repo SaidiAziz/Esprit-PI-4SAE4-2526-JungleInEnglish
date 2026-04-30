@@ -1,0 +1,6 @@
+<div class="toast-wrap" *ngIf="(toast.state$ | async) as s">
+  <div class="toast" *ngIf="s.visible" [class.success]="s.type==='success'" [class.error]="s.type==='error'" [class.info]="s.type==='info'">
+    <span class="msg">{{ s.message }}</span>
+    <button class="x" type="button" (click)="toast.hide()">✕</button>
+  </div>
+</div>

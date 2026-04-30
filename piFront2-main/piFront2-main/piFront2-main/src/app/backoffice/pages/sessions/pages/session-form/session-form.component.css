@@ -1,0 +1,36 @@
+.container { padding: 24px; min-height: calc(100vh - 200px); padding-bottom: 40px; }
+
+.header { display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px; }
+h2 { margin:0; font-size: 28px; }
+
+.card {
+  background:#fff; border:1px solid #e6e6e6; border-radius:12px;
+  padding: 16px;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.field { display:flex; flex-direction:column; gap:6px; }
+label { font-weight:600; font-size: 14px; }
+
+input, select {
+  border:1px solid #ddd; border-radius:10px; padding:10px 12px;
+  outline:none;
+}
+
+input:focus, select:focus { border-color:#111; }
+
+.actions { margin-top: 14px; display:flex; gap:10px; }
+
+.btn{
+  border:1px solid #ddd; background:#fff;
+  padding:8px 12px; border-radius:10px; cursor:pointer;
+}
+.btn.primary{ background:#111; color:#fff; border-color:#111; }
+.btn.primary:hover{ background:#000; }
+
+.error{ color:#e74c3c; }

@@ -1,0 +1,193 @@
+server:
+  port: 8222
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:4200"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+
+      routes:
+        # ── AI / Collaboration / Course ─────────────────
+        - id: collaboration-room-service-ws
+          uri: lb:ws://COLLABORATION-ROOM-SERVICE
+          predicates:
+            - Path=/api/collaboration/ws/**
+
+        - id: ai-learning-assistant-service-legacy
+          uri: lb://AI-LEARNING-ASSISTANT-SERVICE
+          predicates:
+            - Path=/api/ia/**
+
+        - id: ai-learning-assistant-service
+          uri: lb://AI-LEARNING-ASSISTANT-SERVICE
+          predicates:
+            - Path=/api/ai/**
+          filters:
+            - RewritePath=/api/ai(?<segment>/?.*), /api/ia${segment}
+
+        - id: collaboration-room-service
+          uri: lb://COLLABORATION-ROOM-SERVICE
+          predicates:
+            - Path=/api/collaboration/**
+
+        - id: course-ms
+          uri: lb://COURSE-MS
+          predicates:
+            - Path=/api/courses/**
+
+        - id: course-ms-forum
+          uri: lb://COURSE-MS
+          predicates:
+            - Path=/api/forum/**
+
+        # ── administration-service ─────────────────────
+        - id: administration-service
+          uri: lb://ADMINISTRATION-SERVICE
+          predicates:
+            - Path=/admin/**
+          filters:
+            - StripPrefix=1
+
+        # ── user-service ───────────────────────────────
+        - id: user-auth-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/auth/**
+
+        - id: user-auth-service-prefixed
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user/auth/**
+          filters:
+            - RewritePath=/user/auth(?<segment>/?.*), /auth${segment}
+
+        - id: user-management-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/users/**
+
+        - id: student-profile-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/students/**
+
+        - id: tutor-profile-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/tutors/**
+
+        # ── jungle-events ──────────────────────────────
+        - id: event-service
+          uri: lb://JUNGLE-EVENTS
+          predicates:
+            - Path=/api/events/**
+
+        - id: event-session-service
+          uri: lb://JUNGLE-EVENTS
+          predicates:
+            - Path=/api/event/sessions/**
+          filters:
+            - RewritePath=/api/event/sessions(?<segment>/?.*), /api/event/sessions${segment}
+
+        - id: participation-service
+          uri: lb://JUNGLE-EVENTS
+          predicates:
+            - Path=/api/participations/**
+
+        - id: email-service
+          uri: lb://JUNGLE-EVENTS
+          predicates:
+            - Path=/api/email/**
+
+        # ── jungle-payments ────────────────────────────
+        - id: payment-service
+          uri: lb://JUNGLE-PAYMENTS
+          predicates:
+            - Path=/api/payments/**
+
+        # ── quiz-service ───────────────────────────────
+        - id: quiz-service
+          uri: lb://QUIZ-SERVICE
+          predicates:
+            - Path=/api/quizzes/**
+
+        - id: question-service
+          uri: lb://QUIZ-SERVICE
+          predicates:
+            - Path=/api/questions/**
+
+        - id: quiz-attempt-service
+          uri: lb://QUIZ-SERVICE
+          predicates:
+            - Path=/api/quiz-attempts/**
+
+        - id: tts-service
+          uri: lb://QUIZ-SERVICE
+          predicates:
+            - Path=/api/tts/**
+
+        # ── booking-service ────────────────────────────
+        - id: booking-service
+          uri: lb://BOOKING-SERVICE
+          predicates:
+            - Path=/api/bookings/**
+
+        - id: availability-service
+          uri: lb://BOOKING-SERVICE
+          predicates:
+            - Path=/api/availability/**
+
+        - id: booking-session-service
+          uri: lb://BOOKING-SERVICE
+          predicates:
+            - Path=/api/sessions/**
+
+        - id: session-feedback-service
+          uri: lb://BOOKING-SERVICE
+          predicates:
+            - Path=/api/feedback/**
+
+        - id: booking-history-service
+          uri: lb://BOOKING-SERVICE
+          predicates:
+            - Path=/api/booking-history/**
+
+        - id: booking-conflict-service
+          uri: lb://BOOKING-SERVICE
+          predicates:
+            - Path=/api/booking-conflicts/**
+
+        - id: ai-service
+          uri: lb://BOOKING-SERVICE
+          predicates:
+            - Path=/api/ai/recommend
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
+  instance:
+    prefer-ip-address: true

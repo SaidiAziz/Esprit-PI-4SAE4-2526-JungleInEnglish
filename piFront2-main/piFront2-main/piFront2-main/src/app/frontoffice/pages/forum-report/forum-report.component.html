@@ -1,0 +1,35 @@
+<div class="report-page">
+  <a [routerLink]="postId ? ['/forum', postId] : ['/forum']" class="back">← Back</a>
+
+  <div class="hero">
+    <div>
+      <h2>Report {{ targetType === 'POST' ? 'Post' : 'Comment' }}</h2>
+      <p>Help us keep the forum clean and safe for students.</p>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="banner error">{{ error }}</div>
+
+  <form class="report-form" (ngSubmit)="submit()">
+    <div class="field">
+      <label>Your name</label>
+      <input [(ngModel)]="reporterName" name="reporterName" placeholder="Example: Amine" />
+    </div>
+
+    <div class="field">
+      <label>Reason</label>
+      <textarea [(ngModel)]="reason" name="reason" rows="5" placeholder="Explain what is wrong with this content..."></textarea>
+    </div>
+
+    <div class="meta">
+      <span>Target Type: {{ targetType }}</span>
+      <span>Target ID: {{ targetId }}</span>
+    </div>
+
+    <div class="actions">
+      <button type="submit" [disabled]="submitting">Submit report</button>
+      <a [routerLink]="postId ? ['/forum', postId] : ['/forum']" class="ghost">Cancel</a>
+    </div>
+  </form>
+</div>
+

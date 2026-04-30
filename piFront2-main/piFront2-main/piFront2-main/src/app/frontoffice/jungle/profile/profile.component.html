@@ -1,0 +1,185 @@
+<div class="profile-page">
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="state-msg">Loading profile…</div>
+
+  <!-- Error -->
+  <div *ngIf="errorMessage && !editMode" class="error-banner">⚠️ {{ errorMessage }}</div>
+
+  <!-- Success toast -->
+  <div *ngIf="saveSuccess" class="success-toast">✅ Profile updated successfully!</div>
+
+  <ng-container *ngIf="!loading && user">
+
+    <!-- Avatar + info card -->
+    <div class="profile-header">
+
+      <!-- Picture upload widget -->
+      <div class="avatar-wrapper">
+        <img
+          [src]="displayImage"
+          alt="Profile picture"
+          class="avatar-img"
+        />
+
+        <!-- Camera overlay -->
+        <label for="fileInput" class="avatar-overlay" title="Change picture">📷</label>
+        <input
+          id="fileInput"
+          type="file"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+          hidden
+        />
+      </div>
+
+      <!-- Preview actions -->
+      <div class="preview-actions" *ngIf="previewUrl">
+        <span class="preview-hint">Preview — click Save to apply</span>
+        <button (click)="uploadPicture()" [disabled]="uploading" class="btn-upload-save">
+          {{ uploading ? 'Saving…' : '✔ Save Picture' }}
+        </button>
+        <button (click)="cancelPreview()" class="btn-upload-cancel" [disabled]="uploading">✕</button>
+      </div>
+      <div class="upload-error" *ngIf="uploadError">⚠️ {{ uploadError }}</div>
+
+      <div class="profile-info">
+        <h2>{{ user.firstName }} {{ user.lastName }}</h2>
+        <span class="role-pill role-{{ user.role | lowercase }}">{{ user.role }}</span>
+        <p class="email">{{ user.email }}</p>
+        <p class="joined">Joined {{ user.createdAt | date: 'MMMM d, yyyy' }}</p>
+      </div>
+      <button class="btn-edit" *ngIf="!editMode" (click)="openEdit()">✏️ Edit Profile</button>
+    </div>
+
+    <!-- ── View mode ─────────────────────────────── -->
+    <div class="profile-details" *ngIf="!editMode">
+
+      <div class="detail-section">
+        <h3>Account Details</h3>
+        <div class="detail-row">
+          <span class="label">First name</span><span>{{ user.firstName }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Last name</span><span>{{ user.lastName }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Email</span><span>{{ user.email }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Status</span>
+          <span class="status-pill status-{{ user.accountStatus | lowercase }}">{{ user.accountStatus }}</span>
+        </div>
+      </div>
+
+      <!-- Student-specific -->
+      <div class="detail-section" *ngIf="isStudent()">
+        <h3>Learning Profile</h3>
+        <div class="detail-row">
+          <span class="label">Level</span><span>{{ user.level || '—' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Learning goals</span><span>{{ user.learningGoals || '—' }}</span>
+        </div>
+      </div>
+
+      <!-- Tutor-specific -->
+      <div class="detail-section" *ngIf="isTutor()">
+        <h3>Tutor Profile</h3>
+        <div class="detail-row">
+          <span class="label">Bio</span><span>{{ user.bio || '—' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Specialization</span><span>{{ user.specialization || '—' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Experience (years)</span><span>{{ user.experienceYears ?? '—' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Hourly rate (€)</span><span>{{ user.hourlyRate ?? '—' }}</span>
+        </div>
+      </div>
+
+      <!-- Change Password card -->
+      <div class="detail-section security-section">
+        <h3>Security</h3>
+        <div class="detail-row">
+          <span class="label">Password</span>
+          <span>••••••••</span>
+          <a routerLink="/forgot-password" class="btn-change-pw">Change password →</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Edit mode ──────────────────────────────── -->
+    <form class="profile-form" *ngIf="editMode" (ngSubmit)="saveEdit()">
+      <h3>Edit Profile</h3>
+
+      <div class="error-banner" *ngIf="errorMessage">⚠️ {{ errorMessage }}</div>
+
+      <div class="form-row">
+        <label>First name
+          <input [(ngModel)]="form.firstName" name="firstName" type="text" required />
+        </label>
+        <label>Last name
+          <input [(ngModel)]="form.lastName" name="lastName" type="text" required />
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label class="full">Email
+          <input [(ngModel)]="form.email" name="email" type="email" required />
+        </label>
+      </div>
+
+      <!-- Student fields -->
+      <ng-container *ngIf="isStudent()">
+        <h4 class="sub-heading">Learning Profile</h4>
+        <div class="form-row">
+          <label>Level
+            <input [(ngModel)]="form.level" name="level" type="text" placeholder="e.g. B2" />
+          </label>
+          <label>Learning goals
+            <input [(ngModel)]="form.learningGoals" name="learningGoals" type="text" placeholder="e.g. Business English" />
+          </label>
+        </div>
+      </ng-container>
+
+      <!-- Tutor fields -->
+      <ng-container *ngIf="isTutor()">
+        <h4 class="sub-heading">Tutor Profile</h4>
+        <div class="form-row">
+          <label class="full">Bio
+            <textarea [(ngModel)]="form.bio" name="bio" rows="3" placeholder="Short bio…"></textarea>
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Specialization
+            <input [(ngModel)]="form.specialization" name="specialization" type="text" />
+          </label>
+          <label>Experience (years)
+            <input [(ngModel)]="form.experienceYears" name="experienceYears" type="number" min="0" />
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Hourly rate (€)
+            <input [(ngModel)]="form.hourlyRate" name="hourlyRate" type="number" min="0" step="0.01" />
+          </label>
+        </div>
+      </ng-container>
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="cancelEdit()" [disabled]="saving">Cancel</button>
+        <button type="submit" class="btn-save" [disabled]="saving">
+          {{ saving ? 'Saving…' : 'Save changes' }}
+        </button>
+      </div>
+
+    </form>
+
+  </ng-container>
+
+</div>
+
+

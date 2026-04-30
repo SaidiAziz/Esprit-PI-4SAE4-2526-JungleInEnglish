@@ -1,0 +1,173 @@
+.audit-page {
+  padding: 24px;
+  background: #f7f8fa;
+  min-height: 100vh;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 42px;
+  font-weight: 700;
+  color: #204b57;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.back-btn {
+  background: #ffffff;
+  color: #1f2937;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.back-btn:hover {
+  background: #f3f4f6;
+}
+
+.refresh-btn,
+.search-btn {
+  background: #0b0b0f;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.clear-btn {
+  background: #ffffff;
+  color: #1f2937;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.filter-card,
+.table-card {
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.filter-row input {
+  flex: 1;
+  min-width: 220px;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  font-size: 15px;
+}
+
+.loading,
+.error,
+.empty {
+  margin-top: 16px;
+  font-size: 16px;
+}
+
+.error {
+  color: #d32f2f;
+}
+
+.table-card h2 {
+  margin-top: 0;
+  margin-bottom: 18px;
+  color: #204b57;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+}
+
+thead th {
+  text-align: left;
+  padding: 14px;
+  background: #f4f5f7;
+  color: #374151;
+  font-weight: 600;
+}
+
+tbody td {
+  padding: 14px;
+  border-top: 1px solid #ececec;
+  vertical-align: top;
+}
+
+.badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.badge.created {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge.updated {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.badge.completed {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge.canceled {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+.badge.deleted {
+  background: #ffebee;
+  color: #c62828;
+}
+
+@media (max-width: 1000px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .filter-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header-actions {
+    flex-wrap: wrap;
+  }
+}
