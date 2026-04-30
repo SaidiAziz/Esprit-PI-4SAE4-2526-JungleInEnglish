@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :host { display: block; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -99,7 +98,7 @@
   font-size: 0.9rem;
 }
 
-.btn-back:hover { 
+.btn-back:hover {
   background: rgba(255, 255, 255, 0.25);
   transform: translateX(-3px);
   border-color: rgba(255, 255, 255, 0.5);
@@ -136,10 +135,10 @@
 }
 
 /* ── States ── */
-.loading { 
-  color: var(--text-soft); 
-  font-weight: 600; 
-  text-align: center; 
+.loading {
+  color: var(--text-soft);
+  font-weight: 600;
+  text-align: center;
   padding: 3rem;
   background: var(--white);
   border-radius: var(--radius);
@@ -156,12 +155,12 @@
   to { transform: rotate(360deg); }
 }
 
-.error { 
-  background: var(--fail-bg); 
-  color: var(--fail); 
-  border: 2px solid #f5b5b5; 
-  border-radius: var(--radius-sm); 
-  padding: 1rem 1.25rem; 
+.error {
+  background: var(--fail-bg);
+  color: var(--fail);
+  border: 2px solid #f5b5b5;
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -231,16 +230,16 @@
   border: 2px solid var(--border-beige);
 }
 
-.kpi-icon i { 
+.kpi-icon i {
   font-size: 2rem;
   color: var(--teal);
 }
 
-.kpi-body { 
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-  gap: 0.5rem; 
+.kpi-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .kpi-lbl {
@@ -294,22 +293,22 @@
   gap: 1rem;
 }
 
-.empty-icon { 
-  font-size: 4rem; 
-  margin-bottom: 0.5rem; 
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 0.5rem;
   display: block;
   color: var(--border-beige);
 }
 
-.empty-state p { 
-  font-size: 1.2rem; 
-  font-weight: 700; 
-  color: var(--text); 
+.empty-state p {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
   margin: 0;
 }
 
-.empty-state span { 
-  font-size: 0.9rem; 
+.empty-state span {
+  font-size: 0.9rem;
   color: var(--text-soft);
   max-width: 300px;
 }
@@ -341,9 +340,9 @@
   border-bottom: 2px solid var(--border-beige);
 }
 
-.table-title { 
-  font-weight: 800; 
-  font-size: 1rem; 
+.table-title {
+  font-weight: 800;
+  font-size: 1rem;
   color: black; /* TITRE NOIR */
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -403,22 +402,22 @@
   color: var(--text);
 }
 
-.results-table tbody tr { 
-  transition: background 0.2s; 
+.results-table tbody tr {
+  transition: background 0.2s;
 }
 
-.results-table tbody tr:hover { 
-  background: var(--beige-card); 
+.results-table tbody tr:hover {
+  background: var(--beige-card);
 }
 
-.results-table tbody tr:last-child td { 
-  border-bottom: none; 
+.results-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
-.td-num { 
-  color: var(--text-soft); 
-  font-weight: 700; 
-  width: 50px; 
+.td-num {
+  color: var(--text-soft);
+  font-weight: 700;
+  width: 50px;
   font-size: 0.8rem;
 }
 
@@ -431,15 +430,15 @@
 }
 
 .student-avatar {
-  width: 36px; 
+  width: 36px;
   height: 36px;
   border-radius: 10px;
   background: linear-gradient(135deg, var(--teal), var(--teal-light));
   color: #fff;
   font-size: 0.8rem;
   font-weight: 800;
-  display: flex; 
-  align-items: center; 
+  display: flex;
+  align-items: center;
   justify-content: center;
   flex-shrink: 0;
   text-transform: uppercase;
@@ -464,8 +463,8 @@
   color: var(--teal-pale);
 }
 
-.td-score { 
-  min-width: 160px; 
+.td-score {
+  min-width: 160px;
 }
 
 .score-wrap {
@@ -489,21 +488,21 @@
   transition: width 0.5s ease;
 }
 
-.fill-pass { 
-  background: linear-gradient(90deg, var(--pass), #00dfc0); 
+.fill-pass {
+  background: linear-gradient(90deg, var(--pass), #00dfc0);
   box-shadow: 0 0 8px rgba(0,184,160,0.4);
 }
 
-.fill-fail { 
-  background: linear-gradient(90deg, var(--fail), #ff6b6b); 
+.fill-fail {
+  background: linear-gradient(90deg, var(--fail), #ff6b6b);
   box-shadow: 0 0 8px rgba(239,68,68,0.3);
 }
 
-.score-num { 
-  font-weight: 800; 
-  font-size: 0.9rem; 
-  min-width: 38px; 
-  color: var(--text); 
+.score-num {
+  font-weight: 800;
+  font-size: 0.9rem;
+  min-width: 38px;
+  color: var(--text);
 }
 
 .score-num i {
@@ -528,29 +527,29 @@
   font-size: 0.7rem;
 }
 
-.badge-pass { 
-  background: var(--pass-bg); 
-  color: #00705e; 
-  border: 1.5px solid #b2dedd; 
+.badge-pass {
+  background: var(--pass-bg);
+  color: #00705e;
+  border: 1.5px solid #b2dedd;
 }
 
 .badge-pass i {
   color: #00705e;
 }
 
-.badge-fail { 
-  background: var(--fail-bg); 
-  color: #c03030; 
-  border: 1.5px solid #f0b8b8; 
+.badge-fail {
+  background: var(--fail-bg);
+  color: #c03030;
+  border: 1.5px solid #f0b8b8;
 }
 
 .badge-fail i {
   color: #c03030;
 }
 
-.td-date { 
-  color: var(--text-soft); 
-  font-size: 0.8rem; 
+.td-date {
+  color: var(--text-soft);
+  font-size: 0.8rem;
   white-space: nowrap;
   display: flex;
   align-items: center;
@@ -595,15 +594,15 @@
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
-  .kpi-row { 
-    grid-template-columns: 1fr 1fr; 
+  .kpi-row {
+    grid-template-columns: 1fr 1fr;
     gap: 1rem;
   }
-  
-  .tutor-quiz-results { 
-    padding: 1.25rem; 
+
+  .tutor-quiz-results {
+    padding: 1.25rem;
   }
-  
+
   .quiz-title-pill {
     margin-left: 0;
     max-width: 200px;
@@ -616,20 +615,20 @@
     align-items: flex-start;
     gap: 1rem;
   }
-  
+
   .header-title {
     width: 100%;
     justify-content: space-between;
   }
-  
+
   .kpi-card {
     padding: 1.5rem 1rem;
   }
-  
+
   .kpi-val {
     font-size: 1.8rem;
   }
-  
+
   .td-student {
     flex-direction: column;
     align-items: flex-start;
@@ -638,32 +637,32 @@
 }
 
 @media (max-width: 600px) {
-  .kpi-row { 
-    grid-template-columns: 1fr; 
+  .kpi-row {
+    grid-template-columns: 1fr;
   }
-  
+
   .table-header {
     flex-direction: column;
     gap: 0.75rem;
     align-items: flex-start;
   }
-  
+
   .results-table th:nth-child(4),
   .results-table td:nth-child(4) {
     display: none;
   }
-  
+
   .score-wrap {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.3rem;
   }
-  
+
   .score-bar-track {
     max-width: 100%;
     width: 100%;
   }
-  
+
   .td-actions {
     flex-direction: column;
   }

@@ -153,4 +153,3 @@ On the next manual build trigger or Git push to `DevOps_FrontEnd` branch:
 - Angular CLI: https://angular.io/cli
 - Karma Testing: https://karma-runner.github.io/
 - Jenkins SSR Build: See `Jenkinsfile` stages
-
