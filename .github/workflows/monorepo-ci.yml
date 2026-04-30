@@ -3,6 +3,7 @@ name: Monorepo CI
 on:
   push:
     branches:
+      - wissal-recommandation-collab
       - main
       - master
       - develop
