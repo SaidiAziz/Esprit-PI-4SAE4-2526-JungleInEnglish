@@ -16,8 +16,8 @@ import { AuthService } from '../../../core/services/auth.service';
     RouterLink,
     FormsModule
   ],
-  templateUrl: './booking-list.component.html',
-  styleUrls: ['./booking-list.component.css']
+  templateUrl: './Booking-list.component.html',
+  styleUrl: './booking-list.component.css'
 })
 export class BookingListComponent implements OnInit {
 

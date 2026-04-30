@@ -12,7 +12,8 @@ import { AuthService } from '../../../core/services/auth.service';
   selector: 'app-booking-form',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
-  templateUrl: './booking-form.component.html',
+  templateUrl: './Booking-form.component.html',
+  styleUrl: './booking-form.component.css',
 })
 export class BookingFormComponent implements OnInit {
 
@@ -176,11 +177,3 @@ export class BookingFormComponent implements OnInit {
     });
   }
 }
-
-
-
-
-
-
-
-

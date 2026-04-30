@@ -8,7 +8,7 @@ import { Availability } from '@core/models/Availability';
 
 @Component({
   selector: 'app-availability',
-  templateUrl: './availability.component.html',
+  templateUrl: './Availability.component.html',
   styleUrls: ['./availability.component.css'],
   standalone: true,
   imports: [CommonModule, FormsModule]
