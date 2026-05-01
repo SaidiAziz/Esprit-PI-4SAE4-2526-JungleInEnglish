@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+        IMAGE_NAME = 'maaouisamar/booking-service'
+    }
+
+    stages {
+        stage('Pull Docker Image') {
+            steps {
+                sh '''
+                    echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
+                    docker pull $IMAGE_NAME
+                '''
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh '''
+                    docker stop booking-service || true
+                    docker rm booking-service || true
+                    docker run -d \
+                        --name booking-service \
+                        -p 8082:8082 \
+                        $IMAGE_NAME
+                '''
+            }
+        }
+    }
+    post {
+        success {
+            echo '✅ Déploiement réussi !'
+        }
+        failure {
+            echo '❌ Déploiement échoué !'
+        }
+    }
+}
