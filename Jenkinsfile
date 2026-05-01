@@ -27,14 +27,14 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t ton-username/booking-service .'
+                sh 'docker build -t maaouisamar/booking-service .'
             }
         }
         stage('Push Docker Hub') {
             steps {
                 sh '''
                     echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
-                    docker push ton-username/booking-service
+                    docker push maaouisamar/booking-service
                 '''
             }
         }
