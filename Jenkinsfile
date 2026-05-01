@@ -12,8 +12,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'Samar-Booking',
-                    url: 'https://github.com/SaidiAziz/Esprit-PI-4SAE4-2526-JungleInEnglish.git'
+                checkout scm
             }
         }
         stage('Build') {
