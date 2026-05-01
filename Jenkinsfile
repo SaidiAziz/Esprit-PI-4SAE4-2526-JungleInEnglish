@@ -25,18 +25,18 @@ pipeline {
                 sh 'mvn test'
             }
         }
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh '''
-                        mvn sonar:sonar \
-                        -Dsonar.projectKey=booking-service \
-                        -Dsonar.java.coveragePlugin=jacoco \
-                        -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
-                    '''
-                }
-            }
-        }
+       stage('SonarQube Analysis') {
+           steps {
+               withSonarQubeEnv('SonarQube') {
+                   sh '''
+                       mvn sonar:sonar \
+                       -Dsonar.projectKey=booking-service \
+                       -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
+                       -Dsonar.junit.reportPaths=target/surefire-reports
+                   '''
+               }
+           }
+       }
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t maaouisamar/booking-service .'
