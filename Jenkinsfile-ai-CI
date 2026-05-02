@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build & Test AI Learning Assistant') {
+            steps {
+                dir('backend-integre/AI-Learning-Assistant-Microservice') {
+                    sh 'chmod +x mvnw && ./mvnw -B clean package -DskipTests'
+                }
+            }
+        }
+
+        stage('Docker Build AI Learning Assistant') {
+            steps {
+                sh 'docker build -t jungle/ai-learning-assistant:ci backend-integre/AI-Learning-Assistant-Microservice'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'CI AI Learning Assistant réussi ✅'
+            build job: 'ai-learning-CD', wait: false
+        }
+        failure {
+            echo 'CI AI Learning Assistant échoué ❌'
+        }
+    }
+}

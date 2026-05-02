@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials')
+        DOCKER_HUB_USERNAME = 'wissal93'
+    }
+
+    stages {
+        stage('Docker Login') {
+            steps {
+                sh 'echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
+
+        stage('Push AI Learning Assistant') {
+            steps {
+                sh 'docker tag jungle/ai-learning-assistant:ci $DOCKER_HUB_USERNAME/ai-learning-assistant:latest'
+                sh 'docker push $DOCKER_HUB_USERNAME/ai-learning-assistant:latest'
+            }
+        }
+
+        stage('Deploy AI Learning Assistant') {
+            steps {
+                sh 'docker-compose -f docker-compose.yml up -d ai-learning-assistant-microservice'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'CD AI Learning Assistant réussi ✅'
+        }
+        failure {
+            echo 'CD AI Learning Assistant échoué ❌'
+        }
+    }
+}

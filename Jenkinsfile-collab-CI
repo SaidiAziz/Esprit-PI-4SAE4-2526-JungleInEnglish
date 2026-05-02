@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build & Test Collaboration Room') {
+            steps {
+                dir('backend-integre/Collaboration-Room-Microservice') {
+                    sh 'chmod +x mvnw && ./mvnw -B clean package -DskipTests'
+                }
+            }
+        }
+
+        stage('Docker Build Collaboration Room') {
+            steps {
+                sh 'docker build -t jungle/collaboration-room:ci backend-integre/Collaboration-Room-Microservice'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'CI Collaboration Room réussi ✅'
+            build job: 'collaboration-CD', wait: false
+        }
+        failure {
+            echo 'CI Collaboration Room échoué ❌'
+        }
+    }
+}
