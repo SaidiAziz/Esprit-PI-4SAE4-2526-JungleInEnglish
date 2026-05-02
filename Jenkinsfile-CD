@@ -7,43 +7,44 @@ pipeline {
     }
 
     stages {
-        stage('Docker Push') {
-            parallel {
-                stage('Push ai-learning-assistant') {
-                    steps {
-                        sh 'echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin'
-                        sh 'docker tag jungle/ai-learning-assistant:ci $DOCKER_HUB_USERNAME/ai-learning-assistant:latest'
-                        sh 'docker push $DOCKER_HUB_USERNAME/ai-learning-assistant:latest'
-                    }
-                }
-                stage('Push collaboration-room') {
-                    steps {
-                        sh 'echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin'
-                        sh 'docker tag jungle/collaboration-room:ci $DOCKER_HUB_USERNAME/collaboration-room:latest'
-                        sh 'docker push $DOCKER_HUB_USERNAME/collaboration-room:latest'
-                    }
-                }
-                stage('Push user-microservice') {
-                    steps {
-                        sh 'echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin'
-                        sh 'docker tag jungle/user-microservice:ci $DOCKER_HUB_USERNAME/user-microservice:latest'
-                        sh 'docker push $DOCKER_HUB_USERNAME/user-microservice:latest'
-                    }
-                }
-                stage('Push api-gateway') {
-                    steps {
-                        sh 'echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin'
-                        sh 'docker tag jungle/api-gateway:ci $DOCKER_HUB_USERNAME/api-gateway:latest'
-                        sh 'docker push $DOCKER_HUB_USERNAME/api-gateway:latest'
-                    }
-                }
-                stage('Push eureka-server') {
-                    steps {
-                        sh 'echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin'
-                        sh 'docker tag jungle/eureka-server:ci $DOCKER_HUB_USERNAME/eureka-server:latest'
-                        sh 'docker push $DOCKER_HUB_USERNAME/eureka-server:latest'
-                    }
-                }
+        stage('Docker Login') {
+            steps {
+                sh 'echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
+
+        stage('Push ai-learning-assistant') {
+            steps {
+                sh 'docker tag jungle/ai-learning-assistant:ci $DOCKER_HUB_USERNAME/ai-learning-assistant:latest'
+                sh 'docker push $DOCKER_HUB_USERNAME/ai-learning-assistant:latest'
+            }
+        }
+
+        stage('Push collaboration-room') {
+            steps {
+                sh 'docker tag jungle/collaboration-room:ci $DOCKER_HUB_USERNAME/collaboration-room:latest'
+                sh 'docker push $DOCKER_HUB_USERNAME/collaboration-room:latest'
+            }
+        }
+
+        stage('Push user-microservice') {
+            steps {
+                sh 'docker tag jungle/user-microservice:ci $DOCKER_HUB_USERNAME/user-microservice:latest'
+                sh 'docker push $DOCKER_HUB_USERNAME/user-microservice:latest'
+            }
+        }
+
+        stage('Push api-gateway') {
+            steps {
+                sh 'docker tag jungle/api-gateway:ci $DOCKER_HUB_USERNAME/api-gateway:latest'
+                sh 'docker push $DOCKER_HUB_USERNAME/api-gateway:latest'
+            }
+        }
+
+        stage('Push eureka-server') {
+            steps {
+                sh 'docker tag jungle/eureka-server:ci $DOCKER_HUB_USERNAME/eureka-server:latest'
+                sh 'docker push $DOCKER_HUB_USERNAME/eureka-server:latest'
             }
         }
 
