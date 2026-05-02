@@ -20,6 +20,12 @@ pipeline {
             }
         }
 
+        stage('Cleanup old containers') {
+            steps {
+                sh 'docker-compose -f docker-compose.yml down || true'
+            }
+        }
+
         stage('Deploy Collaboration Room') {
             steps {
                 sh 'docker-compose -f docker-compose.yml up -d collaboration-room-microservice'
