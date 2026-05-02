@@ -21,6 +21,12 @@ pipeline {
                 sh 'docker build -t jungle/collaboration-room:ci backend-integre/Collaboration-Room-Microservice'
             }
         }
+
+        stage('Security Scan - Trivy') {
+            steps {
+                sh '/usr/local/bin/trivy image --exit-code 0 --severity HIGH,CRITICAL --format table jungle/collaboration-room:ci'
+            }
+        }
     }
 
     post {
