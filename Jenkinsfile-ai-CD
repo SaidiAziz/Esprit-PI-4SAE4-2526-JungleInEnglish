@@ -21,10 +21,12 @@ pipeline {
         }
 
         stage('Cleanup old containers') {
-            steps {
-                sh 'docker-compose -f docker-compose.yml down || true'
-            }
-        }
+    steps {
+        sh 'docker stop $(docker ps -q --filter "name=ai-learning-cd") || true'
+        sh 'docker stop $(docker ps -q --filter "name=collaboration-cd") || true'
+        sh 'docker-compose -f docker-compose.yml down || true'
+    }
+}
 
         stage('Deploy AI Learning Assistant') {
             steps {
