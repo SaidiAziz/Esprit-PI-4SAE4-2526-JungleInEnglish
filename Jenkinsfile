@@ -1,5 +1,10 @@
 pipeline {
     agent any
+    
+    environment {
+        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials')
+        DOCKER_HUB_USERNAME = 'wissal'
+    }
 
     stages {
         stage('Checkout') {
@@ -77,14 +82,36 @@ pipeline {
                 }
             }
         }
+
+        stage('Docker Push') {
+            steps {
+                sh 'echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin'
+                sh 'docker tag jungle/ai-learning-assistant:ci $DOCKER_HUB_USERNAME/ai-learning-assistant:latest'
+                sh 'docker tag jungle/collaboration-room:ci $DOCKER_HUB_USERNAME/collaboration-room:latest'
+                sh 'docker tag jungle/user-microservice:ci $DOCKER_HUB_USERNAME/user-microservice:latest'
+                sh 'docker tag jungle/api-gateway:ci $DOCKER_HUB_USERNAME/api-gateway:latest'
+                sh 'docker tag jungle/eureka-server:ci $DOCKER_HUB_USERNAME/eureka-server:latest'
+                sh 'docker push $DOCKER_HUB_USERNAME/ai-learning-assistant:latest'
+                sh 'docker push $DOCKER_HUB_USERNAME/collaboration-room:latest'
+                sh 'docker push $DOCKER_HUB_USERNAME/user-microservice:latest'
+                sh 'docker push $DOCKER_HUB_USERNAME/api-gateway:latest'
+                sh 'docker push $DOCKER_HUB_USERNAME/eureka-server:latest'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'docker-compose -f docker-compose.yml up -d'
+            }
+        }
     }
 
     post {
         success {
-            echo 'Pipeline réussi ✅'
+            echo 'Pipeline CI/CD réussi ✅'
         }
         failure {
-            echo 'Pipeline échoué ❌'
+            echo 'Pipeline CI/CD échoué ❌'
         }
     }
 }
