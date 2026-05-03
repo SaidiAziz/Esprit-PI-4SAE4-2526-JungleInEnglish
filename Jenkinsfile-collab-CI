@@ -23,12 +23,11 @@ pipeline {
         }
 
         stage('Security Scan - Trivy') {
-            steps {
-                sh '/usr/local/bin/trivy image --exit-code 0 --severity HIGH,CRITICAL --format template --template "@contrib/html.tpl" --output /tmp/trivy-report-collab.html --timeout 15m jungle/collaboration-room:ci || true'
-                sh 'cp /tmp/trivy-report-collab.html $WORKSPACE/trivy-report-collab.html || true'
-                sh '/usr/local/bin/trivy image --exit-code 0 --severity HIGH,CRITICAL --format table --timeout 15m jungle/collaboration-room:ci'
-            }
-        }
+    steps {
+        sh '/usr/local/bin/trivy image --exit-code 0 --severity HIGH,CRITICAL --format template --template "@/usr/local/share/trivy/templates/html.tpl" --output $WORKSPACE/trivy-report-collab.html --timeout 15m jungle/collaboration-room:ci'
+        sh '/usr/local/bin/trivy image --exit-code 0 --severity HIGH,CRITICAL --format table --timeout 15m jungle/collaboration-room:ci'
+    }
+}
     }
 
     post {
