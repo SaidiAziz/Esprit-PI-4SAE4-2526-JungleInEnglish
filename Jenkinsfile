@@ -6,11 +6,10 @@ pipeline {
     }
 
     environment {
-        CI              = 'true'
-        CHROME_BIN      = '/usr/bin/google-chrome-stable'
-        SONAR_URL       = "http://localhost:9000"
-        DOCKER_REGISTRY = credentials('docker-registry-url')
-        DOCKER_IMAGE    = "${DOCKER_REGISTRY}/jungle-frontend:${BUILD_NUMBER}"
+        CI           = 'true'
+        CHROME_BIN   = '/usr/bin/google-chrome-stable'
+        SONAR_URL    = "http://172.21.34.22:9000"
+        DOCKER_IMAGE = "saidiaziz/jungle-frontend:${BUILD_NUMBER}"
     }
 
     stages {
@@ -20,7 +19,7 @@ pipeline {
             }
         }
 
-        stage('Install dependencies') {
+        stage('Install Dependencies') {
             steps {
                 sh 'npm ci --legacy-peer-deps'
             }
@@ -85,7 +84,7 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh '''
                         echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
                         docker push ${DOCKER_IMAGE}
@@ -105,4 +104,3 @@ pipeline {
         }
     }
 }
-
