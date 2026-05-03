@@ -16,15 +16,15 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('sonarqube') {
-                    dir('backend-integre/AI-Learning-Assistant-Microservice') {
-                        sh './mvnw sonar:sonar -Dsonar.projectKey=ai-learning-assistant -Dsonar.projectName=ai-learning-assistant'
-                    }
-                }
+       stage('SonarQube Analysis') {
+    steps {
+        withSonarQubeEnv('sonarqube') {
+            dir('backend-integre/AI-Learning-Assistant-Microservice') {
+                sh './mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=ai-learning-assistant -Dsonar.projectName=ai-learning-assistant'
             }
         }
+    }
+}
 
         stage('Docker Build AI Learning Assistant') {
             steps {
