@@ -22,5 +22,3 @@ Jenkinsfile
 karma.conf.js
 tsconfig.spec.json
 *.component.spec.ts
-src/environments
-
