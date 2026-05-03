@@ -237,7 +237,8 @@ public class QuizAttemptService {
 
     private void calculateFinalScore(QuizAttempt attempt) {
         if (attempt.getStartedAt() != null && attempt.getCompletedAt() != null) {
-            long seconds = ChronoUnit.SECONDS.between(attempt.getStartedAt(), attempt.getCompletedAt());
+            long seconds = ChronoUnit.SECONDS.between(
+                    attempt.getStartedAt(), attempt.getCompletedAt());
             attempt.setDurationSeconds((int) seconds);
         }
 
@@ -297,7 +298,7 @@ public class QuizAttemptService {
         List<QuizAttempt> attempts = attemptRepository.findByQuizId(quizId);
         List<QuizAttempt> completed = attempts.stream()
                 .filter(a -> a.getStatus() == AttemptStatus.COMPLETED)
-                .collect(Collectors.toList());
+                .toList();
 
         long passed = completed.stream().filter(QuizAttempt::getIsPassed).count();
         long failed = completed.stream().filter(a -> !a.getIsPassed()).count();
@@ -339,7 +340,7 @@ public class QuizAttemptService {
         List<QuizAttempt> attempts = attemptRepository.findByStudentId(studentId).stream()
                 .filter(a -> a.getStatus() == AttemptStatus.COMPLETED)
                 .sorted(Comparator.comparing(QuizAttempt::getCompletedAt))
-                .collect(Collectors.toList());
+                .toList();
 
         List<Map<String, Object>> result = new ArrayList<>();
         long cumulativeXp = 0;
@@ -361,7 +362,7 @@ public class QuizAttemptService {
         List<QuizAttempt> attempts = attemptRepository.findByStudentId(studentId);
         List<QuizAttempt> completed = attempts.stream()
                 .filter(a -> a.getStatus() == AttemptStatus.COMPLETED)
-                .collect(Collectors.toList());
+                .toList();
 
         long passed = completed.stream().filter(QuizAttempt::getIsPassed).count();
         long perfectScore = completed.stream()
@@ -377,11 +378,14 @@ public class QuizAttemptService {
         if (!completed.isEmpty()) badges.add(badge("first_quiz", "🎯 First Quiz",
                 "Completed your first quiz", "gold", true));
         badges.add(badge("quiz_master", "🏆 Quiz Master",
-                passed >= 5 ? "Passed 5 quizzes" : passed + "/5 quizzes passed", "gold", passed >= 5));
+                passed >= 5 ? "Passed 5 quizzes" : passed + "/5 quizzes passed",
+                "gold", passed >= 5));
         badges.add(badge("perfect_score", "⭐ Perfect Score",
-                perfectScore >= 1 ? "Got 100% on a quiz" : "Get 100% on any quiz", "gold", perfectScore >= 1));
+                perfectScore >= 1 ? "Got 100% on a quiz" : "Get 100% on any quiz",
+                "gold", perfectScore >= 1));
         badges.add(badge("xp_500", "⚡ XP Hunter",
-                totalXp >= 500 ? "Earned 500 XP" : totalXp + "/500 XP earned", "purple", totalXp >= 500));
+                totalXp >= 500 ? "Earned 500 XP" : totalXp + "/500 XP earned",
+                "purple", totalXp >= 500));
         badges.add(badge("speed_runner", "🚀 Speed Runner",
                 fastAnswers >= 3 ? "Completed 3 quizzes under 1 min" :
                         fastAnswers + "/3 fast completions", "blue", fastAnswers >= 3));
