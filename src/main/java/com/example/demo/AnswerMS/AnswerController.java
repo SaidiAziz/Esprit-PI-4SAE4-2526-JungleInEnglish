@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/answers")
-@CrossOrigin(origins = "*")
 public class AnswerController {
 
     private final AnswerService answerService;

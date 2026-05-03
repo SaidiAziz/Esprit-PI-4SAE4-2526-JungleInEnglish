@@ -8,7 +8,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/quiz-attempts")
-@CrossOrigin(origins = "*")
 public class QuizAttemptController {
 
     @Autowired
