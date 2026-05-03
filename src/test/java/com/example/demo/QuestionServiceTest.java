@@ -1,3 +1,5 @@
+package com.example.demo;
+
 import com.example.demo.QuestionMS.Question;
 import com.example.demo.QuestionMS.QuestionRepository;
 import com.example.demo.QuestionMS.QuestionService;

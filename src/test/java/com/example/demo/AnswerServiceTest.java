@@ -1,6 +1,6 @@
 package com.example.demo;
 
- import com.example.demo.AnswerMS.Answer;
+import com.example.demo.AnswerMS.Answer;
 import com.example.demo.AnswerMS.AnswerRepository;
 import com.example.demo.AnswerMS.AnswerService;
 import com.example.demo.QuestionMS.Question;

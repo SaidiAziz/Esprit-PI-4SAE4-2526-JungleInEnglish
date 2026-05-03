@@ -1,3 +1,5 @@
+package com.example.demo;
+
 import com.example.demo.QuizMS.Level;
 import com.example.demo.QuizMS.Quiz;
 import com.example.demo.QuizMS.QuizRepository;
