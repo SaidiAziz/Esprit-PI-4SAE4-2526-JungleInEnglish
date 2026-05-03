@@ -1,13 +1,11 @@
 pipeline {
     agent any
-
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-
         stage('Build & Test Collaboration Room') {
             steps {
                 dir('backend-integre/Collaboration-Room-Microservice') {
@@ -15,21 +13,27 @@ pipeline {
                 }
             }
         }
-
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    dir('backend-integre/Collaboration-Room-Microservice') {
+                        sh './mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=collaboration-room -Dsonar.projectName=collaboration-room'
+                    }
+                }
+            }
+        }
         stage('Docker Build Collaboration Room') {
             steps {
                 sh 'docker build -t jungle/collaboration-room:ci backend-integre/Collaboration-Room-Microservice'
             }
         }
-
         stage('Security Scan - Trivy') {
-    steps {
-        sh '/usr/local/bin/trivy image --exit-code 0 --severity HIGH,CRITICAL --format template --template "@/usr/local/share/trivy/templates/html.tpl" --output $WORKSPACE/trivy-report-collab.html --timeout 15m jungle/collaboration-room:ci'
-        sh '/usr/local/bin/trivy image --exit-code 0 --severity HIGH,CRITICAL --format table --timeout 15m jungle/collaboration-room:ci'
+            steps {
+                sh '/usr/local/bin/trivy image --exit-code 0 --severity HIGH,CRITICAL --format template --template "@/usr/local/share/trivy/templates/html.tpl" --output $WORKSPACE/trivy-report-collab.html --timeout 15m jungle/collaboration-room:ci'
+                sh '/usr/local/bin/trivy image --exit-code 0 --severity HIGH,CRITICAL --format table --timeout 15m jungle/collaboration-room:ci'
+            }
+        }
     }
-}
-    }
-
     post {
         success {
             echo 'CI Collaboration Room réussi ✅'
