@@ -29,6 +29,9 @@
       "@shared/*": [
         "app/shared/*"
       ],
+      "@environments/*": [
+        "environments/*"
+      ],
       "sweetalert2": [
         "app/shims/sweetalert2"
       ],
