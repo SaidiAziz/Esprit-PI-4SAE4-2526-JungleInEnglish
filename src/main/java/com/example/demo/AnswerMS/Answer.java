@@ -4,6 +4,8 @@ import com.example.demo.QuestionMS.Question;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import java.util.Objects;
+
 import jakarta.validation.constraints.*;
 
 @Entity
@@ -40,8 +42,8 @@ public class Answer {
     public Answer(Question question, String text, Boolean isCorrect, Integer orderIndex) {
         this.question = question;
         this.text = text;
-        this.isCorrect = isCorrect != null ? isCorrect : false;
-        this.orderIndex = orderIndex != null ? orderIndex : 0;
+        this.isCorrect = Objects.requireNonNullElse(isCorrect, false);
+        this.orderIndex = Objects.requireNonNullElse(orderIndex, 0);
     }
 
     public Long getId() { return id; }

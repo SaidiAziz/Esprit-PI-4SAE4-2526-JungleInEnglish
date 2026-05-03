@@ -6,10 +6,15 @@ import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "quiz")
 public class Quiz {
+
+    private static final String QUIZ_ID = "quizId";
+    private static final String ORDER_INDEX = "orderIndex";
+    private static final String POINTS = "points";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -77,8 +82,12 @@ public class Quiz {
         this.level = level;
         this.duration = duration;
         this.passingScore = passingScore;
-        this.isAdaptive = isAdaptive != null ? isAdaptive : false;
+        this.isAdaptive = Objects.requireNonNullElse(isAdaptive, false);
     }
+
+    public static String getQuizIdConstant() { return QUIZ_ID; }
+    public static String getOrderIndexConstant() { return ORDER_INDEX; }
+    public static String getPointsConstant() { return POINTS; }
 
     public Long getId() { return id; }
     public String getTitle() { return title; }

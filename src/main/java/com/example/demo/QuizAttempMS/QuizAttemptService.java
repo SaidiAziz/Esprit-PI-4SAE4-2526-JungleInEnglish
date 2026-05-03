@@ -19,6 +19,15 @@ import java.util.stream.Collectors;
 @Service
 public class QuizAttemptService {
 
+    // ── Constants ──────────────────────────────────
+    private static final String IS_CORRECT = "isCorrect";
+    private static final String LIVES_REMAINING = "livesRemaining";
+    private static final String GAME_OVER = "gameOver";
+    private static final String XP_EARNED = "xpEarned";
+    private static final String POINTS_EARNED = "pointsEarned";
+    private static final String PERCENTAGE = "percentage";
+    private static final String CORRECT_ANSWER_ID = "correctAnswerId";
+
     @Autowired
     private QuizAttemptRepository attemptRepository;
 
@@ -27,10 +36,6 @@ public class QuizAttemptService {
 
     @Autowired
     private StudentAnswerRepository studentAnswerRepository;
-
-    // ─────────────────────────────────────────────
-    //  DÉMARRER UN QUIZ
-    // ─────────────────────────────────────────────
 
     @Transactional
     public QuizAttempt startQuiz(Long quizId, Long studentId, Long bookingId) {
@@ -41,21 +46,18 @@ public class QuizAttemptService {
             throw new RuntimeException("Quiz is not published yet");
         }
 
-        // ✅ Si une tentative IN_PROGRESS existe déjà → la reprendre
         Optional<QuizAttempt> existing = attemptRepository.findByStudentIdAndQuizIdAndStatus(
                 studentId, quizId, AttemptStatus.IN_PROGRESS
         );
         if (existing.isPresent()) {
-            return existing.get(); // reprendre la tentative existante
+            return existing.get();
         }
 
-        // ✅ Vérifier le nombre max de tentatives
         long previousAttempts = attemptRepository.countByStudentIdAndQuizId(studentId, quizId);
         if (quiz.getMaxAttempts() != null && previousAttempts >= quiz.getMaxAttempts()) {
             throw new RuntimeException("Maximum attempts reached for this quiz");
         }
 
-        // ✅ Créer la tentative
         QuizAttempt attempt = new QuizAttempt();
         attempt.setQuizId(quizId);
         attempt.setStudentId(studentId);
@@ -64,7 +66,7 @@ public class QuizAttemptService {
         attempt.setAttemptNumber((int) previousAttempts + 1);
 
         int totalPoints = quiz.getQuestions().stream()
-                .mapToInt(q -> q.getPoints())
+                .mapToInt(Question::getPoints)
                 .sum();
         attempt.setTotalPoints(totalPoints);
 
@@ -75,25 +77,20 @@ public class QuizAttemptService {
         return attemptRepository.findByStudentIdAndQuizId(studentId, quizId);
     }
 
-    // ─────────────────────────────────────────────
-    //  SOUMETTRE UNE RÉPONSE
-    // ─────────────────────────────────────────────
-
     @Transactional
     public Map<String, Object> submitAnswer(Long attemptId, Long questionId,
                                             Long selectedAnswerId, Integer responseTimeSec) {
         QuizAttempt attempt = getAttemptById(attemptId);
 
-        // ✅ Si déjà terminé → retourner résultat sans bloquer
         if (attempt.getStatus() == AttemptStatus.GAME_OVER
                 || attempt.getStatus() == AttemptStatus.COMPLETED
                 || attempt.getStatus() == AttemptStatus.TIMED_OUT) {
             Map<String, Object> r = new HashMap<>();
-            r.put("isCorrect", false);
-            r.put("livesRemaining", attempt.getLivesRemaining());
-            r.put("gameOver", attempt.getStatus() == AttemptStatus.GAME_OVER);
-            r.put("percentage", attempt.getPercentage());
-            r.put("xpEarned", attempt.getXpEarned());
+            r.put(IS_CORRECT, false);
+            r.put(LIVES_REMAINING, attempt.getLivesRemaining());
+            r.put(GAME_OVER, attempt.getStatus() == AttemptStatus.GAME_OVER);
+            r.put(PERCENTAGE, attempt.getPercentage());
+            r.put(XP_EARNED, attempt.getXpEarned());
             return r;
         }
 
@@ -101,16 +98,16 @@ public class QuizAttemptService {
             throw new RuntimeException("Attempt is not in progress");
         }
 
-        // ✅ Si question déjà répondue → retourner le résultat existant sans erreur
-        Optional<StudentAnswer> existingAnswer = studentAnswerRepository.findByAttemptAndQuestionId(attempt, questionId);
+        Optional<StudentAnswer> existingAnswer = studentAnswerRepository
+                .findByAttemptAndQuestionId(attempt, questionId);
         if (existingAnswer.isPresent()) {
             StudentAnswer existing = existingAnswer.get();
             Map<String, Object> r = new HashMap<>();
-            r.put("isCorrect", existing.getIsCorrect());
-            r.put("livesRemaining", attempt.getLivesRemaining());
-            r.put("pointsEarned", existing.getPointsEarned());
-            r.put("gameOver", false);
-            r.put("xpEarned", 0);
+            r.put(IS_CORRECT, existing.getIsCorrect());
+            r.put(LIVES_REMAINING, attempt.getLivesRemaining());
+            r.put(POINTS_EARNED, existing.getPointsEarned());
+            r.put(GAME_OVER, false);
+            r.put(XP_EARNED, 0);
             return r;
         }
 
@@ -149,10 +146,10 @@ public class QuizAttemptService {
                 attemptRepository.save(attempt);
 
                 Map<String, Object> result = new HashMap<>();
-                result.put("isCorrect", false);
-                result.put("livesRemaining", 0);
-                result.put("gameOver", true);
-                result.put("correctAnswerId", getCorrectAnswerId(question));
+                result.put(IS_CORRECT, false);
+                result.put(LIVES_REMAINING, 0);
+                result.put(GAME_OVER, true);
+                result.put(CORRECT_ANSWER_ID, getCorrectAnswerId(question));
                 return result;
             }
         }
@@ -160,24 +157,19 @@ public class QuizAttemptService {
         attemptRepository.save(attempt);
 
         Map<String, Object> result = new HashMap<>();
-        result.put("isCorrect", isCorrect);
-        result.put("livesRemaining", attempt.getLivesRemaining());
-        result.put("pointsEarned", pointsEarned);
-        result.put("gameOver", false);
-        result.put("correctAnswerId", getCorrectAnswerId(question));
-        result.put("xpEarned", isCorrect ? calculateXpForQuestion(question, responseTimeSec) : 0);
+        result.put(IS_CORRECT, isCorrect);
+        result.put(LIVES_REMAINING, attempt.getLivesRemaining());
+        result.put(POINTS_EARNED, pointsEarned);
+        result.put(GAME_OVER, false);
+        result.put(CORRECT_ANSWER_ID, getCorrectAnswerId(question));
+        result.put(XP_EARNED, isCorrect ? calculateXpForQuestion(question, responseTimeSec) : 0);
         return result;
     }
-
-    // ─────────────────────────────────────────────
-    //  TERMINER LE QUIZ
-    // ─────────────────────────────────────────────
 
     @Transactional
     public QuizAttempt completeQuiz(Long attemptId) {
         QuizAttempt attempt = getAttemptById(attemptId);
 
-        // ✅ Si déjà terminé (GAME_OVER, TIMED_OUT) → retourner tel quel
         if (attempt.getStatus() == AttemptStatus.GAME_OVER
                 || attempt.getStatus() == AttemptStatus.TIMED_OUT
                 || attempt.getStatus() == AttemptStatus.COMPLETED) {
@@ -194,10 +186,6 @@ public class QuizAttemptService {
         return attemptRepository.save(attempt);
     }
 
-    // ─────────────────────────────────────────────
-    //  TIMEOUT
-    // ─────────────────────────────────────────────
-
     @Transactional
     public QuizAttempt timeoutQuiz(Long attemptId) {
         QuizAttempt attempt = getAttemptById(attemptId);
@@ -206,10 +194,6 @@ public class QuizAttemptService {
         calculateFinalScore(attempt);
         return attemptRepository.save(attempt);
     }
-
-    // ─────────────────────────────────────────────
-    //  READ
-    // ─────────────────────────────────────────────
 
     public QuizAttempt getAttemptById(Long id) {
         return attemptRepository.findById(id)
@@ -228,10 +212,6 @@ public class QuizAttemptService {
         return attemptRepository.findByStudentIdAndStatus(studentId, AttemptStatus.COMPLETED);
     }
 
-    // ─────────────────────────────────────────────
-    //  GAMIFICATION
-    // ─────────────────────────────────────────────
-
     public Map<String, Object> getStudentStats(Long studentId) {
         int totalXp = attemptRepository.findTotalXp(studentId);
         int level = totalXp / 100;
@@ -248,17 +228,12 @@ public class QuizAttemptService {
         stats.put("completed", completed);
         stats.put("perfectScores", perfectScores);
         stats.put("badges", calculateBadges(studentId, completed, perfectScores, activeDays));
-
         return stats;
     }
 
     public List<Object[]> getMonthlyLeaderboard() {
         return attemptRepository.findMonthlyLeaderboard();
     }
-
-    // ─────────────────────────────────────────────
-    //  MÉTHODES PRIVÉES
-    // ─────────────────────────────────────────────
 
     private void calculateFinalScore(QuizAttempt attempt) {
         if (attempt.getStartedAt() != null && attempt.getCompletedAt() != null) {
@@ -326,11 +301,15 @@ public class QuizAttemptService {
 
         long passed = completed.stream().filter(QuizAttempt::getIsPassed).count();
         long failed = completed.stream().filter(a -> !a.getIsPassed()).count();
-        long gameOver = attempts.stream().filter(a -> a.getStatus() == AttemptStatus.GAME_OVER).count();
-        double avgScore = completed.stream().mapToDouble(QuizAttempt::getPercentage).average().orElse(0);
-        double avgDuration = completed.stream().filter(a -> a.getDurationSeconds() != null)
+        long gameOver = attempts.stream()
+                .filter(a -> a.getStatus() == AttemptStatus.GAME_OVER).count();
+        double avgScore = completed.stream()
+                .mapToDouble(QuizAttempt::getPercentage).average().orElse(0);
+        double avgDuration = completed.stream()
+                .filter(a -> a.getDurationSeconds() != null)
                 .mapToLong(QuizAttempt::getDurationSeconds).average().orElse(0);
-        double bestScore = completed.stream().mapToDouble(QuizAttempt::getPercentage).max().orElse(0);
+        double bestScore = completed.stream()
+                .mapToDouble(QuizAttempt::getPercentage).max().orElse(0);
         Map<String, Double> scoreByDay = completed.stream()
                 .filter(a -> a.getCompletedAt() != null)
                 .collect(Collectors.groupingBy(
@@ -345,8 +324,9 @@ public class QuizAttemptService {
         stats.put("completed", completed.size());
         stats.put("passed", passed);
         stats.put("failed", failed);
-        stats.put("gameOver", gameOver);
-        stats.put("passRate", completed.isEmpty() ? 0 : Math.round((passed * 100.0) / completed.size()));
+        stats.put(GAME_OVER, gameOver);
+        stats.put("passRate", completed.isEmpty() ? 0 :
+                Math.round((passed * 100.0) / completed.size()));
         stats.put("avgScore", Math.round(avgScore * 10.0) / 10.0);
         stats.put("bestScore", Math.round(bestScore * 10.0) / 10.0);
         stats.put("avgDuration", Math.round(avgDuration));
@@ -368,7 +348,7 @@ public class QuizAttemptService {
             Map<String, Object> point = new LinkedHashMap<>();
             point.put("date", a.getCompletedAt().toLocalDate().toString());
             point.put("score", a.getPercentage());
-            point.put("xp", a.getXpEarned());
+            point.put(XP_EARNED, a.getXpEarned());
             point.put("cumulativeXp", cumulativeXp);
             point.put("isPassed", a.getIsPassed());
             point.put("quizId", a.getQuizId());
@@ -380,22 +360,34 @@ public class QuizAttemptService {
     public List<Map<String, Object>> getStudentBadges(Long studentId) {
         List<QuizAttempt> attempts = attemptRepository.findByStudentId(studentId);
         List<QuizAttempt> completed = attempts.stream()
-                .filter(a -> a.getStatus() == AttemptStatus.COMPLETED).collect(Collectors.toList());
+                .filter(a -> a.getStatus() == AttemptStatus.COMPLETED)
+                .collect(Collectors.toList());
 
         long passed = completed.stream().filter(QuizAttempt::getIsPassed).count();
-        long perfectScore = completed.stream().filter(a -> a.getPercentage() >= 100).count();
-        long totalXp = completed.stream().mapToLong(a -> a.getXpEarned() != null ? a.getXpEarned() : 0).sum();
+        long perfectScore = completed.stream()
+                .filter(a -> a.getPercentage() >= 100).count();
+        long totalXp = completed.stream()
+                .mapToLong(a -> a.getXpEarned() != null ? a.getXpEarned() : 0).sum();
         long fastAnswers = attempts.stream()
-                .filter(a -> a.getDurationSeconds() != null && a.getDurationSeconds() < 60
+                .filter(a -> a.getDurationSeconds() != null
+                        && a.getDurationSeconds() < 60
                         && a.getStatus() == AttemptStatus.COMPLETED).count();
 
         List<Map<String, Object>> badges = new ArrayList<>();
-        if (!completed.isEmpty()) badges.add(badge("first_quiz", "🎯 First Quiz", "Completed your first quiz", "gold", true));
-        badges.add(badge("quiz_master", "🏆 Quiz Master", passed >= 5 ? "Passed 5 quizzes" : passed + "/5 quizzes passed", "gold", passed >= 5));
-        badges.add(badge("perfect_score", "⭐ Perfect Score", perfectScore >= 1 ? "Got 100% on a quiz" : "Get 100% on any quiz", "gold", perfectScore >= 1));
-        badges.add(badge("xp_500", "⚡ XP Hunter", totalXp >= 500 ? "Earned 500 XP" : totalXp + "/500 XP earned", "purple", totalXp >= 500));
-        badges.add(badge("speed_runner", "🚀 Speed Runner", fastAnswers >= 3 ? "Completed 3 quizzes under 1 min" : fastAnswers + "/3 fast completions", "blue", fastAnswers >= 3));
-        badges.add(badge("xp_1000", "💎 XP Legend", totalXp >= 1000 ? "Earned 1000 XP" : totalXp + "/1000 XP earned", "diamond", totalXp >= 1000));
+        if (!completed.isEmpty()) badges.add(badge("first_quiz", "🎯 First Quiz",
+                "Completed your first quiz", "gold", true));
+        badges.add(badge("quiz_master", "🏆 Quiz Master",
+                passed >= 5 ? "Passed 5 quizzes" : passed + "/5 quizzes passed", "gold", passed >= 5));
+        badges.add(badge("perfect_score", "⭐ Perfect Score",
+                perfectScore >= 1 ? "Got 100% on a quiz" : "Get 100% on any quiz", "gold", perfectScore >= 1));
+        badges.add(badge("xp_500", "⚡ XP Hunter",
+                totalXp >= 500 ? "Earned 500 XP" : totalXp + "/500 XP earned", "purple", totalXp >= 500));
+        badges.add(badge("speed_runner", "🚀 Speed Runner",
+                fastAnswers >= 3 ? "Completed 3 quizzes under 1 min" :
+                        fastAnswers + "/3 fast completions", "blue", fastAnswers >= 3));
+        badges.add(badge("xp_1000", "💎 XP Legend",
+                totalXp >= 1000 ? "Earned 1000 XP" : totalXp + "/1000 XP earned",
+                "diamond", totalXp >= 1000));
         return badges;
     }
 

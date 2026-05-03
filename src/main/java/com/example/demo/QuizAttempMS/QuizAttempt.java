@@ -22,25 +22,21 @@ public class QuizAttempt {
     @Column(name = "student_id", nullable = false)
     private Long studentId;
 
-
-    // ── Score ──────────────────────────────────────
     @Column(nullable = false)
-    private Integer score = 0;          // bonnes réponses
+    private Integer score = 0;
 
     @Column(name = "total_points", nullable = false)
-    private Integer totalPoints = 0;    // total points possibles
+    private Integer totalPoints = 0;
 
     @Column(nullable = false)
-    private Double percentage = 0.0;    // score en %
+    private Double percentage = 0.0;
 
     @Column(name = "xp_earned", nullable = false)
-    private Integer xpEarned = 0;       // XP gagné
+    private Integer xpEarned = 0;
 
-    // ── Vies ───────────────────────────────────────
     @Column(name = "lives_remaining", nullable = false)
     private Integer livesRemaining = 3;
 
-    // ── Timing ─────────────────────────────────────
     @Column(name = "started_at")
     private LocalDateTime startedAt;
 
@@ -50,7 +46,6 @@ public class QuizAttempt {
     @Column(name = "duration_seconds")
     private Integer durationSeconds;
 
-    // ── Status ─────────────────────────────────────
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AttemptStatus status = AttemptStatus.IN_PROGRESS;
@@ -61,18 +56,19 @@ public class QuizAttempt {
     @Column(name = "attempt_number", nullable = false)
     private Integer attemptNumber = 1;
 
-    // ── Relation ───────────────────────────────────
     @OneToMany(mappedBy = "attempt", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StudentAnswer> studentAnswers = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
+        // Automatically sets the start time when the attempt is first persisted
         this.startedAt = LocalDateTime.now();
     }
 
-    public QuizAttempt() {}
+    public QuizAttempt() {
+        // Default constructor required by JPA
+    }
 
-    // ── Getters & Setters ──────────────────────────
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -81,8 +77,6 @@ public class QuizAttempt {
 
     public Long getStudentId() { return studentId; }
     public void setStudentId(Long studentId) { this.studentId = studentId; }
-
-
 
     public Integer getScore() { return score; }
     public void setScore(Integer score) { this.score = score; }

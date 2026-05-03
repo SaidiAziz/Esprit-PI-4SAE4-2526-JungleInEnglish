@@ -22,7 +22,7 @@ public class StudentAnswer {
     private Long questionId;
 
     @Column(name = "selected_answer_id")
-    private Long selectedAnswerId;      // null si pas répondu
+    private Long selectedAnswerId;
 
     @Column(name = "is_correct", nullable = false)
     private Boolean isCorrect = false;
@@ -38,12 +38,14 @@ public class StudentAnswer {
 
     @PrePersist
     protected void onCreate() {
+        // Automatically sets the answer timestamp when the entity is first persisted
         this.answeredAt = LocalDateTime.now();
     }
 
-    public StudentAnswer() {}
+    public StudentAnswer() {
+        // Default constructor required by JPA
+    }
 
-    // ── Getters & Setters ──────────────────────────
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -68,15 +70,3 @@ public class StudentAnswer {
     public LocalDateTime getAnsweredAt() { return answeredAt; }
     public void setAnsweredAt(LocalDateTime answeredAt) { this.answeredAt = answeredAt; }
 }
-
-
-
-
-
-
-
-
-
-
-
-
