@@ -18,11 +18,11 @@ RUN npm run build -- --configuration production
 # Stage 2 - Serve with nginx
 FROM nginx:alpine
 
-# Copy built dist to nginx
-COPY --from=build /app/dist/pi-front /usr/share/nginx/html
+# Copy built browser assets to nginx web root
+COPY --from=build /app/dist/pi-front/browser /usr/share/nginx/html
 
 # Copy nginx config
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port
 EXPOSE 80
