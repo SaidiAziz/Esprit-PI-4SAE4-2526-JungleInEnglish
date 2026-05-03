@@ -2,7 +2,6 @@ package com.example.demo.QuestionMS;
 
 import com.example.demo.QuizMS.Quiz;
 import com.example.demo.QuizMS.QuizRepository;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +13,16 @@ import java.util.Map;
 @RequestMapping("/api/questions")
 public class QuestionController {
 
+    // ── Constants ──────────────────────────────────
+    private static final String QUIZ_ID = "quizId";
+    private static final String ORDER_INDEX = "orderIndex";
+    private static final String POINTS = "points";
+    private static final String TEXT = "text";
+    private static final String IS_CORRECT = "isCorrect";
+    private static final String ANSWERS = "answers";
+
     private final QuestionService questionService;
-    private final QuizRepository quizRepository;   // ✅ ajouté
+    private final QuizRepository quizRepository;
 
     public QuestionController(QuestionService questionService,
                               QuizRepository quizRepository) {
@@ -23,13 +30,11 @@ public class QuestionController {
         this.quizRepository  = quizRepository;
     }
 
-    // GET /api/questions
     @GetMapping
     public List<Question> getAllQuestions() {
         return questionService.findAll();
     }
 
-    // GET /api/questions/{id}
     @GetMapping("/{id}")
     public ResponseEntity<Question> getQuestionById(@PathVariable Long id) {
         return questionService.findById(id)
@@ -37,49 +42,47 @@ public class QuestionController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // GET /api/questions/quiz/{quizId}
     @GetMapping("/quiz/{quizId}")
     public List<Question> getQuestionsByQuizId(@PathVariable Long quizId) {
         return questionService.findByQuizId(quizId);
     }
 
-    // POST /api/questions
+    @SuppressWarnings("unchecked")
     @PostMapping
-    public ResponseEntity<?> createQuestion(@RequestBody Map<String, Object> body) {
+    public ResponseEntity<Object> createQuestion(@RequestBody Map<String, Object> body) {
 
-        // ✅ FIX — lire quizId depuis le JSON et charger le Quiz
-        Object quizIdObj = body.get("quizId");
+        Object quizIdObj = body.get(QUIZ_ID);
         if (quizIdObj == null) {
             return ResponseEntity.badRequest().body("quizId is required");
         }
 
         Long quizId = Long.valueOf(quizIdObj.toString());
-        Quiz quiz   = quizRepository.findById(quizId)
-                .orElse(null);
+        Quiz quiz = quizRepository.findById(quizId).orElse(null);
 
         if (quiz == null) {
             return ResponseEntity.badRequest().body("Quiz not found: " + quizId);
         }
 
-        // ✅ Construire la Question manuellement depuis le body
         Question question = new Question();
         question.setQuiz(quiz);
-        question.setText((String) body.get("text"));
-        question.setOrderIndex(body.get("orderIndex") != null
-                ? Integer.valueOf(body.get("orderIndex").toString()) : 0);
-        question.setPoints(body.get("points") != null
-                ? Integer.valueOf(body.get("points").toString()) : 1);
+        question.setText((String) body.get(TEXT));
+        question.setOrderIndex(body.get(ORDER_INDEX) != null
+                ? Integer.valueOf(body.get(ORDER_INDEX).toString()) : 0);
+        question.setPoints(body.get(POINTS) != null
+                ? Integer.valueOf(body.get(POINTS).toString()) : 1);
 
-        // ✅ Mapper les answers si présentes
-        if (body.get("answers") instanceof List<?> rawAnswers) {
+        Object answersObj = body.get(ANSWERS);
+        if (answersObj instanceof List<?> rawAnswers) {
             for (Object rawAnswer : rawAnswers) {
-                if (rawAnswer instanceof Map<?, ?> answerMap) {
-                    com.example.demo.AnswerMS.Answer answer = new com.example.demo.AnswerMS.Answer();
-                    answer.setText((String) answerMap.get("text"));
-                    answer.setIsCorrect(Boolean.TRUE.equals(answerMap.get("isCorrect")));
-                    answer.setOrderIndex(answerMap.get("orderIndex") != null
-                            ? Integer.valueOf(answerMap.get("orderIndex").toString()) : 0);
-                    answer.setQuestion(question);  // ✅ lien bidirectionnel
+                if (rawAnswer instanceof Map) {
+                    Map<String, Object> answerMap = (Map<String, Object>) rawAnswer;
+                    com.example.demo.AnswerMS.Answer answer =
+                            new com.example.demo.AnswerMS.Answer();
+                    answer.setText((String) answerMap.get(TEXT));
+                    answer.setIsCorrect(Boolean.TRUE.equals(answerMap.get(IS_CORRECT)));
+                    answer.setOrderIndex(answerMap.get(ORDER_INDEX) != null
+                            ? Integer.valueOf(answerMap.get(ORDER_INDEX).toString()) : 0);
+                    answer.setQuestion(question);
                     question.getAnswers().add(answer);
                 }
             }
@@ -89,27 +92,27 @@ public class QuestionController {
                 .body(questionService.save(question));
     }
 
-    // PUT /api/questions/{id}
+    @SuppressWarnings("unchecked")
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateQuestion(@PathVariable Long id,
-                                            @RequestBody Map<String, Object> body) {
+    public ResponseEntity<Object> updateQuestion(@PathVariable Long id,
+                                                 @RequestBody Map<String, Object> body) {
         Question existing = questionService.findById(id).orElse(null);
         if (existing == null) return ResponseEntity.notFound().build();
 
-        // Mettre à jour le quiz si quizId fourni
-        if (body.get("quizId") != null) {
-            Long quizId = Long.valueOf(body.get("quizId").toString());
+        if (body.get(QUIZ_ID) != null) {
+            Long quizId = Long.valueOf(body.get(QUIZ_ID).toString());
             quizRepository.findById(quizId).ifPresent(existing::setQuiz);
         }
 
-        if (body.get("text")       != null) existing.setText((String) body.get("text"));
-        if (body.get("orderIndex") != null) existing.setOrderIndex(Integer.valueOf(body.get("orderIndex").toString()));
-        if (body.get("points")     != null) existing.setPoints(Integer.valueOf(body.get("points").toString()));
+        if (body.get(TEXT) != null) existing.setText((String) body.get(TEXT));
+        if (body.get(ORDER_INDEX) != null)
+            existing.setOrderIndex(Integer.valueOf(body.get(ORDER_INDEX).toString()));
+        if (body.get(POINTS) != null)
+            existing.setPoints(Integer.valueOf(body.get(POINTS).toString()));
 
         return ResponseEntity.ok(questionService.save(existing));
     }
 
-    // DELETE /api/questions/{id}
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteQuestion(@PathVariable Long id) {
         if (questionService.findById(id).isEmpty()) {
