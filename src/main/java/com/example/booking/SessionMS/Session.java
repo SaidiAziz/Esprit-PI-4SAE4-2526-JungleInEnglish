@@ -34,17 +34,20 @@ public class Session {
     @JsonIgnore
     private SessionFeedback feedback;
 
+    // ── Helper privé : vérifie que le booking a une date valide ──────
+    private boolean hasValidBookingDate() {
+        return booking != null && booking.getSessionDate() != null;
+    }
+
     // ── Helper : reconstruit le scheduledAt depuis le Booking ────────
     public LocalDateTime getScheduledAt() {
-        if (booking == null) return null;
-        if (booking.getSessionDate() == null || booking.getStartTime() == null) return null;
+        if (!hasValidBookingDate() || booking.getStartTime() == null) return null;
         return LocalDateTime.of(booking.getSessionDate(), booking.getStartTime());
     }
 
     // ── Helper : reconstruit le scheduledEnd depuis le Booking ───────
     public LocalDateTime getScheduledEnd() {
-        if (booking == null) return null;
-        if (booking.getSessionDate() == null || booking.getEndTime() == null) return null;
+        if (!hasValidBookingDate() || booking.getEndTime() == null) return null;
         return LocalDateTime.of(booking.getSessionDate(), booking.getEndTime());
     }
 

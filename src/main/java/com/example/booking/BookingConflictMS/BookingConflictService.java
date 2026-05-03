@@ -1,6 +1,5 @@
 package com.example.booking.BookingConflictMS;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -10,13 +9,15 @@ import java.util.List;
 @Service
 public class BookingConflictService {
 
-    // ✅ @Autowired SANS final SANS constructeur
-    @Autowired
-    private BookingConflictsRepository conflictRepository;
+    private final BookingConflictsRepository conflictRepository;
+
+    // ✅ Constructor injection
+    public BookingConflictService(BookingConflictsRepository conflictRepository) {
+        this.conflictRepository = conflictRepository;
+    }
 
     // ── CREATE ──────────────────────────────────────
-    public BookingConflict saveConflict(Long tutorId, LocalDate date,
-                                        String startTime, String endTime, String reason) {
+    public BookingConflict saveConflict(Long tutorId, LocalDate date, String reason) {
         BookingConflict conflict = new BookingConflict();
         conflict.setTutorId(tutorId);
         conflict.setConflictDate(date);

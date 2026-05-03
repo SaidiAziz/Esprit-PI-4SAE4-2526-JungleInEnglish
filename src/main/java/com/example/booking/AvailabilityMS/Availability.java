@@ -32,7 +32,8 @@ public class Availability {
     private LocalDate specificDate; // utilisé si ONE_TIME
 
     // ─── Constructeurs ───────────────────────────
-    public Availability() {}
+    public Availability() {    // Required by JPA — no-arg constructor needed for entity instantiation
+    }
 
     // ─── Getters & Setters ───────────────────────
 

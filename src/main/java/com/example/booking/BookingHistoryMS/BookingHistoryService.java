@@ -1,17 +1,16 @@
 package com.example.booking.BookingHistoryMS;
 
 import com.example.booking.BookingMS.BookingStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class BookingHistoryService {
-    @Autowired
 
     private final BookingHistoryRepository historyRepository;
 
+    // ✅ Constructor injection — @Autowired supprimé
     public BookingHistoryService(BookingHistoryRepository historyRepository) {
         this.historyRepository = historyRepository;
     }
@@ -39,10 +38,11 @@ public class BookingHistoryService {
         return historyRepository.findByChangedBy(changedBy);
     }
 
-    public List<BookingHistory> getByNewStatus(BookingStatus status) { // ✅
+    public List<BookingHistory> getByNewStatus(BookingStatus status) {
         return historyRepository.findByNewStatus(status);
     }
-    public List<BookingHistory> getByBookingAndStatus(Long bookingId, BookingStatus status) { // ✅
+
+    public List<BookingHistory> getByBookingAndStatus(Long bookingId, BookingStatus status) {
         return historyRepository.findByBookingIdAndNewStatus(bookingId, status);
     }
 

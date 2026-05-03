@@ -29,8 +29,8 @@ public class SessionService {
         Session session = getById(id);
         SessionStatus current = session.getStatus();
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime scheduledAt = session.getScheduledAt();   // sessionDate + startTime
-        LocalDateTime scheduledEnd = session.getScheduledEnd(); // sessionDate + endTime
+        LocalDateTime scheduledAt = session.getScheduledAt();
+        LocalDateTime scheduledEnd = session.getScheduledEnd();
 
         // 1. Vérifier la transition de statut
         if (!ALLOWED.get(current).contains(newStatus)) {
@@ -54,7 +54,6 @@ public class SessionService {
 
                 case DONE -> {
                     // Ne peut pas terminer avant la fin prévue
-                    // (on utilise scheduledEnd si dispo, sinon startedAt + 5 min minimum)
                     if (scheduledEnd != null && now.isBefore(scheduledEnd)) {
                         throw new IllegalStateException(
                                 "La session ne peut pas se terminer avant " + scheduledEnd
@@ -76,6 +75,10 @@ public class SessionService {
                                         + scheduledAt.plusMinutes(15)
                         );
                     }
+                }
+
+                default -> {
+                    // No additional time constraints for this status
                 }
             }
         }
