@@ -16,6 +16,16 @@ pipeline {
             }
         }
 
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    dir('backend-integre/AI-Learning-Assistant-Microservice') {
+                        sh './mvnw sonar:sonar -Dsonar.projectKey=ai-learning-assistant -Dsonar.projectName=ai-learning-assistant'
+                    }
+                }
+            }
+        }
+
         stage('Docker Build AI Learning Assistant') {
             steps {
                 sh 'docker build -t jungle/ai-learning-assistant:ci backend-integre/AI-Learning-Assistant-Microservice'
@@ -23,11 +33,11 @@ pipeline {
         }
 
         stage('Security Scan - Trivy') {
-    steps {
-        sh '/usr/local/bin/trivy image --exit-code 0 --severity HIGH,CRITICAL --format template --template "@/usr/local/share/trivy/templates/html.tpl" --output $WORKSPACE/trivy-report-ai.html --timeout 15m jungle/ai-learning-assistant:ci'
-        sh '/usr/local/bin/trivy image --exit-code 0 --severity HIGH,CRITICAL --format table --timeout 15m jungle/ai-learning-assistant:ci'
-    }
-}
+            steps {
+                sh '/usr/local/bin/trivy image --exit-code 0 --severity HIGH,CRITICAL --format template --template "@/usr/local/share/trivy/templates/html.tpl" --output $WORKSPACE/trivy-report-ai.html --timeout 15m jungle/ai-learning-assistant:ci'
+                sh '/usr/local/bin/trivy image --exit-code 0 --severity HIGH,CRITICAL --format table --timeout 15m jungle/ai-learning-assistant:ci'
+            }
+        }
     }
 
     post {
