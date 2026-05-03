@@ -12,7 +12,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tts")
-@CrossOrigin(origins = "*")
 public class TtsController {
 
     @Value("${elevenlabs.api.key}")
