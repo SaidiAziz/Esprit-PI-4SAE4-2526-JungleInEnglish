@@ -24,7 +24,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh './mvnw -B test'
+                sh 'cd pi/User-Microservice && ./mvnw -B test'
             }
         }
 
@@ -32,6 +32,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
                     sh '''
+                        cd pi/User-Microservice
                         ./mvnw -B sonar:sonar \
                             -Dsonar.projectKey=user-microservice \
                             -Dsonar.projectName="User Microservice" \
@@ -44,13 +45,13 @@ pipeline {
 
         stage('Package') {
             steps {
-                sh './mvnw -B -DskipTests package'
+                sh 'cd pi/User-Microservice && ./mvnw -B -DskipTests package'
             }
         }
 
         stage('Docker Build') {
             steps {
-                sh 'docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER} .'
+                sh 'docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER} pi/User-Microservice/'
             }
         }
 
@@ -74,9 +75,9 @@ pipeline {
                     sh '''
                         export KUBECONFIG="$KUBECONFIG_FILE"
                         kubectl create namespace ${K8S_NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
-                        kubectl apply -n ${K8S_NAMESPACE} -f k8s/mysql.yaml
-                        kubectl apply -n ${K8S_NAMESPACE} -f k8s/deployment.yaml
-                        kubectl apply -n ${K8S_NAMESPACE} -f k8s/service.yaml
+                        kubectl apply -n ${K8S_NAMESPACE} -f pi/User-Microservice/k8s/mysql.yaml
+                        kubectl apply -n ${K8S_NAMESPACE} -f pi/User-Microservice/k8s/deployment.yaml
+                        kubectl apply -n ${K8S_NAMESPACE} -f pi/User-Microservice/k8s/service.yaml
                         kubectl set image deployment/user-microservice \
                             user-microservice=${DOCKER_REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER} \
                             -n ${K8S_NAMESPACE}
