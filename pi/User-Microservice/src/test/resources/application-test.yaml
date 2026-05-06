@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:userdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: ""
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate.auto_quote_keyword: true
+    show-sql: false
+  cloud:
+    config:
+      enabled: false
+  mail:
+    host: localhost
+    port: 1025
+
+eureka:
+  client:
+    enabled: false
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+server:
+  port: 0
+
+app:
+  frontend:
+    url: http://localhost:4200
+
+jwt:
+  secret: test-secret-test-secret-test-secret-test-secret
+  expiration-ms: 86400000

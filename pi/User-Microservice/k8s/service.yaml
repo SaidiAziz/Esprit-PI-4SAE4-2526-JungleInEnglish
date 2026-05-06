@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-microservice
+  labels:
+    app: user-microservice
+spec:
+  type: ClusterIP
+  selector:
+    app: user-microservice
+  ports:
+    - port: 8081
+      targetPort: 8081
+      protocol: TCP
+      name: http
+

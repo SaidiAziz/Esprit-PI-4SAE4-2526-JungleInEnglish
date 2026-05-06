@@ -1,0 +1,89 @@
+pipeline {
+    agent any
+
+    tools {
+        jdk 'JDK-21'
+        maven 'Maven-3.9'
+    }
+
+    parameters {
+        string(name: 'DOCKER_REGISTRY', defaultValue: 'docker.io/your-dockerhub-username', description: 'Docker registry namespace to push the backend image')
+        string(name: 'IMAGE_NAME', defaultValue: 'user-microservice', description: 'Docker image name')
+        string(name: 'K8S_NAMESPACE', defaultValue: 'user-microservice', description: 'Kubernetes namespace')
+        string(name: 'K8S_IMAGE_TAG', defaultValue: 'latest', description: 'Kubernetes image tag after deployment')
+    }
+
+    environment {
+        SONAR_PROJECT_KEY = 'User-Microservice'
+        SONAR_PROJECT_NAME = 'User-Microservice'
+        DOCKER_CREDENTIALS_ID = 'docker-registry-credentials'
+        KUBE_CREDENTIALS_ID = 'kubeconfig-credentials'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh './mvnw -B test'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh './mvnw -B sonar:sonar -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName=${SONAR_PROJECT_NAME} -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml'
+                }
+            }
+        }
+
+        stage('Package') {
+            steps {
+                sh './mvnw -B -DskipTests package'
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                sh 'docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER} .'
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh 'echo "$DOCKER_PASSWORD" | docker login ${DOCKER_REGISTRY} -u "$DOCKER_USER" --password-stdin'
+                    sh 'docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER}'
+                    sh 'docker tag ${DOCKER_REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER} ${DOCKER_REGISTRY}/${IMAGE_NAME}:${K8S_IMAGE_TAG}'
+                    sh 'docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}:${K8S_IMAGE_TAG}'
+                    sh 'docker logout ${DOCKER_REGISTRY}'
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                withCredentials([file(credentialsId: env.KUBE_CREDENTIALS_ID, variable: 'KUBECONFIG_FILE')]) {
+                    sh '''
+                        export KUBECONFIG="$KUBECONFIG_FILE"
+                        kubectl create namespace ${K8S_NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
+                        kubectl apply -n ${K8S_NAMESPACE} -f k8s/mysql.yaml
+                        kubectl apply -n ${K8S_NAMESPACE} -f k8s/deployment.yaml
+                        kubectl apply -n ${K8S_NAMESPACE} -f k8s/service.yaml
+                        kubectl set image deployment/user-microservice user-microservice=${DOCKER_REGISTRY}/${IMAGE_NAME}:${K8S_IMAGE_TAG} -n ${K8S_NAMESPACE}
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            deleteDir()
+        }
+    }
+}
