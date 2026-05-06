@@ -1,0 +1,52 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build & Test AI Learning Assistant') {
+            steps {
+                dir('backend-integre/AI-Learning-Assistant-Microservice') {
+                    sh 'chmod +x mvnw && ./mvnw -B clean package -DskipTests'
+                }
+            }
+        }
+
+       stage('SonarQube Analysis') {
+    steps {
+        withSonarQubeEnv('sonarqube') {
+            dir('backend-integre/AI-Learning-Assistant-Microservice') {
+                sh './mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=ai-learning-assistant -Dsonar.projectName=ai-learning-assistant'
+            }
+        }
+    }
+}
+
+        stage('Docker Build AI Learning Assistant') {
+            steps {
+                sh 'docker build -t jungle/ai-learning-assistant:ci backend-integre/AI-Learning-Assistant-Microservice'
+            }
+        }
+
+        stage('Security Scan - Trivy') {
+            steps {
+                sh '/usr/local/bin/trivy image --exit-code 0 --severity HIGH,CRITICAL --format template --template "@/usr/local/share/trivy/templates/html.tpl" --output $WORKSPACE/trivy-report-ai.html --timeout 15m jungle/ai-learning-assistant:ci'
+                sh '/usr/local/bin/trivy image --exit-code 0 --severity HIGH,CRITICAL --format table --timeout 15m jungle/ai-learning-assistant:ci'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'CI AI Learning Assistant réussi ✅'
+            build job: 'ai-learning-CD', wait: false
+        }
+        failure {
+            echo 'CI AI Learning Assistant échoué ❌'
+        }
+    }
+}

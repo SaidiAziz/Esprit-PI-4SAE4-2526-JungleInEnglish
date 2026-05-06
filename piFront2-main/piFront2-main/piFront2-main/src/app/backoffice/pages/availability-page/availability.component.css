@@ -1,0 +1,25 @@
+.btn-jie {
+  background-color: #2D5757;
+  color: white;
+  border: 2px solid #2D5757;
+  transition: all 0.2s ease;
+}
+.btn-jie:hover { 
+  background-color: #1e3d3d; 
+  border-color: #1e3d3d; 
+  color: white; 
+}
+
+.btn-outline-jie {
+  background-color: transparent;
+  color: #2D5757;
+  border: 2px solid #2D5757;
+  transition: all 0.2s ease;
+}
+.btn-outline-jie:hover { 
+  background-color: #2D5757; 
+  color: white; 
+}
+
+.availability-grid { display:flex; gap:8px; flex-wrap:wrap }
+.slot { border:1px solid #eaeaea; padding:6px 8px; border-radius:4px }

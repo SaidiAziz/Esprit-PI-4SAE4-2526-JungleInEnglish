@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: ${SPRING_APPLICATION_NAME:api-gateway}
+
+server:
+  port: ${SERVER_PORT:8222}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://eureka-server:8761/eureka}
+  instance:
+    prefer-ip-address: ${EUREKA_INSTANCE_PREFER_IP_ADDRESS:true}

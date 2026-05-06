@@ -1,0 +1,8 @@
+#spring.application.name=Eureka
+server:
+  port: 8761
+
+eureka:
+  client:
+    register-with-eureka: false   # because this is the server, not a client
+    fetch-registry: false

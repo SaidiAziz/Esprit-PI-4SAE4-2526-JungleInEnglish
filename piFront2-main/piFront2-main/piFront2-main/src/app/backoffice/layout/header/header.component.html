@@ -1,0 +1,18 @@
+<header class="dashboard-header">
+  <div class="dashboard-header-content">
+    <!-- Logo -->
+    <a routerLink="/" class="dashboard-logo">
+      <span class="logo-icon">🌿</span>
+      <span class="logo-text">Jungle in English</span>
+    </a>
+
+   
+
+    <!-- User Info & Logout -->
+    <div class="dashboard-user" *ngIf="currentUser">
+      <span class="user-name">{{ currentUser.firstName }} {{ currentUser.lastName }}</span>
+      <span class="role-badge role-{{ currentUser.role | lowercase }}">{{ currentUser.role }}</span>
+      <button class="btn-logout" (click)="logout()">Logout</button>
+    </div>
+  </div>
+</header>

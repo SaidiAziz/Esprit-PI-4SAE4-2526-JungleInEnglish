@@ -1,0 +1,118 @@
+<div class="statistics-page">
+  <div class="page-header">
+    <h1>Sessions Statistics</h1>
+
+    <div class="header-actions">
+      <button class="back-btn" routerLink="/admin/sessions">Back to Sessions</button>
+      <button class="refresh-btn" (click)="loadStatistics()">Refresh</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    Loading statistics...
+  </div>
+
+  <div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="globalStats && !loading" class="stats-grid">
+    <div class="stat-card">
+      <span class="label">Total Sessions</span>
+      <span class="value">{{ globalStats.totalSessions }}</span>
+    </div>
+
+    <div class="stat-card">
+      <span class="label">Planned</span>
+      <span class="value">{{ globalStats.plannedSessions }}</span>
+    </div>
+
+    <div class="stat-card">
+      <span class="label">Completed</span>
+      <span class="value">{{ globalStats.completedSessions }}</span>
+    </div>
+
+    <div class="stat-card">
+      <span class="label">Canceled</span>
+      <span class="value">{{ globalStats.canceledSessions }}</span>
+    </div>
+
+    <div class="stat-card highlight">
+      <span class="label">Completion Rate</span>
+      <span class="value">{{ globalStats.completionRate | number:'1.0-2' }}%</span>
+    </div>
+  </div>
+
+  <div class="charts-grid" *ngIf="globalStats && !loading">
+    <div class="chart-card">
+      <h2>Sessions by Status</h2>
+
+      <div class="status-chart">
+        <div class="status-row">
+          <div class="status-label">Planned</div>
+          <div class="status-bar-wrapper">
+            <div class="status-bar planned" [style.width.%]="getStatusPercent(globalStats.plannedSessions)"></div>
+          </div>
+          <div class="status-value">{{ globalStats.plannedSessions }}</div>
+        </div>
+
+        <div class="status-row">
+          <div class="status-label">Completed</div>
+          <div class="status-bar-wrapper">
+            <div class="status-bar completed" [style.width.%]="getStatusPercent(globalStats.completedSessions)"></div>
+          </div>
+          <div class="status-value">{{ globalStats.completedSessions }}</div>
+        </div>
+
+        <div class="status-row">
+          <div class="status-label">Canceled</div>
+          <div class="status-bar-wrapper">
+            <div class="status-bar canceled" [style.width.%]="getStatusPercent(globalStats.canceledSessions)"></div>
+          </div>
+          <div class="status-value">{{ globalStats.canceledSessions }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h2>Sessions by Month</h2>
+
+      <div *ngIf="monthStats.length > 0; else noMonthData" class="month-chart">
+        <div class="month-row" *ngFor="let item of monthStats">
+          <div class="month-label">{{ getMonthName(item.month) }}</div>
+          <div class="month-bar-wrapper">
+            <div class="month-bar" [style.width.%]="getMonthBarWidth(item.sessionCount)"></div>
+          </div>
+          <div class="month-value">{{ item.sessionCount }}</div>
+        </div>
+      </div>
+
+      <ng-template #noMonthData>
+        <p class="empty">No monthly statistics available.</p>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="table-card" *ngIf="!loading">
+    <h2>Sessions by Tutor</h2>
+
+    <table *ngIf="tutorStats.length > 0; else noTutorStats">
+      <thead>
+        <tr>
+          <th>Tutor ID</th>
+          <th>Session Count</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let stat of tutorStats">
+          <td>{{ stat.tutorId }}</td>
+          <td>{{ stat.sessionCount }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #noTutorStats>
+      <p class="empty">No tutor statistics available.</p>
+    </ng-template>
+  </div>
+</div>

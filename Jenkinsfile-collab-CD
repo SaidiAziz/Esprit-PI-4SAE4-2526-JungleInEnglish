@@ -1,0 +1,40 @@
+pipeline {
+    agent any
+    environment {
+        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials')
+        DOCKER_HUB_USERNAME = 'wissal93'
+    }
+    stages {
+        stage('Docker Login') {
+            steps {
+                sh 'echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
+        stage('Push Collaboration Room') {
+            steps {
+                sh 'docker tag jungle/collaboration-room:ci $DOCKER_HUB_USERNAME/collaboration-room:latest'
+                sh 'docker push $DOCKER_HUB_USERNAME/collaboration-room:latest'
+            }
+        }
+        stage('Cleanup old containers') {
+            steps {
+                sh 'docker stop $(docker ps -q --filter "name=ai-learning-cd") || true'
+                sh 'docker stop $(docker ps -q --filter "name=collaboration-cd") || true'
+                sh 'docker-compose -f docker-compose.yml down || true'
+            }
+        }
+        stage('Deploy Collaboration Room') {
+            steps {
+                sh 'docker-compose -f docker-compose.yml up -d collaboration-room-microservice'
+            }
+        }
+    }
+    post {
+        success {
+            echo 'CD Collaboration Room réussi ✅'
+        }
+        failure {
+            echo 'CD Collaboration Room échoué ❌'
+        }
+    }
+}

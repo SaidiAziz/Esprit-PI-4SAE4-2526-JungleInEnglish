@@ -1,0 +1,49 @@
+<div class="page-container">
+  <div class="card">
+
+    <div class="icon">🔐</div>
+    <h1>Two-Factor Authentication</h1>
+
+    <p class="subtitle" *ngIf="method === 'EMAIL'">
+      Enter the 6-digit code sent to your email address.
+    </p>
+    <p class="subtitle" *ngIf="method === 'TOTP'">
+      Enter the 6-digit code from your Authenticator app.
+    </p>
+
+    <!-- OTP input -->
+    <div class="form-group">
+      <input
+        [(ngModel)]="code"
+        type="text"
+        inputmode="numeric"
+        maxlength="6"
+        placeholder="000000"
+        class="otp-input"
+        [class.is-invalid]="errorMessage"
+        (keyup.enter)="verify()"
+        autocomplete="one-time-code"
+      />
+    </div>
+
+    <!-- Error -->
+    <div class="error-message alert-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <!-- Submit -->
+    <button
+      (click)="verify()"
+      class="btn-submit"
+      [disabled]="code.length !== 6 || loading"
+    >
+      <span *ngIf="!loading">Verify</span>
+      <span *ngIf="loading">Verifying…</span>
+    </button>
+
+    <!-- Back link -->
+    <div class="form-links">
+      <a routerLink="/login" class="link">← Back to Sign In</a>
+    </div>
+
+  </div>
+</div>
+
