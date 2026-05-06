@@ -164,7 +164,7 @@ function request(method, path) {
     }
 
     const numericTags = tags
-      .filter(tag => /^\d+$/.test(tag.name))
+      .filter(tag => /^[0-9]+$/.test(tag.name))
       .sort((a, b) => new Date(b.last_updated) - new Date(a.last_updated));
 
     const protectedTags = new Set([currentTag, 'latest']);
