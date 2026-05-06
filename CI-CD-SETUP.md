@@ -14,6 +14,7 @@ The Jenkins pipeline consists of the following stages:
 6. **Static Code Analysis** — SonarQube scan of source code
 7. **Build Docker Image** — Multi-stage Docker build (Node → nginx)
 8. **Push Docker Image** — Push image to Docker Hub
+9. **Deploy to Kubernetes** — Apply `k8s/deployment.yaml` and `k8s/service.yaml`, then roll out the new image
 
 ## Prerequisites
 
@@ -51,6 +52,8 @@ The Jenkins pipeline consists of the following stages:
 - `nginx.conf` — nginx server configuration for SPA routing
 - `sonar-project.properties` — SonarQube project configuration
 - `.dockerignore` — Files to exclude from Docker build context
+- `k8s/deployment.yaml` — Kubernetes Deployment for the frontend
+- `k8s/service.yaml` — Kubernetes NodePort Service for WSL/kubeadm access
 
 ## Jenkins Credentials Setup
 
@@ -183,6 +186,20 @@ The pipeline builds a multi-stage Docker image:
 **Image Name:** `<registry>/jungle-frontend:${BUILD_NUMBER}`
 
 Example: `mycompany/jungle-frontend:123`
+
+## Kubernetes Deployment
+
+After the Docker image is pushed, the Jenkins pipeline deploys the frontend to Kubernetes with:
+
+1. `kubectl apply -f k8s/deployment.yaml`
+2. `kubectl apply -f k8s/service.yaml`
+3. `kubectl set image deployment/jungle-frontend app=${DOCKER_IMAGE}`
+4. `kubectl rollout status deployment/jungle-frontend --timeout=3m`
+
+### Local kubeadm / WSL Access
+
+- The Service uses `NodePort` on `30080` so it can be reached from a Windows browser via `http://localhost:30080` when kubeadm is running inside WSL.
+- Ensure the Jenkins agent has `kubectl` access to the cluster and a valid kubeconfig.
 
 ### Testing Docker Image Locally
 

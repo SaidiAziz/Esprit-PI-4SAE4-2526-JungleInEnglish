@@ -97,6 +97,17 @@ pipeline {
             }
         }
 
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh '''
+                    kubectl apply -f k8s/deployment.yaml
+                    kubectl apply -f k8s/service.yaml
+                    kubectl set image deployment/jungle-frontend app=${DOCKER_IMAGE}
+                    kubectl rollout status deployment/jungle-frontend --timeout=3m
+                '''
+            }
+        }
+
         stage('Cleanup Old Docker Tags') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
