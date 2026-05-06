@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
         - name: user-microservice
-          image: user-microservice:latest
-          imagePullPolicy: IfNotPresent
+          image: saidiaziz/user-microservice:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8081
           env:
@@ -56,4 +56,3 @@ spec:
             limits:
               cpu: 500m
               memory: 1Gi
-
