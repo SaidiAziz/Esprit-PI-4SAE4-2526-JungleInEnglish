@@ -99,12 +99,30 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                sh '''
-                    kubectl apply -f k8s/deployment.yaml
-                    kubectl apply -f k8s/service.yaml
-                    kubectl set image deployment/jungle-frontend app=${DOCKER_IMAGE}
-                    kubectl rollout status deployment/jungle-frontend --timeout=3m
-                '''
+                withCredentials([file(credentialsId: 'kubeconfig-prod', variable: 'KUBECONFIG_FILE')]) {
+                    sh '''
+                        export KUBECONFIG="$KUBECONFIG_FILE"
+                        echo "Attempting Kubernetes deployment..."
+
+                        if ! kubectl cluster-info &> /dev/null; then
+                            echo "WARNING: Kubernetes cluster is not reachable. Skipping deployment."
+                            echo "To deploy manually from WSL, run:"
+                            echo "  kubectl apply -f k8s/deployment.yaml"
+                            echo "  kubectl apply -f k8s/service.yaml"
+                            echo "  kubectl set image deployment/jungle-frontend app=${DOCKER_IMAGE}"
+                            echo "  kubectl rollout status deployment/jungle-frontend --timeout=3m"
+                            exit 0
+                        fi
+
+                        echo "Cluster is reachable. Proceeding with deployment..."
+                        kubectl config current-context
+                        kubectl apply -f k8s/deployment.yaml
+                        kubectl apply -f k8s/service.yaml
+                        kubectl set image deployment/jungle-frontend app=${DOCKER_IMAGE}
+                        kubectl rollout status deployment/jungle-frontend --timeout=3m
+                        echo "✓ Kubernetes deployment successful"
+                    '''
+                }
             }
         }
 
