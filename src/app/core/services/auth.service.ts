@@ -16,10 +16,10 @@ import {
 export type { LoginRequest, LoginResponse, RegisterRequest, UserResponse, TutorProfile, ForgotPasswordRequest, ResetPasswordRequest };
 
 @Injectable({
-  providedIn: 'root'
+   providedIn: 'root'
 })
 export class AuthService {
-  private readonly API_URL = 'http://localhost:8080/auth';
+  private readonly API_URL = 'http://localhost:8081/auth';
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'auth_user';
 
