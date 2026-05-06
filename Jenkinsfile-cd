@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+        IMAGE_NAME = 'maaouisamar/quiz-service'
+        IMAGE_TAG = 'latest'
+    }
+
+    stages {
+        stage('Pull Image') {
+            steps {
+                echo '📥 Pulling latest image from DockerHub...'
+                sh "docker pull ${IMAGE_NAME}:${IMAGE_TAG}"
+            }
+        }
+
+        stage('Stop Old Container') {
+            steps {
+                echo '🛑 Stopping old container...'
+                sh '''
+                    docker stop quiz-service || true
+                    docker rm quiz-service || true
+                '''
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo '🚀 Deploying quiz-service...'
+                sh """
+                    docker run -d \
+                        --name quiz-service \
+                        -p 8081:8081 \
+                        --restart unless-stopped \
+                        ${IMAGE_NAME}:${IMAGE_TAG}
+                """
+            }
+        }
+
+        stage('Verify') {
+            steps {
+                echo '✅ Verifying deployment...'
+                sh 'docker ps | grep quiz-service'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ quiz-service déployé avec succès!'
+        }
+        failure {
+            echo '❌ Déploiement échoué!'
+        }
+    }
+}
